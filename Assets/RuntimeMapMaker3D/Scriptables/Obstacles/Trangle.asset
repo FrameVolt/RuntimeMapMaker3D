@@ -1,0 +1,18 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d900d69fc7840ad408413059b23afcce, type: 3}
+  m_Name: Trangle
+  m_EditorClassIdentifier: 
+  obstacleType: 0
+  prefab: {fileID: 7034530815532624178, guid: 0a4d378c68c14e54386587fbdfaa2f31, type: 3}
+  sprite: {fileID: 21300000, guid: 3fa4311efa85d8a43b6bd4c8c319a9ea, type: 3}
+  slotSize: 0

@@ -1,0 +1,31 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b270e45f5152abd4abf30c763b368fa5, type: 3}
+  m_Name: FreeFlyCamSetting
+  m_EditorClassIdentifier: 
+  negateScrollDirection: 0
+  movementSpeed: 30
+  turnSpeed: 3
+  cameraSpawn: {x: 0, y: 0, z: 0}
+  cursorVisible: 0
+  lockCursor: 1
+  shiftSpeedMax: 5
+  smoothSpeed: 0.125
+  turnSpeedH: 1
+  turnSpeedV: 1
+  scrollSensitivity: 50
+  minCameraDistance: 5
+  maxCameraDistance: 40
+  pitch: 0
+  yaw: 0
+  inputH: 0
+  inputV: 0
