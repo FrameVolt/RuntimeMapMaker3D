@@ -2,9 +2,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class UIPanelBase : MonoBehaviour
+namespace RMM3D
 {
-    protected virtual void OnHide() { }
+    public class UIPanelBase : MonoBehaviour
+    {
+        protected virtual void OnHide() { }
 
-    protected virtual void OnShow() { }
+        protected virtual void OnShow() { }
+    }
 }

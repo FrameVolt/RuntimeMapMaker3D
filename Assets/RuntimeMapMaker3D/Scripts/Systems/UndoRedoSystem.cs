@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
@@ -6,149 +7,160 @@ using System.Runtime.Serialization.Formatters.Binary;
 using UnityEngine;
 using Zenject;
 
-public class UndoRedoSystem : IInitializable
+namespace RMM3D
 {
-    public UndoRedoSystem(UndoRedoSystem.Settings settings, 
-        SlotsHolder groundSlotsHolder
-        )
+    public class UndoRedoSystem : IInitializable
     {
-        _undoList = new LinkedList<Solt[,,]>();
-        _redoList = new LinkedList<Solt[,,]>();
-
-        this.max = settings.maxItems;
-        this.groundSlotsHolder = groundSlotsHolder;
-    }
-
-
-    private readonly SlotsHolder groundSlotsHolder;
-    private readonly int max;
-
-    private LinkedList<Solt[,,]> _undoList;
-    private LinkedList<Solt[,,]> _redoList;
-
-    private bool sign = true;
-
-    public void Initialize()
-    {
-        AppendStatus();
-    }
-
-    public void Clear()
-    {
-        _undoList.Clear();
-        _redoList.Clear();
-    }
-
-    public void AppendStatus()
-    {
-        var newSolts = SoltMap.Copy(groundSlotsHolder.slotMap.Solts);
-
-        //if (_undoList.Count > 0 && _undoList.Last.Value == str)
-        //{
-        //    return;
-        //}
-
-        if (sign == false)
+        public UndoRedoSystem(UndoRedoSystem.Settings settings,
+            SlotsHolder groundSlotsHolder
+            )
         {
-            sign = true;
-            //AppendStatus();
+            _undoList = new LinkedList<Solt[,,]>();
+            _redoList = new LinkedList<Solt[,,]>();
 
-            Solt[,,] slots = _redoList.Last.Value;
-            _undoList.AddLast(slots);
-            _redoList.RemoveLast();
+            this.max = settings.maxItems;
+            this.groundSlotsHolder = groundSlotsHolder;
         }
 
-        if (_undoList.Count > max)
+
+        public event Action OnAppend = () => { };
+
+        private readonly SlotsHolder groundSlotsHolder;
+        private readonly int max;
+
+        private LinkedList<Solt[,,]> _undoList;
+        private LinkedList<Solt[,,]> _redoList;
+
+        private bool sign = true;
+
+        public void Initialize()
         {
-            _undoList.RemoveFirst();
+            AppendStatus();
         }
 
-        Debug.Log("AppendStatus");
-        _undoList.AddLast(newSolts);
-        _redoList.Clear();
-        
-    }
-
-
-    public void Undo()
-    {
-        Debug.Log("Undo Count:" + _undoList.Count);
-
-        if (CanPerformUndo())
+        public void Clear()
         {
-            Solt[,,] slots = _undoList.Last.Value;
-
-            if(sign == true)
-            {
-                sign = false;
-                _redoList.AddLast(slots);
-                _undoList.RemoveLast();
-                slots = _undoList.Last.Value;
-            }
-
-            var newSolts = SoltMap.Copy(slots);
-
-            groundSlotsHolder.ResetSoltMap();
-            groundSlotsHolder.SetSoltMap(newSolts);
-
-            _redoList.AddLast(slots);
-            _undoList.RemoveLast();
-            
+            _undoList.Clear();
+            _redoList.Clear();
         }
-        else
+
+        public int GetUndoCount()
         {
-            Debug.Log("Undo list is empty.");
+            return _undoList.Count;
         }
-        
-    }
-
-    public void Redo()
-    {
-        Debug.Log("Undo Redo:" + _redoList.Count);
-
-        if (CanPerformRedo())
+        public int GetRedoCount()
         {
-            Solt[,,] slots = _redoList.Last.Value;
+            return _redoList.Count;
+        }
+
+        public void AppendStatus()
+        {
+
+
+            var newSolts = SoltMap.Copy(groundSlotsHolder.slotMap.Solts);
+
+            //if (_undoList.Count > 0 && _undoList.Last.Value == str)
+            //{
+            //    return;
+            //}
 
             if (sign == false)
             {
                 sign = true;
+                //AppendStatus();
+
+                Solt[,,] slots = _redoList.Last.Value;
                 _undoList.AddLast(slots);
                 _redoList.RemoveLast();
-                slots = _redoList.Last.Value;
             }
 
-            var newSolts = SoltMap.Copy(slots);
-            groundSlotsHolder.ResetSoltMap();
-            groundSlotsHolder.SetSoltMap(newSolts);
+            if (_undoList.Count > max)
+            {
+                _undoList.RemoveFirst();
+            }
+            OnAppend.Invoke();
+            _undoList.AddLast(newSolts);
+            _redoList.Clear();
 
-            _undoList.AddLast(slots);
-            _redoList.RemoveLast();
-           
         }
-        else
+
+
+        public void Undo()
         {
-            Debug.Log("Redo list is empty.");
+            if (CanPerformUndo())
+            {
+                Solt[,,] slots = _undoList.Last.Value;
+
+                if (sign == true)
+                {
+                    sign = false;
+                    _redoList.AddLast(slots);
+                    _undoList.RemoveLast();
+                    slots = _undoList.Last.Value;
+                }
+
+                var newSolts = SoltMap.Copy(slots);
+
+                groundSlotsHolder.ResetSoltMap();
+                groundSlotsHolder.SetSoltMap(newSolts);
+
+                _redoList.AddLast(slots);
+                _undoList.RemoveLast();
+
+            }
+            else
+            {
+                Debug.Log("Undo list is empty.");
+            }
+
         }
-        
+
+        public void Redo()
+        {
+            if (CanPerformRedo())
+            {
+                Solt[,,] slots = _redoList.Last.Value;
+
+                if (sign == false)
+                {
+                    sign = true;
+                    _undoList.AddLast(slots);
+                    _redoList.RemoveLast();
+                    slots = _redoList.Last.Value;
+                }
+
+                var newSolts = SoltMap.Copy(slots);
+                groundSlotsHolder.ResetSoltMap();
+                groundSlotsHolder.SetSoltMap(newSolts);
+
+                _undoList.AddLast(slots);
+                _redoList.RemoveLast();
+
+            }
+            else
+            {
+                Debug.Log("Redo list is empty.");
+            }
+
+        }
+
+        public bool CanPerformUndo()
+        {
+            return _undoList.Count != 0;
+        }
+
+        public bool CanPerformRedo()
+        {
+            return _redoList.Count != 0;
+        }
+
+
+
+        [System.Serializable]
+        public class Settings
+        {
+            public int maxItems;
+        }
+
     }
-
-    public bool CanPerformUndo()
-    {
-        return _undoList.Count != 0;
-    }
-
-    public bool CanPerformRedo()
-    {
-        return _redoList.Count != 0;
-    }
-
-   
-
-    [System.Serializable]
-    public class Settings
-    {
-        public int maxItems;
-    }
-
 }

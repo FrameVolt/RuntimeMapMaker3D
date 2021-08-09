@@ -2,9 +2,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class UIPopBase : MonoBehaviour
+namespace RMM3D
 {
-    protected virtual void OnShow() { }
-    protected virtual void OnHide() { }
+    public class UIPopBase : MonoBehaviour
+    {
+        protected virtual void OnShow() { }
+        protected virtual void OnHide() { }
 
+    }
 }

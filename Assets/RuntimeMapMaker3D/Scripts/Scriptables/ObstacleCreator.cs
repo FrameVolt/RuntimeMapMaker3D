@@ -1,21 +1,23 @@
-﻿
-using UnityEditor;
+﻿using UnityEditor;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "ObstacleCreator", menuName = "RuntimeMapMaker3D/ObstacleCreator")]
-public class ObstacleCreator : ScriptableObject
+namespace RMM3D
 {
-    public GameObject fbx;
-    public Sprite obstacleIcon;
+    [CreateAssetMenu(fileName = "ObstacleCreator", menuName = "RuntimeMapMaker3D/ObstacleCreator")]
+    public class ObstacleCreator : ScriptableObject
+    {
+        public GameObject fbx;
+        public Sprite obstacleIcon;
 
-    public string sourcePrefabsPath;
-    public string texturesPath;
-    public string targetPrefabsPath;
-    public string obstacleModelPath;
+        public string sourcePrefabsPath;
+        public string texturesPath;
+        public string targetPrefabsPath;
+        public string obstacleModelPath;
 
-    public const string defaultSourcePrefabsPath = "Assets/RuntimeMapMaker3D/ArtWorks/FBX/Obstacles/";
-    public const string defaultTexturesPath = "Assets/RuntimeMapMaker3D/ArtWorks/Textures/ObstaclesIcon/";
-    public const string defaultTargetPrefabsPath = "Assets/RuntimeMapMaker3D/Prefabs/Obstacles/";
-    public const string defaultObstacleModelPath = "Assets/RuntimeMapMaker3D/Scriptables/Obstacles/";
+        public const string defaultSourcePrefabsPath = "Assets/RuntimeMapMaker3D/ArtWorks/FBX/Obstacles/";
+        public const string defaultTexturesPath = "Assets/RuntimeMapMaker3D/ArtWorks/Textures/ObstaclesIcon/";
+        public const string defaultTargetPrefabsPath = "Assets/RuntimeMapMaker3D/Prefabs/Obstacles/";
+        public const string defaultObstacleModelPath = "Assets/RuntimeMapMaker3D/Scriptables/Obstacles/";
 
+    }
 }

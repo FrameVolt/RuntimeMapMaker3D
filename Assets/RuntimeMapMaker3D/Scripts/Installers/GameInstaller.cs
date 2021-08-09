@@ -4,59 +4,68 @@ using System.Collections.Generic;
 using UnityEngine;
 using Zenject;
 
-public class GameInstaller : MonoInstaller
+namespace RMM3D
 {
-    [Inject]
-    GameSettingsInstaller.GameSettings settings;
-    //[Inject]
-    //ResourceSystem resourceSystem;
-
-    public override void InstallBindings()
+    public class GameInstaller : MonoInstaller
     {
-        Container.BindInterfacesAndSelfTo<SlotRaycastSystem>().AsSingle().NonLazy();
-        Container.Bind<SlotsHolder>().AsSingle().NonLazy();
-        Container.BindInterfacesAndSelfTo<PlacementSystem>().AsSingle().NonLazy();
-        Container.BindInterfacesAndSelfTo<RotateObstacleSystem>().AsSingle().NonLazy();
-        Container.BindInterfacesAndSelfTo<SaveMapSystem>().AsSingle().NonLazy();
-        Container.BindInterfacesAndSelfTo<EraseSystem>().AsSingle().NonLazy();
-        Container.BindInterfacesAndSelfTo<FreeFlyCamSystem>().AsSingle().NonLazy();
-        Container.BindInterfacesAndSelfTo<FollowCamSystem>().AsSingle().NonLazy();
-        Container.BindInterfacesAndSelfTo<CameraManager>().AsSingle().NonLazy();
-        Container.BindInterfacesAndSelfTo<UndoRedoSystem>().AsSingle().NonLazy();
-        Container.BindInterfacesAndSelfTo<BoxSelectionSystem>().AsSingle().NonLazy();
-        Container.BindInterfacesAndSelfTo<MoveToolSystem>().AsSingle().NonLazy();
-        
+        [Inject]
+        GameSettingsInstaller.GameSettings settings;
 
-        Container.BindFactory<Vector3Int, ObstacleModel, ObstacleFacade, ObstacleFacade.Factory>().FromFactory<ObstacleFactory>();
-
-        Container.Bind<MemoryPoolSettings>().FromInstance(settings.defaultPoolSettings);
-
-        Container.BindFactory<ConfirmPop, ConfirmPop.Factory>()
-            .FromPoolableMemoryPool<ConfirmPop, ConfirmPopPool>(x => x.WithInitialSize(1).FromComponentInNewPrefab(settings.confirmPopPrefab)).NonLazy();
-            
-        Container.BindFactory<ObstacleBtn, ObstacleBtn.Factory>().FromComponentInNewPrefab(settings.obstacleBtnPrototype);
+        public override void InstallBindings()
+        {
+            Container.BindInterfacesAndSelfTo<SlotRaycastSystem>().AsSingle().NonLazy();
+            Container.Bind<SlotsHolder>().AsSingle().NonLazy();
+            Container.BindInterfacesAndSelfTo<PlacementSystem>().AsSingle().NonLazy();
+            Container.BindInterfacesAndSelfTo<RotateObstacleSystem>().AsSingle().NonLazy();
+            Container.BindInterfacesAndSelfTo<SaveMapSystem>().AsSingle().NonLazy();
+            Container.BindInterfacesAndSelfTo<EraseSystem>().AsSingle().NonLazy();
+            Container.BindInterfacesAndSelfTo<FreeFlyCamSystem>().AsSingle().NonLazy();
+            Container.BindInterfacesAndSelfTo<FollowCamSystem>().AsSingle().NonLazy();
+            Container.BindInterfacesAndSelfTo<CameraManager>().AsSingle().NonLazy();
+            Container.BindInterfacesAndSelfTo<UndoRedoSystem>().AsSingle().NonLazy();
+            Container.BindInterfacesAndSelfTo<BoxSelectionSystem>().AsSingle().NonLazy();
+            Container.BindInterfacesAndSelfTo<MoveToolSystem>().AsSingle().NonLazy();
 
 
-        GameSignalsInstaller.Install(Container);
-        InitExecutionOrder();
+            Container.Bind<MemoryPoolSettings>().FromInstance(settings.defaultPoolSettings);
+
+            BindFactorys();
+
+            GameSignalsInstaller.Install(Container);
+            InitExecutionOrder();
+        }
+
+
+        private void BindFactorys()
+        {
+            Container.BindFactory<Vector3Int, ObstacleModel, ObstacleFacade, ObstacleFacade.Factory>().FromFactory<ObstacleFactory>();
+
+
+
+            Container.BindFactory<ConfirmPop, ConfirmPop.Factory>()
+                .FromPoolableMemoryPool<ConfirmPop, ConfirmPopPool>(x => x.WithInitialSize(1).FromComponentInNewPrefab(settings.confirmPopPrefab)).NonLazy();
+
+            Container.BindFactory<ObstacleBtn, ObstacleBtn.Factory>().FromComponentInNewPrefab(settings.obstacleBtnPrototype);
+
+        }
+
+        private void InitExecutionOrder()
+        {
+            //Container.BindExecutionOrder<UIManager>(-10);
+            //Container.BindExecutionOrder<ConfirmPop>(-10);
+        }
+
+
+        public class ConfirmPopPool : MonoPoolableMemoryPool<IMemoryPool, ConfirmPop>
+        {
+        }
     }
 
-    private void InitExecutionOrder()
+    public class ObstacleInstaller : Installer<ObstacleInstaller>
     {
-        //Container.BindExecutionOrder<UIManager>(-10);
-        //Container.BindExecutionOrder<ConfirmPop>(-10);
-    }
+        public override void InstallBindings()
+        {
 
-
-    public class ConfirmPopPool : MonoPoolableMemoryPool<IMemoryPool, ConfirmPop>
-    {
-    }
-}
-
-public class ObstacleInstaller : Installer<ObstacleInstaller>
-{
-    public override void InstallBindings()
-    {
-        
+        }
     }
 }

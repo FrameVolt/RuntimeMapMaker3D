@@ -2,7 +2,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class FloorControlSystem 
+namespace RMM3D
 {
-    
+    public class FloorControlSystem
+    {
+
+    }
 }

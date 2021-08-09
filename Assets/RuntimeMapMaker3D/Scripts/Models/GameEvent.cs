@@ -2,7 +2,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public struct ChangeCameraStateSignal
+namespace RMM3D
 {
-    public CameraState cameraState;
+    public struct ChangeCameraStateSignal
+    {
+        public CameraState cameraState;
+    }
 }

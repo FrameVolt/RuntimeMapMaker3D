@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using UnityEditor;
 
+namespace RMM3D.Editor
+{
 public static class LayerUtility
 {
     public static void CreateLayer(string layerName)
@@ -41,4 +43,5 @@ public static class LayerUtility
         }
 
     }
+}
 }

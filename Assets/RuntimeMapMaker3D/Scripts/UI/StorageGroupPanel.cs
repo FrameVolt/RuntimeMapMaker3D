@@ -7,74 +7,90 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using Zenject;
+using TMPro;
 
-public class StorageGroupPanel : UIPanelBase
+namespace RMM3D
 {
-    [Inject]
-    public void Construct(
-       SaveMapSystem saveMapSystem,
-       UIManager uIManager,
-       UndoRedoSystem undoRedoSystem,
-       BoxSelectionSystem boxSelectionSystem
-       )
+    public class StorageGroupPanel : UIPanelBase
     {
-        this.saveMapSystem = saveMapSystem;
-        this.uIManager = uIManager;
-        this.undoRedoSystem = undoRedoSystem;
-        this.boxSelectionSystem = boxSelectionSystem;
-    }
+        [Inject]
+        public void Construct(
+           SaveMapSystem saveMapSystem,
+           UIManager uIManager,
+           UndoRedoSystem undoRedoSystem,
+           BoxSelectionSystem boxSelectionSystem
+           )
+        {
+            this.saveMapSystem = saveMapSystem;
+            this.uIManager = uIManager;
+            this.undoRedoSystem = undoRedoSystem;
+            this.boxSelectionSystem = boxSelectionSystem;
+        }
 
-    private SaveMapSystem saveMapSystem;
-    private UIManager uIManager;
-    private UndoRedoSystem undoRedoSystem;
-    private BoxSelectionSystem boxSelectionSystem;
+        private SaveMapSystem saveMapSystem;
+        private UIManager uIManager;
+        private UndoRedoSystem undoRedoSystem;
+        private BoxSelectionSystem boxSelectionSystem;
 
-    [SerializeField] private Button backBtn;
-    [SerializeField] private Button saveBtn;
-    [SerializeField] private Button loadBtn;
-    [SerializeField] private Button resetBtn;
-    [SerializeField] private Button undoBtn;
-    [SerializeField] private Button redoBtn;
+        [SerializeField] private Button backBtn;
+        [SerializeField] private Button saveBtn;
+        [SerializeField] private Button loadBtn;
+        [SerializeField] private Button resetBtn;
+        [SerializeField] private Button undoBtn;
+        [SerializeField] private Button redoBtn;
+
+        [SerializeField] private TMP_Text undoCount;
+        [SerializeField] private TMP_Text redoCount;
 
 
-    void Start()
-    {
+        void Start()
+        {
 
-        backBtn.onClick.AddListener(() => { SceneManager.LoadScene(0); boxSelectionSystem.ClearSelections(); });
-        saveBtn.onClick.AddListener(() => { saveMapSystem.SaveMap(); boxSelectionSystem.ClearSelections(); });
-        loadBtn.onClick.AddListener(() => { saveMapSystem.LoadMap(); boxSelectionSystem.ClearSelections(); });
-        resetBtn.onClick.AddListener(() => {
-            uIManager.Pop(PopType.ConfirmPop);
-            boxSelectionSystem.ClearSelections();
-        });
+            backBtn.onClick.AddListener(() => { SceneManager.LoadScene(0); boxSelectionSystem.ClearSelections(); });
+            saveBtn.onClick.AddListener(() => { saveMapSystem.SaveMap(); boxSelectionSystem.ClearSelections(); });
+            loadBtn.onClick.AddListener(() => { saveMapSystem.LoadMap(); boxSelectionSystem.ClearSelections(); });
+            resetBtn.onClick.AddListener(() =>
+            {
+                uIManager.Pop(PopType.ConfirmPop);
+                boxSelectionSystem.ClearSelections();
+            });
 
-        //var undoLongPress =
-        //    undoBtn.OnPointerDownAsObservable()
-        //    .SelectMany(_ => Observable.Interval(TimeSpan.FromSeconds(0.2f)).StartWith(0))
-        //    .TakeUntil(undoBtn.OnPointerUpAsObservable())
-        //    .RepeatUntilDestroy(undoBtn);
+            undoBtn.onClick.AddListener(() =>
+            {
+                undoRedoSystem.Undo();
+                boxSelectionSystem.ClearSelections();
+                undoCount.text = undoRedoSystem.GetUndoCount().ToString();
+                redoCount.text = undoRedoSystem.GetRedoCount().ToString();
+            });
+            redoBtn.onClick.AddListener(() =>
+            {
+                undoRedoSystem.Redo();
+                boxSelectionSystem.ClearSelections();
+                undoCount.text = undoRedoSystem.GetUndoCount().ToString();
+                redoCount.text = undoRedoSystem.GetRedoCount().ToString();
+            });
 
-        //undoLongPress.Subscribe((x) => { undoRedoSystem.Undo(); boxSelectionSystem.ClearSelections(); });
+            undoCount.text = "0";
+            redoCount.text = "0";
 
-        //var redoLongPress =
-        //  redoBtn.OnPointerDownAsObservable()
-        //  .SelectMany(_ => Observable.Interval(TimeSpan.FromSeconds(0.2f)).StartWith(0))
-        //  .TakeUntil(redoBtn.OnPointerUpAsObservable())
-        //  .RepeatUntilDestroy(redoBtn);
+            undoRedoSystem.OnAppend += () =>
+            {
+                undoCount.text = undoRedoSystem.GetUndoCount().ToString();
+                redoCount.text = undoRedoSystem.GetRedoCount().ToString();
+            };
 
-        //redoLongPress.Subscribe((x) => { undoRedoSystem.Redo(); boxSelectionSystem.ClearSelections(); });
+        }
 
-        undoBtn.onClick.AddListener(()=> { undoRedoSystem.Undo(); boxSelectionSystem.ClearSelections(); });
-        redoBtn.onClick.AddListener(()=> { undoRedoSystem.Redo(); boxSelectionSystem.ClearSelections(); });
-    }
 
-    protected override void OnShow()
-    {
-        base.OnShow();
-    }
+        protected override void OnShow()
+        {
+            base.OnShow();
+        }
 
-    protected override void OnHide()
-    {
-        base.OnHide();
+        protected override void OnHide()
+        {
+            base.OnHide();
+        }
+
     }
 }

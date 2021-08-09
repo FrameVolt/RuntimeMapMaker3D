@@ -4,33 +4,36 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SaveMapSystem
+namespace RMM3D
 {
-    public SaveMapSystem(SlotsHolder groundSlotsHolder)
+    public class SaveMapSystem
     {
-        this.groundSlotsHolder = groundSlotsHolder;
-    }
+        public SaveMapSystem(SlotsHolder groundSlotsHolder)
+        {
+            this.groundSlotsHolder = groundSlotsHolder;
+        }
 
-    private SlotsHolder groundSlotsHolder;
+        private SlotsHolder groundSlotsHolder;
 
-    public void SaveMap()
-    {
-        string str = JsonConvert.SerializeObject(groundSlotsHolder.slotMap.Solts);
-        //ES3.Save("Solts", str);
-    }
+        public void SaveMap()
+        {
+            string str = JsonConvert.SerializeObject(groundSlotsHolder.slotMap.Solts);
+            //ES3.Save("Solts", str);
+        }
 
-    public void LoadMap()
-    {
-        groundSlotsHolder.ResetSoltMap();
+        public void LoadMap()
+        {
+            groundSlotsHolder.ResetSoltMap();
 
-        //string str = ES3.Load<string>("Solts");
+            //string str = ES3.Load<string>("Solts");
 
-        //var slotMap = JsonConvert.DeserializeObject<Solt[,,]>(str);
-        //groundSlotsHolder.SetSoltMap(slotMap);
-    }
+            //var slotMap = JsonConvert.DeserializeObject<Solt[,,]>(str);
+            //groundSlotsHolder.SetSoltMap(slotMap);
+        }
 
-    public void ResetMap()
-    {
-        groundSlotsHolder.ResetSoltMap();
+        public void ResetMap()
+        {
+            groundSlotsHolder.ResetSoltMap();
+        }
     }
 }
