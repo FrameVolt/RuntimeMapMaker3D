@@ -13,6 +13,5 @@ MonoBehaviour:
   m_Name: ConvexTrangle
   m_EditorClassIdentifier: 
   obstacleType: 0
-  prefab: {fileID: 3208607664777718769, guid: fbcd4ca01991ab643979c89433065eed, type: 3}
-  sprite: {fileID: 21300000, guid: 7104dd1432a89c6429bb8526638f4da2, type: 3}
+  assetName: ConvexTrangle
   slotSize: 0

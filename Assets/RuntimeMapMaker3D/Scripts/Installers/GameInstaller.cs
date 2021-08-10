@@ -9,7 +9,7 @@ namespace RMM3D
     public class GameInstaller : MonoInstaller
     {
         [Inject]
-        GameSettingsInstaller.GameSettings settings;
+        SettingsInstaller.GameSettings settings;
 
         public override void InstallBindings()
         {
@@ -25,7 +25,8 @@ namespace RMM3D
             Container.BindInterfacesAndSelfTo<UndoRedoSystem>().AsSingle().NonLazy();
             Container.BindInterfacesAndSelfTo<BoxSelectionSystem>().AsSingle().NonLazy();
             Container.BindInterfacesAndSelfTo<MoveToolSystem>().AsSingle().NonLazy();
-
+            Container.BindInterfacesAndSelfTo<AssetBundleSystem>().AsSingle().NonLazy();
+            
 
             Container.Bind<MemoryPoolSettings>().FromInstance(settings.defaultPoolSettings);
 

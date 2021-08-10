@@ -13,6 +13,5 @@ MonoBehaviour:
   m_Name: Trangle
   m_EditorClassIdentifier: 
   obstacleType: 0
-  prefab: {fileID: 7034530815532624178, guid: 0a4d378c68c14e54386587fbdfaa2f31, type: 3}
-  sprite: {fileID: 21300000, guid: 3fa4311efa85d8a43b6bd4c8c319a9ea, type: 3}
+  assetName: Trangle
   slotSize: 0

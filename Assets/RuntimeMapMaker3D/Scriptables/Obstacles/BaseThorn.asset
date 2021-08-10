@@ -13,6 +13,5 @@ MonoBehaviour:
   m_Name: BaseThorn
   m_EditorClassIdentifier: 
   obstacleType: 1
-  prefab: {fileID: 4070780760951137490, guid: 775b0d6222bbbc14b9acc73ee828652c, type: 3}
-  sprite: {fileID: 21300000, guid: 8a0e3b4690b72724ba34d10bd89b223c, type: 3}
+  assetName: BaseThorn
   slotSize: 0

@@ -9,8 +9,8 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ba420e86392c47640959768457104ba0, type: 3}
-  m_Name: GameSettingsInstaller
+  m_Script: {fileID: 11500000, guid: b06622dd2189f9b4496715e8b7a133d5, type: 3}
+  m_Name: SettingsInstaller
   m_EditorClassIdentifier: 
   gameSettings:
     groundGrid: {fileID: 11400000, guid: 63571bcfbefb85643bee1ce0331acbc2, type: 2}
@@ -25,7 +25,6 @@ MonoBehaviour:
       type: 3}
     freeFlyCamSetting: {fileID: 11400000, guid: dfff54033e85860409a78188de6e3fab,
       type: 2}
-    resourceHandler: {fileID: 11400000, guid: ddc6af58555d0ef4a9c1f6e79d5b9c05, type: 2}
     confirmPopPrefab: {fileID: 2397138376040945223, guid: 1e9ec432412cc2d4787646e1fc02a13c,
       type: 3}
     defaultPoolSettings:
@@ -40,3 +39,5 @@ MonoBehaviour:
       maxItems: 20
     groundGridSystemSettings:
       material: {fileID: 2100000, guid: 4a3241fd17cf4ea4a9b805af81c796e2, type: 2}
+    obstacleCreatorData: {fileID: 11400000, guid: 29d67c40be8298d40aaf13142ab0aa57,
+      type: 2}

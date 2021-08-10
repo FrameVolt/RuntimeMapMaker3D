@@ -3,6 +3,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.IO;
 
 namespace RMM3D
 {
@@ -15,20 +16,20 @@ namespace RMM3D
 
         private SlotsHolder groundSlotsHolder;
 
+        private string filePath = Application.dataPath + "map.txt";
+
         public void SaveMap()
         {
             string str = JsonConvert.SerializeObject(groundSlotsHolder.slotMap.Solts);
-            //ES3.Save("Solts", str);
+            File.WriteAllText(str, filePath);
         }
 
         public void LoadMap()
         {
             groundSlotsHolder.ResetSoltMap();
-
-            //string str = ES3.Load<string>("Solts");
-
-            //var slotMap = JsonConvert.DeserializeObject<Solt[,,]>(str);
-            //groundSlotsHolder.SetSoltMap(slotMap);
+            string str = File.ReadAllText(filePath);
+            var slotMap = JsonConvert.DeserializeObject<Solt[,,]>(str);
+            groundSlotsHolder.SetSoltMap(slotMap);
         }
 
         public void ResetMap()

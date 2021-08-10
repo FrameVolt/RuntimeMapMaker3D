@@ -33,15 +33,21 @@ namespace RMM3D
     {
         DiContainer _container;
         private Transform parent;
-        public ObstacleFactory(DiContainer container)
+
+        private AssetBundleSystem assetBundleSystem;
+
+        public ObstacleFactory(DiContainer container, AssetBundleSystem assetBundleSystem)
         {
             _container = container;
             parent = new GameObject("ObstacleFactory").transform;
+            this.assetBundleSystem = assetBundleSystem;
         }
 
         public ObstacleFacade Create(Vector3Int slotID, ObstacleModel obstacleModel)
         {
-            ObstacleFacade result = _container.InstantiatePrefabForComponent<ObstacleFacade>(obstacleModel.prefab, new List<object> { slotID, obstacleModel });
+
+            var prefab = assetBundleSystem.assetBundle.LoadAsset<GameObject>(obstacleModel.assetName);
+            ObstacleFacade result = _container.InstantiatePrefabForComponent<ObstacleFacade>(prefab, new List<object> { slotID, obstacleModel });
             result.transform.SetParent(parent);
             return result;
         }

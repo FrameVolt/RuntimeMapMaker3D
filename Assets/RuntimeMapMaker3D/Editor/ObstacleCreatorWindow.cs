@@ -4,14 +4,15 @@ using UnityEngine;
 using UnityEditor;
 using System.IO;
 using RMM3D;
+using System;
 
 namespace RMM3D.Editor
 {
     public class ObstacleCreatorWindow : EditorWindow
     {
 
-        static ObstacleCreator obstacleCreator;
-        static GameSettingsInstaller gameSettingsInstaller;
+        static ObstacleCreatorData obstacleCreator;
+        static SettingsInstaller settingsInstaller;
 
         private int tab;
 
@@ -20,20 +21,27 @@ namespace RMM3D.Editor
         {
             EditorWindow.GetWindow(typeof(ObstacleCreatorWindow), false, "Obstacle creator window");
         }
+
+        void OnDestroy()
+        {
+            AssetDatabase.SaveAssets();
+            AssetDatabase.Refresh();
+        }
+
         void OnGUI()
         {
             if (obstacleCreator == null)
             {
-                string[] guids = AssetDatabase.FindAssets("t:" + typeof(ObstacleCreator).Name);
+                string[] guids = AssetDatabase.FindAssets("t:" + typeof(ObstacleCreatorData).Name);
                 string path = AssetDatabase.GUIDToAssetPath(guids[0]);
-                obstacleCreator = AssetDatabase.LoadAssetAtPath<ObstacleCreator>(path);
+                obstacleCreator = AssetDatabase.LoadAssetAtPath<ObstacleCreatorData>(path);
             }
 
-            if (gameSettingsInstaller == null)
+            if (settingsInstaller == null)
             {
-                string[] guids = AssetDatabase.FindAssets("t:" + typeof(GameSettingsInstaller).Name);
+                string[] guids = AssetDatabase.FindAssets("t:" + typeof(SettingsInstaller).Name);
                 string path = AssetDatabase.GUIDToAssetPath(guids[0]);
-                gameSettingsInstaller = AssetDatabase.LoadAssetAtPath<GameSettingsInstaller>(path);
+                settingsInstaller = AssetDatabase.LoadAssetAtPath<SettingsInstaller>(path);
             }
 
             GUIStyle myStyle = new GUIStyle(GUI.skin.label);
@@ -78,6 +86,12 @@ namespace RMM3D.Editor
             GUILayout.Label("Output obstacle models folder:", EditorStyles.boldLabel);
             EditorGUILayout.Space(1);
             obstacleCreator.obstacleModelPath = EditorGUILayout.TextField(obstacleCreator.obstacleModelPath);
+            EditorGUILayout.Space(5);
+            GUILayout.Label("Output bundle folder:", EditorStyles.boldLabel);
+            EditorGUILayout.Space(1);
+            obstacleCreator.bundleOutputPath = EditorGUILayout.TextField(obstacleCreator.bundleOutputPath);
+            EditorGUILayout.Space(5);
+            obstacleCreator.obstacleType = (ObstacleType)EditorGUILayout.EnumPopup("Obstacle type:", obstacleCreator.obstacleType);
             EditorGUILayout.Space(10);
             Rect rect = EditorGUILayout.GetControlRect(false, 1);
             EditorGUI.DrawRect(rect, new Color(0.5f, 0.5f, 0.5f, 1));
@@ -85,11 +99,11 @@ namespace RMM3D.Editor
             EditorGUILayout.Space(10);
             if (GUILayout.Button("Reset settings", GUILayout.Height(25)))
             {
-                obstacleCreator.sourcePrefabsPath = ObstacleCreator.defaultSourcePrefabsPath;
-                obstacleCreator.texturesPath = ObstacleCreator.defaultTexturesPath;
-                obstacleCreator.targetPrefabsPath = ObstacleCreator.defaultTargetPrefabsPath;
-                obstacleCreator.obstacleModelPath = ObstacleCreator.defaultObstacleModelPath;
-
+                obstacleCreator.sourcePrefabsPath = ObstacleCreatorData.defaultSourcePrefabsPath;
+                obstacleCreator.texturesPath = ObstacleCreatorData.defaultTexturesPath;
+                obstacleCreator.targetPrefabsPath = ObstacleCreatorData.defaultTargetPrefabsPath;
+                obstacleCreator.obstacleModelPath = ObstacleCreatorData.defaultObstacleModelPath;
+                obstacleCreator.bundleOutputPath = ObstacleCreatorData.defaultbundleOutputPath;
             }
             EditorGUILayout.Space(2);
 
@@ -102,7 +116,9 @@ namespace RMM3D.Editor
                 switch (tab)
                 {
                     case 0:
+                        EditorUtility.DisplayProgressBar("Creating files", "Creating target prefabs, obstacleModel and assetsbundle", 0.5f);
                         CreateByFolder();
+                        EditorUtility.ClearProgressBar();
                         break;
                     case 1:
                         CreatePrefab(obstacleCreator.fbx, obstacleCreator.targetPrefabsPath);
@@ -119,6 +135,9 @@ namespace RMM3D.Editor
 
         private void CreateByFolder()
         {
+
+           
+
             string sourcePrefabsPath = obstacleCreator.sourcePrefabsPath;
 
             List<GameObject> assets = new List<GameObject>();
@@ -127,8 +146,8 @@ namespace RMM3D.Editor
 
             foreach (var item in assets)
             {
-                var t = System.IO.Path.GetFullPath(obstacleCreator.targetPrefabsPath);
-                createdPrefabs.Add(CreatePrefab(item, t));
+                //var t = System.IO.Path.GetFullPath(obstacleCreator.targetPrefabsPath);
+                createdPrefabs.Add(CreatePrefab(item, obstacleCreator.targetPrefabsPath));
             }
 
             string texturesPath = obstacleCreator.texturesPath;
@@ -143,15 +162,21 @@ namespace RMM3D.Editor
 
             List<ObstacleModel> obstacleModels = new List<ObstacleModel>();
             TryGetUnityObjectsOfTypeFromPath<ObstacleModel>(obstacleCreator.obstacleModelPath, obstacleModels);
-            gameSettingsInstaller.gameSettings.obstacleDatas = obstacleModels.ToArray();
+            settingsInstaller.gameSettings.obstacleDatas = obstacleModels.ToArray();
+
+
+            CreateAssetBundles.BuildAllAssetBundles(obstacleCreator.bundleOutputPath, obstacleCreator.targetPrefabsPath, obstacleCreator.texturesPath);
+
 
             AssetDatabase.SaveAssets();
+            AssetDatabase.Refresh();
         }
 
 
         private void CreateObstacleModel(string name, GameObject targetPrefab, Sprite icon)
         {
             ObstacleModel asset = ScriptableObject.CreateInstance<ObstacleModel>();
+            asset.assetName = name;
             asset.prefab = targetPrefab;
             asset.sprite = icon;
             string assetPath = obstacleCreator.obstacleModelPath + name + ".asset";

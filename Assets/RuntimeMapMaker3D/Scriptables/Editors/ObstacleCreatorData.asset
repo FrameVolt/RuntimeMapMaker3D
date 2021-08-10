@@ -10,10 +10,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7e8dd2a20734ad54793a52cd5e99080d, type: 3}
-  m_Name: ObstacleCreater
+  m_Name: ObstacleCreatorData
   m_EditorClassIdentifier: 
   fbx: {fileID: 0}
   obstacleIcon: {fileID: 0}
+  obstacleType: 0
   sourcePrefabsPath: Assets/RuntimeMapMaker3D/ArtWorks/FBX/Obstacles/
   texturesPath: Assets/RuntimeMapMaker3D/ArtWorks/Textures/ObstaclesIcon/
-  outputPath: Assets/RuntimeMapMaker3D/Prefabs/Obstacles/
+  targetPrefabsPath: Assets/RuntimeMapMaker3D/Prefabs/Obstacles/
+  obstacleModelPath: Assets/RuntimeMapMaker3D/Scriptables/Obstacles/
+  bundleOutputPath: Assets/StreamingAssets/

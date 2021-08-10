@@ -44,13 +44,32 @@ namespace RMM3D
             _redoList.Clear();
         }
 
-        public int GetUndoCount()
+        public int GetUndoVisualCount()
         {
-            return _undoList.Count;
+            int result;
+            if (sign) {
+                result = _undoList.Count - 1;
+            }
+            else
+            {
+                result = _undoList.Count;
+            }
+
+            return result;
         }
-        public int GetRedoCount()
+        public int GetRedoVisualCount()
         {
-            return _redoList.Count;
+            int result;
+            if (sign)
+            {
+                result = _redoList.Count;
+            }
+            else
+            {
+                result = _redoList.Count - 1;
+            }
+
+            return result;
         }
 
         public void AppendStatus()
@@ -78,10 +97,10 @@ namespace RMM3D
             {
                 _undoList.RemoveFirst();
             }
-            OnAppend.Invoke();
+            
             _undoList.AddLast(newSolts);
             _redoList.Clear();
-
+            OnAppend.Invoke();
         }
 
 

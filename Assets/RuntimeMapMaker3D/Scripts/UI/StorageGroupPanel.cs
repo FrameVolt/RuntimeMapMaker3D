@@ -57,26 +57,32 @@ namespace RMM3D
 
             undoBtn.onClick.AddListener(() =>
             {
+                if (undoRedoSystem.GetUndoVisualCount() <= 0)
+                    return;
+
                 undoRedoSystem.Undo();
                 boxSelectionSystem.ClearSelections();
-                undoCount.text = undoRedoSystem.GetUndoCount().ToString();
-                redoCount.text = undoRedoSystem.GetRedoCount().ToString();
+                undoCount.text = undoRedoSystem.GetUndoVisualCount().ToString();
+                redoCount.text = undoRedoSystem.GetRedoVisualCount().ToString();
             });
             redoBtn.onClick.AddListener(() =>
             {
+                if (undoRedoSystem.GetRedoVisualCount() <= 0)
+                    return;
+
                 undoRedoSystem.Redo();
                 boxSelectionSystem.ClearSelections();
-                undoCount.text = undoRedoSystem.GetUndoCount().ToString();
-                redoCount.text = undoRedoSystem.GetRedoCount().ToString();
+                undoCount.text = undoRedoSystem.GetUndoVisualCount().ToString();
+                redoCount.text = undoRedoSystem.GetRedoVisualCount().ToString();
             });
 
-            undoCount.text = "0";
-            redoCount.text = "0";
+            undoCount.text = undoRedoSystem.GetUndoVisualCount().ToString();
+            redoCount.text = undoRedoSystem.GetRedoVisualCount().ToString();
 
             undoRedoSystem.OnAppend += () =>
             {
-                undoCount.text = undoRedoSystem.GetUndoCount().ToString();
-                redoCount.text = undoRedoSystem.GetRedoCount().ToString();
+                undoCount.text = undoRedoSystem.GetUndoVisualCount().ToString();
+                redoCount.text = undoRedoSystem.GetRedoVisualCount().ToString();
             };
 
         }

@@ -7,19 +7,20 @@ using Zenject;
 namespace RMM3D
 {
     [CreateAssetMenu(menuName = "GameSettingsInstaller")]
-    public class GameSettingsInstaller : ScriptableObjectInstaller<GameSettingsInstaller>
+    public class SettingsInstaller : ScriptableObjectInstaller<SettingsInstaller>
     {
         public GameSettings gameSettings;
 
         public override void InstallBindings()
         {
-            Container.BindInstance<GameSettingsInstaller.GameSettings>(gameSettings).IfNotBound();
+            Container.BindInstance<SettingsInstaller.GameSettings>(gameSettings).IfNotBound();
             Container.BindInstance(gameSettings.groundGrid).IfNotBound();
             Container.BindInstance(gameSettings.freeFlyCamSetting).IfNotBound();
             Container.BindInstance(gameSettings.confirmPopPrefab).IfNotBound();
             Container.BindInstance(gameSettings.GroundPosSystemSettings).IfNotBound();
             Container.BindInstance(gameSettings.UndoRedoSystemSettings).IfNotBound();
             Container.BindInstance(gameSettings.groundGridSystemSettings).IfNotBound();
+            Container.BindInstance(gameSettings.obstacleCreatorData).IfNotBound();
 
         }
 
@@ -36,6 +37,7 @@ namespace RMM3D
             public SlotRaycastSystem.Settings GroundPosSystemSettings;
             public UndoRedoSystem.Settings UndoRedoSystemSettings;
             public GroundGridSystem.Settings groundGridSystemSettings;
+            public ObstacleCreatorData obstacleCreatorData;
         }
 
     }

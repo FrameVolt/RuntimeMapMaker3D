@@ -10,18 +10,21 @@ namespace RMM3D
     {
         [Inject]
         public void Construct(
-            GameSettingsInstaller.GameSettings gameSettings,
+            SettingsInstaller.GameSettings gameSettings,
             ObstacleBtn.Factory obstacleBtnFactory,
-            ToolGroupPanel toolGroupPanel
+            ToolGroupPanel toolGroupPanel,
+            AssetBundleSystem assetBundleSystem
             )
         {
             this.gameSettings = gameSettings;
             this.obstacleBtnFactory = obstacleBtnFactory;
             this.toolGroupPanel = toolGroupPanel;
+            this.assetBundleSystem = assetBundleSystem;
         }
 
-        GameSettingsInstaller.GameSettings gameSettings;
+        SettingsInstaller.GameSettings gameSettings;
         ObstacleBtn.Factory obstacleBtnFactory;
+        private AssetBundleSystem assetBundleSystem;
 
         [SerializeField] private Transform solidGroup;
         [SerializeField] private Transform harmfulGroup;
@@ -63,8 +66,8 @@ namespace RMM3D
                 btnBGImages[i] = obstacleBtnInstance.GetComponent<Image>();
                 var image = obstacleBtnInstance.transform.GetChild(0).GetComponent<Image>();
 
-
-                image.sprite = obstacle.sprite;
+                
+                image.sprite = assetBundleSystem.assetBundle.LoadAsset<Sprite>(obstacle.assetName);
 
                 buttons[i] = obstacleBtnInstance.GetComponentInChildren<Button>();
                 int j = i;

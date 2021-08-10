@@ -9,8 +9,9 @@ namespace RMM3D
     public class ObstacleModel : ScriptableObject
     {
         public ObstacleType obstacleType;
-        public GameObject prefab;
-        public Sprite sprite;
+        public string assetName;
+        [System.NonSerialized] public GameObject prefab;
+        [System.NonSerialized] public Sprite sprite;
         public int slotSize;
     }
 
