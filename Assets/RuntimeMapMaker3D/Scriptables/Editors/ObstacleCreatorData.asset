@@ -13,10 +13,9 @@ MonoBehaviour:
   m_Name: ObstacleCreatorData
   m_EditorClassIdentifier: 
   fbx: {fileID: 0}
-  obstacleIcon: {fileID: 0}
   obstacleType: 0
   sourcePrefabsPath: Assets/RuntimeMapMaker3D/ArtWorks/FBX/Obstacles/
   texturesPath: Assets/RuntimeMapMaker3D/ArtWorks/Textures/ObstaclesIcon/
   targetPrefabsPath: Assets/RuntimeMapMaker3D/Prefabs/Obstacles/
   obstacleModelPath: Assets/RuntimeMapMaker3D/Scriptables/Obstacles/
-  bundleOutputPath: Assets/StreamingAssets/
+  bundleOutputPath: Obstacles/

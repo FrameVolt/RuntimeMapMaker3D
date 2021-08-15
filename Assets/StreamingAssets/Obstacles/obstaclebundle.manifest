@@ -1,0 +1,49 @@
+ManifestFileVersion: 0
+CRC: 3954201860
+Hashes:
+  AssetFileHash:
+    serializedVersion: 2
+    Hash: 03871437389bbc79574549e996e68d8b
+  TypeTreeHash:
+    serializedVersion: 2
+    Hash: e6b9e399119ffd56ccff1f4f24dca213
+HashAppended: 0
+ClassTypes:
+- Class: 1
+  Script: {instanceID: 0}
+- Class: 4
+  Script: {instanceID: 0}
+- Class: 21
+  Script: {instanceID: 0}
+- Class: 23
+  Script: {instanceID: 0}
+- Class: 28
+  Script: {instanceID: 0}
+- Class: 33
+  Script: {instanceID: 0}
+- Class: 43
+  Script: {instanceID: 0}
+- Class: 48
+  Script: {instanceID: 0}
+- Class: 65
+  Script: {instanceID: 0}
+- Class: 114
+  Script: {fileID: 11500000, guid: 15a06508325dbb643a7d49b0888604a8, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: 0166d8ff8d905b048b2448179e1f5d11, type: 3}
+- Class: 115
+  Script: {instanceID: 0}
+- Class: 213
+  Script: {instanceID: 0}
+Assets:
+- Assets/RuntimeMapMaker3D/Prefabs/Obstacles/ConvexTrangle.prefab
+- Assets/RuntimeMapMaker3D/ArtWorks/Textures/ObstaclesIcon/ConcaveTrangle.png
+- Assets/RuntimeMapMaker3D/ArtWorks/Textures/ObstaclesIcon/ConvexTrangle.png
+- Assets/RuntimeMapMaker3D/Prefabs/Obstacles/BaseLine.prefab
+- Assets/RuntimeMapMaker3D/ArtWorks/Textures/ObstaclesIcon/BaseCube.png
+- Assets/RuntimeMapMaker3D/Prefabs/Obstacles/ConcaveTrangle.prefab
+- Assets/RuntimeMapMaker3D/Prefabs/Obstacles/Trangle.prefab
+- Assets/RuntimeMapMaker3D/ArtWorks/Textures/ObstaclesIcon/BaseLine.png
+- Assets/RuntimeMapMaker3D/ArtWorks/Textures/ObstaclesIcon/Trangle.png
+- Assets/RuntimeMapMaker3D/Prefabs/Obstacles/BaseCube.prefab
+Dependencies: []

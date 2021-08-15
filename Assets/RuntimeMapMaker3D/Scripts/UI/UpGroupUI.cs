@@ -3,10 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using Zenject;
-using UnityEngine.SceneManagement;
-using UniRx.Triggers;
-using UniRx;
-using System;
 
 namespace RMM3D
 {
@@ -19,7 +15,6 @@ namespace RMM3D
         }
 
         private CameraManager cameraManager;
-
 
         [SerializeField] private Button playBtn;
 

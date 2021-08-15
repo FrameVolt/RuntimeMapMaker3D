@@ -17,7 +17,6 @@ MonoBehaviour:
     obstacleDatas:
     - {fileID: 11400000, guid: 90dc6bc9dc2c0d648953a0879371c2f0, type: 2}
     - {fileID: 11400000, guid: e49bf93d79fb8dd41a1e0e2a0a853282, type: 2}
-    - {fileID: 11400000, guid: e953663f33bdab346964d2acb0a9e769, type: 2}
     - {fileID: 11400000, guid: 33574854ec899284dbf059a7b0756ff4, type: 2}
     - {fileID: 11400000, guid: ac51530720ed1f5419a2001a2c57e91e, type: 2}
     - {fileID: 11400000, guid: 267d38ccd3ad0a54db87c825eb623398, type: 2}

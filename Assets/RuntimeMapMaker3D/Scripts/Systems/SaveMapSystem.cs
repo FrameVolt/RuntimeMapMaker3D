@@ -7,34 +7,50 @@ using System.IO;
 
 namespace RMM3D
 {
+    /// <summary>
+    /// Storage all of obstacles data on the map to streamingAssets/map.txt
+    /// </summary>
     public class SaveMapSystem
     {
-        public SaveMapSystem(SlotsHolder groundSlotsHolder)
+        /// <summary>
+        /// Inject dependence
+        /// </summary>
+        public SaveMapSystem(SlotsHolder slotsHolder)
         {
-            this.groundSlotsHolder = groundSlotsHolder;
+            this.slotsHolder = slotsHolder;
         }
 
-        private SlotsHolder groundSlotsHolder;
+        private SlotsHolder slotsHolder;
 
-        private string filePath = Application.dataPath + "map.txt";
-
+        private string filePath = Application.streamingAssetsPath + "/map.txt";
+        /// <summary>
+        /// Do save
+        /// </summary>
         public void SaveMap()
         {
-            string str = JsonConvert.SerializeObject(groundSlotsHolder.slotMap.Solts);
-            File.WriteAllText(str, filePath);
-        }
+            string str = JsonConvert.SerializeObject(slotsHolder.slotMap.Solts);
+            File.WriteAllText(filePath, str);
 
+        }
+        /// <summary>
+        /// Load from streamingAssets
+        /// </summary>
         public void LoadMap()
         {
-            groundSlotsHolder.ResetSoltMap();
+            if (!File.Exists(filePath))
+                return;
+            slotsHolder.ResetSoltMap();
             string str = File.ReadAllText(filePath);
-            var slotMap = JsonConvert.DeserializeObject<Solt[,,]>(str);
-            groundSlotsHolder.SetSoltMap(slotMap);
-        }
 
+            var slotMap = JsonConvert.DeserializeObject<Solt[,,]>(str);
+            slotsHolder.SetSoltMap(slotMap);
+        }
+        /// <summary>
+        /// reset current map data
+        /// </summary>
         public void ResetMap()
         {
-            groundSlotsHolder.ResetSoltMap();
+            slotsHolder.ResetSoltMap();
         }
     }
 }

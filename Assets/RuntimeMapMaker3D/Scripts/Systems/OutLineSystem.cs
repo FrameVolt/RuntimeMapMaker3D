@@ -16,7 +16,7 @@ namespace RMM3D
 
             for (int i = 0; i < renderers.Length; i++)
             {
-                renderers[i].material.color = new Color(0.3f, 0.3f, 0.9f);
+                renderers[i].gameObject.layer = LayerMask.NameToLayer("Outline");
 
                 outLineRenderers.Add(renderers[i]);
             }
@@ -26,7 +26,9 @@ namespace RMM3D
         {
             foreach (var item in outLineRenderers)
             {
-                item.material.color = Color.white;
+                item.gameObject.layer = LayerMask.NameToLayer("Default");
+                //item.material.renderQueue = 3000;
+                //item.material.color = Color.white;
             }
             outLineRenderers.Clear();
         }

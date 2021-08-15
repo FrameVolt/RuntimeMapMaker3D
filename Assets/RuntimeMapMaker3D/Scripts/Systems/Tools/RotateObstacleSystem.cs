@@ -4,41 +4,47 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using Zenject;
-using UniRx;
 
 namespace RMM3D
 {
+    /// <summary>
+    /// Rotate obstacle system
+    /// </summary>
     public class RotateObstacleSystem : ITickable
     {
+        /// <summary>
+        /// Inject dependence
+        /// </summary>
         [Inject]
         public RotateObstacleSystem(
             SlotRaycastSystem slotRaycastSystem,
-            SlotsHolder groundSlotsHolder,
-            ArrangeObstacleBtnsPanel arrangeObstacleBtnSystem,
-            ToolGroupPanel toolGroupPanel,
+            SlotsHolder slotsHolder,
+            ObstacleBtnsPanel obstacleBtnPanel,
+            ToolHandlers toolHandlers,
             UndoRedoSystem undoRedoSystem)
         {
             this.slotRaycastSystem = slotRaycastSystem;
-            this.groundSlotsHolder = groundSlotsHolder;
-            this.arrangeObstacleBtnSystem = arrangeObstacleBtnSystem;
-            this.toolGroupPanel = toolGroupPanel;
+            this.slotsHolder = slotsHolder;
+            this.obstacleBtnPanel = obstacleBtnPanel;
+            this.toolHandlers = toolHandlers;
             this.undoRedoSystem = undoRedoSystem;
         }
 
-
         private SlotRaycastSystem slotRaycastSystem;
-        private SlotsHolder groundSlotsHolder;
-        private ArrangeObstacleBtnsPanel arrangeObstacleBtnSystem;
-        private ToolGroupPanel toolGroupPanel;
+        private SlotsHolder slotsHolder;
+        private ObstacleBtnsPanel obstacleBtnPanel;
+        private ToolHandlers toolHandlers;
         private UndoRedoSystem undoRedoSystem;
 
-        public ReactiveProperty<Axis> CurrentAxis { get; private set; } = new ReactiveProperty<Axis>();
 
+        /// <summary>
+        /// Tick is Same as Unity Update event, control by Zenject
+        /// </summary>
         public void Tick()
         {
-            if (toolGroupPanel.ToolTypeRP.Value != ToolType.Rotate)
+            if (toolHandlers.CurrentToolType != ToolType.Rotate)
                 return;
-            if (arrangeObstacleBtnSystem.CurrentObstacleData == null)
+            if (obstacleBtnPanel.CurrentObstacleData == null)
                 return;
             if (EventSystem.current.IsPointerOverGameObject())
                 return;
@@ -50,13 +56,13 @@ namespace RMM3D
             {
                 var currentHitID = slotRaycastSystem.CurrentSoltID;
 
-                var slot = groundSlotsHolder.slotMap.Solts[currentHitID.x, currentHitID.y, currentHitID.z];
+                var slot = slotsHolder.slotMap.Solts[currentHitID.x, currentHitID.y, currentHitID.z];
 
                 if (slot.item != null)
                 {
                     var trans = slot.item.transform;
 
-                    switch (CurrentAxis.Value)
+                    switch (toolHandlers.CurrentAxis)
                     {
                         case Axis.X:
                             trans.Rotate(new Vector3(-90, 0, 0), Space.World);
@@ -80,22 +86,18 @@ namespace RMM3D
                 undoRedoSystem.AppendStatus();
             }
         }
-
+        /// <summary>
+        /// Change rotate axis
+        /// </summary>
         public void ChangeAxis()
         {
             var array = Enum.GetValues(typeof(Axis));
             var length = array.Length;
-            int index = (int)CurrentAxis.Value;
+            int index = (int)toolHandlers.CurrentAxis;
             index++;
             if (index >= length)
                 index = 0;
-            CurrentAxis.Value = (Axis)index;
+            toolHandlers.CurrentAxis = (Axis)index;
         }
-
-        public enum Axis
-        {
-            X, Y, Z
-        }
-
     }
 }

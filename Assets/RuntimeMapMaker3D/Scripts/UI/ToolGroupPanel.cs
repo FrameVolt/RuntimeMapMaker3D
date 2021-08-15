@@ -2,27 +2,31 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using UniRx;
 using Zenject;
 using TMPro;
+using HSVPicker;
 
 namespace RMM3D
 {
-    public class ToolGroupPanel : UIPanelBase
+    public class ToolGroupPanel : UIPanelBase, IInitializable
     {
         [Inject]
-        public void Construct(RotateObstacleSystem rotateObstacleSystem)
+        public void Construct(RotateObstacleSystem rotateObstacleSystem, ToolHandlers toolHandlers, ColorPicker colorPicker)
         {
             this.rotateObstacleSystem = rotateObstacleSystem;
+            this.toolHandlers = toolHandlers;
+            this.colorPicker = colorPicker;
         }
 
-
         private RotateObstacleSystem rotateObstacleSystem;
+        private ToolHandlers toolHandlers;
+        private ColorPicker colorPicker;
         [SerializeField] private Toggle baseSelectionBtn;
         [SerializeField] private Toggle boxSelectionBtn;
         [SerializeField] private Toggle moveBtn;
         [SerializeField] private Toggle eraseBtn;
         [SerializeField] private Toggle rotateBtn;
+        [SerializeField] private Toggle colorBrushBtn;
         [SerializeField] private TMP_Text rotateText;
 
         [SerializeField] private RectTransform baseSelectionGroup;
@@ -30,39 +34,46 @@ namespace RMM3D
         [SerializeField] private RectTransform moveGroup;
         [SerializeField] private RectTransform eraseGroup;
         [SerializeField] private RectTransform rotateGroup;
+        [SerializeField] private RectTransform ColorBrushGroup;
 
-
-
-        public ReactiveProperty<ToolType> ToolTypeRP = new ReactiveProperty<ToolType>();
-
-
-        void Awake()
+        [SerializeField] private Image brushColorImage;
+        [SerializeField] private GameObject colorPickerPanel;
+        public void Initialize()
         {
-            baseSelectionBtn.onValueChanged.AddListener((x) => { ToolTypeRP.Value = ToolType.BaseSelection; MoveDown(baseSelectionGroup, x); });
-            boxSelectionBtn.onValueChanged.AddListener((x) => { ToolTypeRP.Value = ToolType.BoxSelection; MoveDown(boxSelectionGroup, x); });
-            moveBtn.onValueChanged.AddListener((x) => { ToolTypeRP.Value = ToolType.Move; MoveDown(moveGroup, x); });
-            eraseBtn.onValueChanged.AddListener((x) => { ToolTypeRP.Value = ToolType.Erase; MoveDown(eraseGroup, x); });
+            baseSelectionBtn.onValueChanged.AddListener((x) => { toolHandlers.CurrentToolType = ToolType.BaseSelection; MoveDown(baseSelectionGroup, x); });
+            boxSelectionBtn.onValueChanged.AddListener((x) => { toolHandlers.CurrentToolType = ToolType.BoxSelection; MoveDown(boxSelectionGroup, x); });
+            moveBtn.onValueChanged.AddListener((x) => { toolHandlers.CurrentToolType = ToolType.Move; MoveDown(moveGroup, x); });
+            eraseBtn.onValueChanged.AddListener((x) => { toolHandlers.CurrentToolType = ToolType.Erase; MoveDown(eraseGroup, x); });
             rotateBtn.onValueChanged.AddListener((x) =>
             {
-                ToolTypeRP.Value = ToolType.Rotate;
+                toolHandlers.CurrentToolType = ToolType.Rotate;
 
                 rotateObstacleSystem.ChangeAxis();
 
-                switch (rotateObstacleSystem.CurrentAxis.Value)
+                switch (toolHandlers.CurrentAxis)
                 {
-                    case RotateObstacleSystem.Axis.X:
+                    case Axis.X:
                         rotateText.text = "X";
                         break;
-                    case RotateObstacleSystem.Axis.Y:
+                    case Axis.Y:
                         rotateText.text = "Y";
                         break;
-                    case RotateObstacleSystem.Axis.Z:
+                    case Axis.Z:
                         rotateText.text = "Z";
                         break;
                 }
                 MoveDown(rotateGroup, x);
             });
+            colorBrushBtn.onValueChanged.AddListener((x) => { 
+                toolHandlers.CurrentToolType = ToolType.ColorBrush; 
+                MoveDown(ColorBrushGroup, x);
+                colorPickerPanel.SetActive(x);
+            });
 
+            colorPicker.onValueChanged.AddListener((c) => { brushColorImage.color = c; });
+
+            colorPickerPanel.SetActive(false);
+            brushColorImage.color = colorPicker.CurrentColor;
         }
 
         public void MoveDown(RectTransform rectTransform, bool isOn)
@@ -103,13 +114,7 @@ namespace RMM3D
                     break;
             }
         }
+
     }
-    public enum ToolType
-    {
-        BaseSelection,
-        BoxSelection,
-        Move,
-        Erase,
-        Rotate
-    }
+    
 }

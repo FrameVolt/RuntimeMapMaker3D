@@ -10,17 +10,17 @@ namespace RMM3D
     {
 
         public EraseSystem(SlotRaycastSystem slotRaycastSystem,
-                            SlotsHolder groundSlotsHolder,
+                            SlotsHolder slotsHolder,
                             ObstacleFacade.Factory obstacleFactory,
-                            ToolGroupPanel toolGroupPanel,
+                            ToolHandlers toolHandlers,
                             BoxSelectionSystem boxSelectionSystem,
                             UndoRedoSystem undoRedoSystem
                             )
         {
             this.slotRaycastSystem = slotRaycastSystem;
-            this.groundSlotsHolder = groundSlotsHolder;
+            this.slotsHolder = slotsHolder;
             this.obstacleFactory = obstacleFactory;
-            this.toolGroupPanel = toolGroupPanel;
+            this.toolHandlers = toolHandlers;
             this.boxSelectionSystem = boxSelectionSystem;
             this.undoRedoSystem = undoRedoSystem;
         }
@@ -28,8 +28,8 @@ namespace RMM3D
 
 
         private readonly SlotRaycastSystem slotRaycastSystem;
-        private readonly SlotsHolder groundSlotsHolder;
-        private readonly ToolGroupPanel toolGroupPanel;
+        private readonly SlotsHolder slotsHolder;
+        private readonly ToolHandlers toolHandlers;
         private readonly ObstacleFacade.Factory obstacleFactory;
         private readonly BoxSelectionSystem boxSelectionSystem;
         private readonly UndoRedoSystem undoRedoSystem;
@@ -39,7 +39,7 @@ namespace RMM3D
         // Update is called once per frame
         public void Tick()
         {
-            if (toolGroupPanel.ToolTypeRP.Value != ToolType.Erase)
+            if (toolHandlers.CurrentToolType != ToolType.Erase)
                 return;
 
             if (EventSystem.current.IsPointerOverGameObject())
@@ -56,7 +56,7 @@ namespace RMM3D
                 currentHitID = slotRaycastSystem.CurrentSoltID;
                 currentObstacle = slotRaycastSystem.CurrentObstacle;
 
-                var slotItem = groundSlotsHolder.slotMap.TryGetItem(currentHitID);
+                var slotItem = slotsHolder.slotMap.TryGetItem(currentHitID);
 
 
                 if (slotItem != null)
@@ -71,13 +71,13 @@ namespace RMM3D
                         for (int i = 0; i < boxSelectionSystem.SelectedObstacles.Count; i++)
                         {
                             var obstacle = boxSelectionSystem.SelectedObstacles[i];
-                            groundSlotsHolder.slotMap.ReleaseSlotItem(obstacle.slotID, obstacleFactory);
+                            slotsHolder.slotMap.ReleaseSlotItem(obstacle.slotID, obstacleFactory);
                         }
                         boxSelectionSystem.ClearSelections();
                     }
                     else
                     {
-                        groundSlotsHolder.slotMap.ReleaseSlotItem(currentHitID, obstacleFactory);
+                        slotsHolder.slotMap.ReleaseSlotItem(currentHitID, obstacleFactory);
                     }
 
 

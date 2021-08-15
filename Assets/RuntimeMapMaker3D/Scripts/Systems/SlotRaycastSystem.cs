@@ -2,13 +2,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 using Zenject;
-using UniRx;
 
 namespace RMM3D
 {
     public class SlotRaycastSystem : ITickable, IInitializable
     {
-        public SlotRaycastSystem(GroundGrid groundGrid, SlotRaycastSystem.Settings settings, SlotsHolder groundSlotsHolder)
+        public SlotRaycastSystem(GroundGrid groundGrid, SlotRaycastSystem.Settings settings, SlotsHolder slotsHolder)
         {
             this.mainCamera = Camera.main;
             this.groundGrid = groundGrid;
@@ -18,7 +17,7 @@ namespace RMM3D
             this.yAmount = groundGrid.yAmount;
             this.halfZAmount = groundGrid.zAmount / 2;
             this.settings = settings;
-            this.groundSlotsHolder = groundSlotsHolder;
+            this.slotsHolder = slotsHolder;
         }
 
         private Camera mainCamera;
@@ -28,11 +27,24 @@ namespace RMM3D
         private int yAmount;
         private int halfZAmount;
         private readonly Settings settings;
-        private readonly SlotsHolder groundSlotsHolder;
+        private readonly SlotsHolder slotsHolder;
 
-
-        public ReactiveProperty<int> GroundY { get; private set; } = new ReactiveProperty<int>();
-
+        //public ReactiveProperty<int> GroundY { get; private set; } = new ReactiveProperty<int>();
+        private int groundY;
+        public int GroundY { 
+            get {
+                return groundY;
+            }
+            set {
+                if (groundY == value)
+                    return;
+                groundY = value;
+                OnChangeGroundY.Invoke(value);
+            } 
+        
+        
+        }
+        public IntEvent OnChangeGroundY = new IntEvent();
         public Vector3Int CurrentSoltID { get; private set; }
         public Vector3 CurrentInRangeSlotPos { get; private set; }
         public Vector3Int PlaceableSlotID { get; private set; }
@@ -56,11 +68,12 @@ namespace RMM3D
         private int maxY_ID;
         private int maxZ_ID;
 
+
         public void Initialize()
         {
-            maxX_ID = groundSlotsHolder.slotMap.Solts.GetLength(0) - 1;
-            maxY_ID = groundSlotsHolder.slotMap.Solts.GetLength(1) - 1;
-            maxZ_ID = groundSlotsHolder.slotMap.Solts.GetLength(2) - 1;
+            maxX_ID = slotsHolder.slotMap.Solts.GetLength(0) - 1;
+            maxY_ID = slotsHolder.slotMap.Solts.GetLength(1) - 1;
+            maxZ_ID = slotsHolder.slotMap.Solts.GetLength(2) - 1;
         }
 
         public void Tick()
@@ -81,7 +94,7 @@ namespace RMM3D
         }
         public void SetGroundY(int y)
         {
-            GroundY.Value = y;
+            GroundY = y;
         }
 
         private void CalculateCurrentGroundPos()
@@ -103,10 +116,10 @@ namespace RMM3D
             int z = Mathf.FloorToInt(hitPoint.z + halfZAmount / groundGrid.size);
 
             GroundHitPos = hitPoint;
-            CurrentGroundSlotID = new Vector3Int(x, GroundY.Value, z);
+            CurrentGroundSlotID = new Vector3Int(x, GroundY, z);
             CurrentGroundSlotPos = SoltMap.GetSlotPos(CurrentGroundSlotID, groundGrid);
 
-            CurrentInRangeGroundSlotID = new Vector3Int(Mathf.Clamp(CurrentGroundSlotID.x, 0, maxX_ID), Mathf.Clamp(CurrentGroundSlotID.y, GroundY.Value, maxY_ID), Mathf.Clamp(CurrentGroundSlotID.z, 0, maxZ_ID));
+            CurrentInRangeGroundSlotID = new Vector3Int(Mathf.Clamp(CurrentGroundSlotID.x, 0, maxX_ID), Mathf.Clamp(CurrentGroundSlotID.y, GroundY, maxY_ID), Mathf.Clamp(CurrentGroundSlotID.z, 0, maxZ_ID));
             CurrentInRangeGroundSlotPos = SoltMap.GetSlotPos(CurrentInRangeGroundSlotID, groundGrid);
         }
 
@@ -125,13 +138,13 @@ namespace RMM3D
             Vector3Int tempPlaceableID = new Vector3Int();
             tempHitID.x = Mathf.FloorToInt(hitPoint.x + halfXAmount / groundGrid.size);
             tempHitID.z = Mathf.FloorToInt(hitPoint.z + halfZAmount / groundGrid.size);
-            tempHitID.y = GroundY.Value;
+            tempHitID.y = GroundY;
 
             tempPlaceableID = tempHitID;
 
             Vector3 tempNormal = Vector3.up;
 
-            if (hitPoint.y > -0.4f + GroundY.Value)
+            if (hitPoint.y > -0.4f + GroundY)
             {
                 var obstacleFacade = hit.collider.GetComponentInParent<ObstacleFacade>();
 
@@ -159,7 +172,7 @@ namespace RMM3D
             PlaceableSlotID = tempPlaceableID;
             PlaceableSlotPos = SoltMap.GetSlotPos(tempPlaceableID, groundGrid);
 
-            InRangePlaceableID = new Vector3Int(Mathf.Clamp(PlaceableSlotID.x, 0, maxX_ID), Mathf.Clamp(PlaceableSlotID.y, GroundY.Value, maxY_ID), Mathf.Clamp(PlaceableSlotID.z, 0, maxZ_ID));
+            InRangePlaceableID = new Vector3Int(Mathf.Clamp(PlaceableSlotID.x, 0, maxX_ID), Mathf.Clamp(PlaceableSlotID.y, GroundY, maxY_ID), Mathf.Clamp(PlaceableSlotID.z, 0, maxZ_ID));
 
             HitPos = hit.point;
             HitNormal = tempNormal;

@@ -9,10 +9,10 @@ namespace RMM3D
 {
     public class SlotsHolder
     {
-        public SlotsHolder(GroundGrid groundGrid, ObstacleFacade.Factory obstacleFactory)
+        public SlotsHolder(GroundGrid groundGrid, ObstacleFacade.Factory obstacleFactory, SoltMap soltMap)
         {
 
-            this.slotMap = new SoltMap();
+            this.slotMap = soltMap;
             this.slotMap.Solts = new Solt[groundGrid.xAmount, groundGrid.yAmount, groundGrid.zAmount];
 
             int halfXAmount = groundGrid.xAmount / 2;
@@ -28,6 +28,7 @@ namespace RMM3D
                         var slot = new Solt();
                         slot.position = new Vector3(i - halfXAmount + offset, j, k - halfZAmount + offset);
                         slot.rotation = Vector3.zero;
+                        slot.color = Vector4.one;
                         this.slotMap.Solts[i, j, k] = slot;
                     }
                 }
@@ -52,9 +53,8 @@ namespace RMM3D
                     {
                         if (slots[i, j, k].obstacleData != null)
                         {
-                            var obstacle = obstacleFactory.Create(new Vector3Int(i, j, k), slots[i, j, k].obstacleData);
+                            var obstacle = obstacleFactory.Create(new Vector3Int(i, j, k), slots[i, j, k].obstacleData, slots[i,j,k].rotation,slots[i,j,k].color);
                             obstacle.transform.position = slots[i, j, k].position;
-                            obstacle.transform.eulerAngles = slots[i, j, k].rotation;
                             slots[i, j, k].item = obstacle.gameObject;
                         }
 
@@ -107,9 +107,8 @@ namespace RMM3D
                     {
                         if (slots[i, j, k].obstacleData != null)
                         {
-                            var obstacle = obstacleFactory.Create(new Vector3Int(i, j, k), slots[i, j, k].obstacleData);
+                            var obstacle = obstacleFactory.Create(new Vector3Int(i, j, k), slots[i, j, k].obstacleData, slots[i, j, k].rotation, slots[i, j, k].color);
                             obstacle.transform.position = slots[i, j, k].position;
-                            obstacle.transform.eulerAngles = slots[i, j, k].rotation;
                             slots[i, j, k].item = obstacle.gameObject;
                         }
 
@@ -119,46 +118,7 @@ namespace RMM3D
             this.slotMap.Solts = slots;
         }
 
-
-
-        public void ReplaceSlotMap(Solt[,,] newSolts)
-        {
-            var oldSlots = this.slotMap.Solts;
-
-            for (int i = 0; i < newSolts.GetLength(0); i++)
-            {
-                for (int j = 0; j < newSolts.GetLength(1); j++)
-                {
-                    for (int k = 0; k < newSolts.GetLength(2); k++)
-                    {
-                        if (newSolts[i, j, k].obstacleData != oldSlots[i, j, k].obstacleData)
-                        {
-                            if (oldSlots[i, j, k].obstacleData != null)
-                            {
-                                slotMap.ReleaseSlotItem(new Vector3Int(i, j, k), obstacleFactory);
-                            }
-                            if (newSolts[i, j, k].obstacleData != null)
-                            {
-                                var obstacle = obstacleFactory.Create(new Vector3Int(i, j, k), newSolts[i, j, k].obstacleData);
-                                obstacle.transform.position = newSolts[i, j, k].position;
-                                obstacle.transform.eulerAngles = newSolts[i, j, k].rotation;
-                                newSolts[i, j, k].item = obstacle.gameObject;
-                            }
-
-                        }
-                    }
-                }
-            }
-
-            this.slotMap.Solts = newSolts;
-        }
-
     }
-
-
-
-
-
 
     [System.Serializable]
     public class SoltMap
@@ -187,7 +147,10 @@ namespace RMM3D
             return Solts[slotID.x, slotID.y, slotID.z].obstacleData;
         }
 
-
+        public void SetSoltColor(Vector3Int slotID, Color color)
+        {
+            Solts[slotID.x, slotID.y, slotID.z].color = color;
+        }
         public void SetSlotItem(Vector3Int slotID, GameObject item, ObstacleModel obstacleData)
         {
             Solts[slotID.x, slotID.y, slotID.z].rotation = item.transform.eulerAngles;
@@ -318,6 +281,7 @@ namespace RMM3D
     {
         public Vector3 position;
         public Vector3 rotation;
+        public Vector4 color;
         [System.NonSerialized] public GameObject item;
         public bool isRoot;
         public ObstacleModel obstacleData;
@@ -332,68 +296,6 @@ namespace RMM3D
             result.isRoot = value.isRoot;
             result.obstacleData = value.obstacleData;
             return result;
-        }
-    }
-
-    [System.Serializable]
-    public struct Vector3S
-    {
-        public float x;
-        public float y;
-        public float z;
-
-        public Vector3S(float x, float y, float z)
-        {
-            this.x = x;
-            this.y = y;
-            this.z = z;
-        }
-
-        public override bool Equals(object obj)
-        {
-            if (!(obj is Vector3S))
-            {
-                return false;
-            }
-
-            var s = (Vector3S)obj;
-            return x == s.x &&
-                   y == s.y &&
-                   z == s.z;
-        }
-
-        public override int GetHashCode()
-        {
-            var hashCode = 373119288;
-            hashCode = hashCode * -1521134295 + x.GetHashCode();
-            hashCode = hashCode * -1521134295 + y.GetHashCode();
-            hashCode = hashCode * -1521134295 + z.GetHashCode();
-            return hashCode;
-        }
-
-        public Vector3 ToVector3()
-        {
-            return new Vector3(x, y, z);
-        }
-
-        public static bool operator ==(Vector3S a, Vector3S b)
-        {
-            return a.x == b.x && a.y == b.y && a.z == b.z;
-        }
-
-        public static bool operator !=(Vector3S a, Vector3S b)
-        {
-            return a.x != b.x && a.y != b.y && a.z != b.z;
-        }
-
-        public static implicit operator Vector3(Vector3S x)
-        {
-            return new Vector3(x.x, x.y, x.z);
-        }
-
-        public static implicit operator Vector3S(Vector3 x)
-        {
-            return new Vector3S(x.x, x.y, x.z);
         }
     }
 }

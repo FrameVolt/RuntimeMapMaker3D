@@ -1,5 +1,4 @@
-﻿using Newtonsoft.Json;
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
@@ -12,20 +11,19 @@ namespace RMM3D
     public class UndoRedoSystem : IInitializable
     {
         public UndoRedoSystem(UndoRedoSystem.Settings settings,
-            SlotsHolder groundSlotsHolder
+            SlotsHolder slotsHolder
             )
         {
             _undoList = new LinkedList<Solt[,,]>();
             _redoList = new LinkedList<Solt[,,]>();
 
             this.max = settings.maxItems;
-            this.groundSlotsHolder = groundSlotsHolder;
+            this.slotsHolder = slotsHolder;
         }
-
 
         public event Action OnAppend = () => { };
 
-        private readonly SlotsHolder groundSlotsHolder;
+        private readonly SlotsHolder slotsHolder;
         private readonly int max;
 
         private LinkedList<Solt[,,]> _undoList;
@@ -76,7 +74,7 @@ namespace RMM3D
         {
 
 
-            var newSolts = SoltMap.Copy(groundSlotsHolder.slotMap.Solts);
+            var newSolts = SoltMap.Copy(slotsHolder.slotMap.Solts);
 
             //if (_undoList.Count > 0 && _undoList.Last.Value == str)
             //{
@@ -120,8 +118,8 @@ namespace RMM3D
 
                 var newSolts = SoltMap.Copy(slots);
 
-                groundSlotsHolder.ResetSoltMap();
-                groundSlotsHolder.SetSoltMap(newSolts);
+                slotsHolder.ResetSoltMap();
+                slotsHolder.SetSoltMap(newSolts);
 
                 _redoList.AddLast(slots);
                 _undoList.RemoveLast();
@@ -149,8 +147,8 @@ namespace RMM3D
                 }
 
                 var newSolts = SoltMap.Copy(slots);
-                groundSlotsHolder.ResetSoltMap();
-                groundSlotsHolder.SetSoltMap(newSolts);
+                slotsHolder.ResetSoltMap();
+                slotsHolder.SetSoltMap(newSolts);
 
                 _undoList.AddLast(slots);
                 _redoList.RemoveLast();

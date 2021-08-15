@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using Zenject;
-using UniRx;
 using UnityEngine.Assertions;
 
 namespace RMM3D
@@ -12,28 +11,28 @@ namespace RMM3D
     {
 
         public MoveToolSystem(
-                ToolGroupPanel toolGroupPanel,
+                ToolHandlers toolHandlers,
                 SlotRaycastSystem slotRaycastSystem,
                 BoxSelectionSystem boxSelectionSystem,
-                SlotsHolder groundSlotsHolder,
+                SlotsHolder slotsHolder,
                 GroundGrid groundGrid,
                 ObstacleFacade.Factory obstacleFactory,
                 UndoRedoSystem undoRedoSystem
             )
         {
-            this.toolGroupPanel = toolGroupPanel;
+            this.toolHandlers = toolHandlers;
             this.slotRaycastSystem = slotRaycastSystem;
             this.boxSelectionSystem = boxSelectionSystem;
-            this.groundSlotsHolder = groundSlotsHolder;
+            this.slotsHolder = slotsHolder;
             this.groundGrid = groundGrid;
             this.obstacleFactory = obstacleFactory;
             this.undoRedoSystem = undoRedoSystem;
         }
 
-        private readonly ToolGroupPanel toolGroupPanel;
+        private readonly ToolHandlers toolHandlers;
         private readonly SlotRaycastSystem slotRaycastSystem;
         private readonly BoxSelectionSystem boxSelectionSystem;
-        private readonly SlotsHolder groundSlotsHolder;
+        private readonly SlotsHolder slotsHolder;
         private readonly GroundGrid groundGrid;
         private readonly ObstacleFacade.Factory obstacleFactory;
         private readonly UndoRedoSystem undoRedoSystem;
@@ -45,7 +44,7 @@ namespace RMM3D
 
         public void Tick()
         {
-            if (toolGroupPanel.ToolTypeRP.Value != ToolType.Move)
+            if (toolHandlers.CurrentToolType != ToolType.Move)
                 return;
 
             if (EventSystem.current.IsPointerOverGameObject())
@@ -91,11 +90,11 @@ namespace RMM3D
 
             if (Input.GetMouseButtonUp(0))
             {
-                //Debug.Log("AmountItem1: " + groundSlotsHolder.slotMap.AmountItem() + ":" + groundSlotsHolder.slotMap.AmountObstacleModel());
+                //Debug.Log("AmountItem1: " + slotsHolder.slotMap.AmountItem() + ":" + slotsHolder.slotMap.AmountObstacleModel());
                 RemoveItemsFromOldSlot();
-                //Debug.Log("AmountItem1: " + groundSlotsHolder.slotMap.AmountItem() + ":" + groundSlotsHolder.slotMap.AmountObstacleModel());
+                //Debug.Log("AmountItem1: " + slotsHolder.slotMap.AmountItem() + ":" + slotsHolder.slotMap.AmountObstacleModel());
                 PlacementItemsToNewSlot();
-                //Debug.Log("AmountItem1: " + groundSlotsHolder.slotMap.AmountItem() + ":" + groundSlotsHolder.slotMap.AmountObstacleModel());
+                //Debug.Log("AmountItem1: " + slotsHolder.slotMap.AmountItem() + ":" + slotsHolder.slotMap.AmountObstacleModel());
                 undoRedoSystem.AppendStatus();
             }
         }
@@ -123,9 +122,9 @@ namespace RMM3D
             {
                 var obstacle = boxSelectionSystem.SelectedObstacles[i];
 
-                oldObstacleModels.Add(groundSlotsHolder.slotMap.TryGetObstacleModel(obstacle.slotID));
+                oldObstacleModels.Add(slotsHolder.slotMap.TryGetObstacleModel(obstacle.slotID));
 
-                groundSlotsHolder.slotMap.RemoveSlotItem(obstacle.slotID);
+                slotsHolder.slotMap.RemoveSlotItem(obstacle.slotID);
             }
         }
         private void PlacementItemsToNewSlot()
@@ -138,7 +137,7 @@ namespace RMM3D
                 var obstacle = boxSelectionSystem.SelectedObstacles[i];
                 var newTransPos = obstacle.transform.position;
 
-                var newSlotID = groundSlotsHolder.slotMap.TranPos2SlotID(newTransPos, groundGrid);
+                var newSlotID = slotsHolder.slotMap.TranPos2SlotID(newTransPos, groundGrid);
 
                 if (newSlotID.y != obstacle.slotID.y)
                 {
@@ -157,13 +156,12 @@ namespace RMM3D
 
 
                 //移除新位置上的已经存在的对象
-                var stayedItem = groundSlotsHolder.slotMap.TryGetItem(newSlotID);
+                var stayedItem = slotsHolder.slotMap.TryGetItem(newSlotID);
                 if (stayedItem != null)
-                    groundSlotsHolder.slotMap.ReleaseSlotItem(newSlotID, obstacleFactory);
+                    slotsHolder.slotMap.ReleaseSlotItem(newSlotID, obstacleFactory);
 
-                obstacle.transform.position = SoltMap.GetSlotPos(newSlotID, groundGrid);
-                obstacle.slotID = newSlotID;
-                groundSlotsHolder.slotMap.SetSlotItem(newSlotID, obstacle.gameObject, oldObstacleModels[i]);
+                obstacle.SetSlotID(newSlotID);
+                slotsHolder.slotMap.SetSlotItem(newSlotID, obstacle.gameObject, oldObstacleModels[i]);
 
             }
             oldObstacleModels.Clear();

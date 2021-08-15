@@ -3,7 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Zenject;
-using Zenject.SpaceFighter;
 
 namespace RMM3D
 {
@@ -11,16 +10,49 @@ namespace RMM3D
     public class ObstacleFacade : MonoBehaviour
     {
         [Inject]
-        public void Construct(ObstacleModel obstacleModel, Vector3Int slotID)
+        public void Construct(SoltMap solt, GroundGrid groundGrid, ObstacleModel obstacleModel, Vector3Int slotID, Vector3 euler, Color color)
         {
+            this.solt = solt;
+            this.groundGrid = groundGrid;
             this.slotID = slotID;
+            this.euler = euler;
             this.obstacleModel = obstacleModel;
+            this.color = color;
+            this.transform.localEulerAngles = euler;
+            obstacleRenderer = GetComponentsInChildren<Renderer>();
+            SetColor(color);
         }
 
-        public Vector3Int slotID;
-        private ObstacleModel obstacleModel;
+        private SoltMap solt;
+        private GroundGrid groundGrid;
 
-        public class Factory : PlaceholderFactory<Vector3Int, ObstacleModel, ObstacleFacade>
+        public Vector3Int slotID { get; private set; }
+        public Vector3 euler { get; private set; }
+        public Color color { get; private set; }
+        private ObstacleModel obstacleModel;
+        private Renderer[] obstacleRenderer;
+
+
+        public void SetSlotID(Vector3Int newSlotID)
+        {
+            slotID = newSlotID;
+            transform.position = SoltMap.GetSlotPos(newSlotID, groundGrid);
+
+            
+        }
+
+        public void SetColor(Color color)
+        {
+            for (int i = 0; i < obstacleRenderer.Length; i++)
+            {
+                obstacleRenderer[i].material.color = color;
+            }
+            solt.SetSoltColor(slotID, color);
+        }
+
+
+
+        public class Factory : PlaceholderFactory<Vector3Int, ObstacleModel, Vector3, Color, ObstacleFacade>
         {
             internal void DeSpawn(ObstacleFacade obstacleFacade)
             {
@@ -29,7 +61,10 @@ namespace RMM3D
         }
     }
 
-    public class ObstacleFactory : IFactory<Vector3Int, ObstacleModel, ObstacleFacade>
+    /// <summary>
+    /// Obstacle real factory, override create function, load from assetbundle
+    /// </summary>
+    public class ObstacleFactory : IFactory<Vector3Int, ObstacleModel, Vector3, Color, ObstacleFacade>
     {
         DiContainer _container;
         private Transform parent;
@@ -43,11 +78,11 @@ namespace RMM3D
             this.assetBundleSystem = assetBundleSystem;
         }
 
-        public ObstacleFacade Create(Vector3Int slotID, ObstacleModel obstacleModel)
+        public ObstacleFacade Create(Vector3Int slotID, ObstacleModel obstacleModel, Vector3 euler, Color color)
         {
 
             var prefab = assetBundleSystem.assetBundle.LoadAsset<GameObject>(obstacleModel.assetName);
-            ObstacleFacade result = _container.InstantiatePrefabForComponent<ObstacleFacade>(prefab, new List<object> { slotID, obstacleModel });
+            ObstacleFacade result = _container.InstantiatePrefabForComponent<ObstacleFacade>(prefab, new List<object> { slotID, obstacleModel, euler, color});
             result.transform.SetParent(parent);
             return result;
         }

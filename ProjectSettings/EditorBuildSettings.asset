@@ -4,5 +4,8 @@
 EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
-  m_Scenes: []
+  m_Scenes:
+  - enabled: 1
+    path: Assets/RuntimeMapMaker3D/Scenes/MakerScene.unity
+    guid: 4a37e8c75e9d48246bad67c5c88ab1af
   m_configObjects: {}

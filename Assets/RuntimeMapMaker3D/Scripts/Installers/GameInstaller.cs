@@ -26,7 +26,8 @@ namespace RMM3D
             Container.BindInterfacesAndSelfTo<BoxSelectionSystem>().AsSingle().NonLazy();
             Container.BindInterfacesAndSelfTo<MoveToolSystem>().AsSingle().NonLazy();
             Container.BindInterfacesAndSelfTo<AssetBundleSystem>().AsSingle().NonLazy();
-            
+            Container.BindInterfacesAndSelfTo<ColorBrushSystem>().AsSingle().NonLazy();
+            Container.BindInterfacesAndSelfTo<SoltMap>().AsSingle().NonLazy();
 
             Container.Bind<MemoryPoolSettings>().FromInstance(settings.defaultPoolSettings);
 
@@ -39,7 +40,7 @@ namespace RMM3D
 
         private void BindFactorys()
         {
-            Container.BindFactory<Vector3Int, ObstacleModel, ObstacleFacade, ObstacleFacade.Factory>().FromFactory<ObstacleFactory>();
+            Container.BindFactory<Vector3Int, ObstacleModel, Vector3, Color, ObstacleFacade, ObstacleFacade.Factory>().FromFactory<ObstacleFactory>();
 
 
 

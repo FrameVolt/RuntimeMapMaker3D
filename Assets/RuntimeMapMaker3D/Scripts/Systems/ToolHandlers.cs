@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using UniRx;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.EventSystems;
 using Zenject;
 
@@ -11,14 +9,10 @@ namespace RMM3D
 
         [Inject]
         public void Construct(SlotRaycastSystem slotRaycastSystem,
-                ToolGroupPanel toolGroupPanel,
-                RotateObstacleSystem rotateObstacleSystem,
                 MoveToolSystem moveToolSystem
             )
         {
             this.slotRaycastSystem = slotRaycastSystem;
-            this.toolGroupPanel = toolGroupPanel;
-            this.rotateObstacleSystem = rotateObstacleSystem;
             this.moveToolSystem = moveToolSystem;
         }
 
@@ -30,17 +24,53 @@ namespace RMM3D
         [SerializeField] private Transform rotateHandlerTrans;
         [SerializeField] private Material rotateHandlerMat;
         private SlotRaycastSystem slotRaycastSystem;
-        private ToolGroupPanel toolGroupPanel;
-        private RotateObstacleSystem rotateObstacleSystem;
         private MoveToolSystem moveToolSystem;
 
         public Vector3Int StartSlotID { get; private set; }
         private Vector3 startSlotPos;
         public Vector3Int EndSlotID { get; private set; }
 
+
+        private ToolType currentToolType;
+        public ToolType CurrentToolType
+        {
+            get
+            {
+                return currentToolType;
+            }
+            set
+            {
+                if (currentToolType == value)
+                    return;
+                currentToolType = value;
+
+                OnChangeCurrentToolType.Invoke(value);
+            }
+        }
+
+        public ChangeToolTypeEvent OnChangeCurrentToolType = new ChangeToolTypeEvent();
+
+        private Axis axis;
+        public Axis CurrentAxis
+        {
+            get
+            {
+                return axis;
+            }
+            set
+            {
+                if (axis == value)
+                    return;
+
+                axis = value;
+            }
+        }
+
+        public ChangeAxisEvent OnChangeCurrentAxis = new ChangeAxisEvent();
+
         public void Initialize()
         {
-            toolGroupPanel.ToolTypeRP.Subscribe(toolType =>
+            OnChangeCurrentToolType.AddListener(toolType =>
             {
                 if (toolType == ToolType.Rotate)
                 {
@@ -76,17 +106,17 @@ namespace RMM3D
                 }
             });
 
-            rotateObstacleSystem.CurrentAxis.Subscribe(axis =>
+            OnChangeCurrentAxis.AddListener(axis =>
             {
                 switch (axis)
                 {
-                    case RotateObstacleSystem.Axis.X:
+                    case Axis.X:
                         rotateHandlerTrans.eulerAngles = new Vector3(60, 0, 90);
                         break;
-                    case RotateObstacleSystem.Axis.Y:
+                    case Axis.Y:
                         rotateHandlerTrans.eulerAngles = Vector3.zero;
                         break;
-                    case RotateObstacleSystem.Axis.Z:
+                    case Axis.Z:
                         rotateHandlerTrans.eulerAngles = new Vector3(90, 0, 0);
                         break;
                     default:
@@ -106,7 +136,7 @@ namespace RMM3D
 
 
 
-            if (toolGroupPanel.ToolTypeRP.Value == ToolType.BaseSelection)
+            if (CurrentToolType == ToolType.BaseSelection)
             {
                 Vector3 temp;
                 if (Input.GetMouseButton(0))
@@ -122,7 +152,7 @@ namespace RMM3D
                 baseTrans.position = pos;
 
             }
-            else if (toolGroupPanel.ToolTypeRP.Value == ToolType.Move)
+            else if (CurrentToolType == ToolType.Move)
             {
                 if (moveToolSystem.CurrentGrabedObstacle)
                 {
@@ -135,7 +165,7 @@ namespace RMM3D
                 }
 
             }
-            else if (toolGroupPanel.ToolTypeRP.Value == ToolType.Rotate)
+            else if (CurrentToolType == ToolType.Rotate)
             {
                 RotateHandlerColor();
                 Vector3 temp = slotRaycastSystem.CurrentInRangeSlotPos;
@@ -143,7 +173,7 @@ namespace RMM3D
                 var pos = new Vector3(temp.x, temp.y, temp.z);
                 rotateHandlerTrans.position = pos;
             }
-            else if (toolGroupPanel.ToolTypeRP.Value == ToolType.BoxSelection)
+            else if (CurrentToolType == ToolType.BoxSelection)
             {
                 BoxSelection();
             }
@@ -184,8 +214,8 @@ namespace RMM3D
 
                 var selecteVector = EndSlotID - StartSlotID;
 
-                boxSelectionTrans.position = startSlotPos - new Vector3(Mathf.Sign(selecteVector.x) * 0.5f, 0.5f + slotRaycastSystem.GroundY.Value, Mathf.Sign(selecteVector.z) * 0.5f);
-                boxSelectionTrans.position = new Vector3(boxSelectionTrans.position.x, slotRaycastSystem.GroundY.Value - 0.45f, boxSelectionTrans.position.z);
+                boxSelectionTrans.position = startSlotPos - new Vector3(Mathf.Sign(selecteVector.x) * 0.5f, 0.5f + slotRaycastSystem.GroundY, Mathf.Sign(selecteVector.z) * 0.5f);
+                boxSelectionTrans.position = new Vector3(boxSelectionTrans.position.x, slotRaycastSystem.GroundY - 0.45f, boxSelectionTrans.position.z);
                 float y = 0;
                 Vector3 scale = Vector3.zero;
 
@@ -224,5 +254,20 @@ namespace RMM3D
         }
 
 
+    }
+
+    public enum ToolType
+    {
+        BaseSelection,
+        BoxSelection,
+        Move,
+        Erase,
+        Rotate,
+        ColorBrush
+    }
+
+    public enum Axis
+    {
+        X, Y, Z
     }
 }

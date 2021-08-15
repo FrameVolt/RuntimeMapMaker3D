@@ -1,6 +1,5 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
-using UniRx;
 using UnityEngine;
 using Zenject;
 
@@ -26,7 +25,7 @@ namespace RMM3D
             settings.material.mainTextureScale = new Vector2(groundGrid.xAmount, groundGrid.zAmount);
             gridTrans.localScale = new Vector3(groundGrid.xAmount * 0.1f, 1, groundGrid.zAmount * 0.1f);
 
-            slotRaycastSystem.GroundY.Subscribe((v) =>
+            slotRaycastSystem.OnChangeGroundY.AddListener((v) =>
             {
                 gridTrans.localPosition = new Vector3(0, -0.48f + v, 0);
             });

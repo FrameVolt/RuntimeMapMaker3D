@@ -10,16 +10,15 @@ namespace RMM3D
     {
         [Inject]
         public BoxSelectionSystem(SlotRaycastSystem slotRaycastSystem,
-               SlotsHolder groundSlotsHolder,
-               ToolGroupPanel toolGroupPanel,
+               SlotsHolder slotsHolder,
                GroundGrid groundGrid,
-                OutLineSystem obstacleOutLineSystem
+               OutLineSystem obstacleOutLineSystem, 
+               ToolHandlers toolHandlers
             )
         {
             this.slotRaycastSystem = slotRaycastSystem;
-            this.toolGroupPanel = toolGroupPanel;
             this.obstacleOutLineSystem = obstacleOutLineSystem;
-
+            this.toolHandlers = toolHandlers;
             int size = groundGrid.xAmount * groundGrid.yAmount * groundGrid.zAmount;
             selectedSlotIDs = new List<Vector3Int>(size);
             coveringSlotIDs = new List<Vector3Int>();
@@ -28,14 +27,14 @@ namespace RMM3D
             SelectedObstacles = new List<ObstacleFacade>();
             this.groundGrid = groundGrid;
 
-            this.slotMap = groundSlotsHolder.slotMap;
+            this.slotMap = slotsHolder.slotMap;
         }
 
         private SlotRaycastSystem slotRaycastSystem;
-        private ToolGroupPanel toolGroupPanel;
         private GroundGrid groundGrid;
         private SoltMap slotMap;
         private OutLineSystem obstacleOutLineSystem;
+        private ToolHandlers toolHandlers;
 
         private Vector3Int startSlot;
         private Vector3Int endSlot;
@@ -46,8 +45,6 @@ namespace RMM3D
 
         public List<Vector3Int> coveringSlotIDs { get; private set; }
         public List<Vector3Int> coveringGroundSlotIDs { get; private set; }
-
-
 
         public void ClearSelections()
         {
@@ -69,7 +66,7 @@ namespace RMM3D
 
         public void Tick()
         {
-            if (toolGroupPanel.ToolTypeRP.Value != ToolType.BoxSelection)
+            if (toolHandlers.CurrentToolType != ToolType.BoxSelection)
                 return;
             if (EventSystem.current.IsPointerOverGameObject())
                 return;
@@ -98,7 +95,7 @@ namespace RMM3D
 
             for (int i = startSlot.x; i != endSlot.x + Mathf.CeilToInt(Mathf.Sign(selecteVector.x)); i += Mathf.CeilToInt(Mathf.Sign(selecteVector.x)))
             {
-                for (int j = slotRaycastSystem.GroundY.Value; j < groundGrid.yAmount; j++)
+                for (int j = slotRaycastSystem.GroundY; j < groundGrid.yAmount; j++)
                 {
                     for (int k = startSlot.z; k != endSlot.z + Mathf.CeilToInt(Mathf.Sign(selecteVector.z)); k += Mathf.CeilToInt(Mathf.Sign(selecteVector.z)))
                     {

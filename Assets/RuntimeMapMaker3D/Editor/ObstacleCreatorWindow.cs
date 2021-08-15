@@ -5,6 +5,7 @@ using UnityEditor;
 using System.IO;
 using RMM3D;
 using System;
+using System.Linq;
 
 namespace RMM3D.Editor
 {
@@ -13,6 +14,7 @@ namespace RMM3D.Editor
 
         static ObstacleCreatorData obstacleCreator;
         static SettingsInstaller settingsInstaller;
+        static GroundGrid groundGrid;
 
         private int tab;
 
@@ -20,6 +22,22 @@ namespace RMM3D.Editor
         public static void ShowWindow()
         {
             EditorWindow.GetWindow(typeof(ObstacleCreatorWindow), false, "Obstacle creator window");
+            {
+                string[] guids = AssetDatabase.FindAssets("t:" + typeof(ObstacleCreatorData).Name);
+                string path = AssetDatabase.GUIDToAssetPath(guids[0]);
+                obstacleCreator = AssetDatabase.LoadAssetAtPath<ObstacleCreatorData>(path);
+            }
+            {
+                string[] guids = AssetDatabase.FindAssets("t:" + typeof(SettingsInstaller).Name);
+                string path = AssetDatabase.GUIDToAssetPath(guids[0]);
+                settingsInstaller = AssetDatabase.LoadAssetAtPath<SettingsInstaller>(path);
+            }
+            {
+                string[] guids = AssetDatabase.FindAssets("t:" + typeof(GroundGrid).Name);
+                string path = AssetDatabase.GUIDToAssetPath(guids[0]);
+                groundGrid = AssetDatabase.LoadAssetAtPath<GroundGrid>(path);
+            }
+
         }
 
         void OnDestroy()
@@ -30,20 +48,6 @@ namespace RMM3D.Editor
 
         void OnGUI()
         {
-            if (obstacleCreator == null)
-            {
-                string[] guids = AssetDatabase.FindAssets("t:" + typeof(ObstacleCreatorData).Name);
-                string path = AssetDatabase.GUIDToAssetPath(guids[0]);
-                obstacleCreator = AssetDatabase.LoadAssetAtPath<ObstacleCreatorData>(path);
-            }
-
-            if (settingsInstaller == null)
-            {
-                string[] guids = AssetDatabase.FindAssets("t:" + typeof(SettingsInstaller).Name);
-                string path = AssetDatabase.GUIDToAssetPath(guids[0]);
-                settingsInstaller = AssetDatabase.LoadAssetAtPath<SettingsInstaller>(path);
-            }
-
             GUIStyle myStyle = new GUIStyle(GUI.skin.label);
             myStyle.padding = new RectOffset(10, 10, 10, 10);
 
@@ -51,7 +55,7 @@ namespace RMM3D.Editor
 
             EditorGUILayout.Space(10);
 
-            tab = GUILayout.Toolbar(tab, new string[] { "Folder mode", "Single mode" });
+            tab = GUILayout.Toolbar(tab, new string[] { "Folder mode", "Single mode", "Settings" });
             switch (tab)
             {
                 case 0:
@@ -59,11 +63,15 @@ namespace RMM3D.Editor
                     GUILayout.Label("Source prefab or FBX files folder:", EditorStyles.boldLabel);
                     EditorGUILayout.Space(1);
                     obstacleCreator.sourcePrefabsPath = EditorGUILayout.TextField(obstacleCreator.sourcePrefabsPath);
+                    EditorGUILayout.Space(10);
+                    obstacleCreator.obstacleType = (ObstacleType)EditorGUILayout.EnumPopup("Obstacle type:", obstacleCreator.obstacleType);
+                    EditorGUILayout.Space(10);
+                    Rect rect1 = EditorGUILayout.GetControlRect(false, 1);
+                    EditorGUI.DrawRect(rect1, new Color(0.5f, 0.5f, 0.5f, 1));
+                    EditorGUILayout.Space(10);
+                    ConvertAllPrefabsButton();
                     EditorGUILayout.Space(5);
-                    GUILayout.Label("Icon sprites folder:", EditorStyles.boldLabel);
-                    EditorGUILayout.Space(1);
-                    obstacleCreator.texturesPath = EditorGUILayout.TextField(obstacleCreator.texturesPath);
-
+                    CreateBundleButton();
                     break;
                 case 1:
                     EditorGUILayout.Space(5);
@@ -71,116 +79,161 @@ namespace RMM3D.Editor
                     EditorGUILayout.Space(1);
                     obstacleCreator.fbx = (GameObject)EditorGUILayout.ObjectField(obstacleCreator.fbx, typeof(GameObject), true);
                     EditorGUILayout.Space(5);
-                    obstacleCreator.obstacleIcon = GUIUtitlty.SpriteField("Icon sprite:", obstacleCreator.obstacleIcon);
+                    obstacleCreator.obstacleType = (ObstacleType)EditorGUILayout.EnumPopup("Obstacle type:", obstacleCreator.obstacleType);
+                    EditorGUILayout.Space(10);
+                    Rect rect2 = EditorGUILayout.GetControlRect(false, 1);
+                    EditorGUI.DrawRect(rect2, new Color(0.5f, 0.5f, 0.5f, 1));
+                    EditorGUILayout.Space(10);
+                    ConvertPrefabButton();
+                    EditorGUILayout.Space(5);
+                    CreateBundleButton();
                     break;
+                case 2:
+                    EditorGUILayout.Space(5);
+                    GUILayout.Label("Source prefab or FBX files folder:", EditorStyles.boldLabel);
+                    EditorGUILayout.Space(1);
+                    obstacleCreator.sourcePrefabsPath = EditorGUILayout.TextField(obstacleCreator.sourcePrefabsPath);
+                    EditorGUILayout.Space(5);
+                    GUILayout.Label("Output prefabs folder:", EditorStyles.boldLabel);
+                    EditorGUILayout.Space(1);
+                    obstacleCreator.targetPrefabsPath = EditorGUILayout.TextField(obstacleCreator.targetPrefabsPath);
+                    EditorGUILayout.Space(5);
+                    GUILayout.Label("Button sprites folder:", EditorStyles.boldLabel);
+                    EditorGUILayout.Space(1);
+                    obstacleCreator.texturesPath = EditorGUILayout.TextField(obstacleCreator.texturesPath);
+                    EditorGUILayout.Space(5);
+                    GUILayout.Label("Output obstacle models folder:", EditorStyles.boldLabel);
+                    EditorGUILayout.Space(1);
+                    obstacleCreator.obstacleModelPath = EditorGUILayout.TextField(obstacleCreator.obstacleModelPath);
+                    EditorGUILayout.Space(5);
+                    GUILayout.Label("Output bundle folder:", EditorStyles.boldLabel);
+                    EditorGUILayout.Space(1);
+                    obstacleCreator.bundleOutputPath = EditorGUILayout.TextField("Assets/StreamingAssets/", obstacleCreator.bundleOutputPath);
+                    EditorGUILayout.Space(5);
+                    groundGrid.SetAmount(EditorGUILayout.Vector3IntField("Grid size:", groundGrid.GetAmount()));
+                    EditorGUILayout.Space(10);
+                    Rect rect3 = EditorGUILayout.GetControlRect(false, 1);
+                    EditorGUI.DrawRect(rect3, new Color(0.5f, 0.5f, 0.5f, 1));
 
+                    EditorGUILayout.Space(10);
+                    var oldColor = GUI.backgroundColor;
+                    GUI.backgroundColor = new Color(0.7f, 0.7f, 0.341f);
+                    if (GUILayout.Button("Reset settings", GUILayout.Height(25)))
+                    {
+                        obstacleCreator.sourcePrefabsPath = ObstacleCreatorData.defaultSourcePrefabsPath;
+                        obstacleCreator.texturesPath = ObstacleCreatorData.defaultTexturesPath;
+                        obstacleCreator.targetPrefabsPath = ObstacleCreatorData.defaultTargetPrefabsPath;
+                        obstacleCreator.obstacleModelPath = ObstacleCreatorData.defaultObstacleModelPath;
+                        obstacleCreator.bundleOutputPath = ObstacleCreatorData.defaultbundleOutputPath;
+
+                        EditorUtility.SetDirty(obstacleCreator);
+                        AssetDatabase.SaveAssets();
+                        AssetDatabase.Refresh();
+                    }
+                    GUI.backgroundColor = oldColor;
+                    break;
                 default:
                     break;
             }
-
-            EditorGUILayout.Space(5);
-            GUILayout.Label("Output prefabs folder:", EditorStyles.boldLabel);
-            EditorGUILayout.Space(1);
-            obstacleCreator.targetPrefabsPath = EditorGUILayout.TextField(obstacleCreator.targetPrefabsPath);
-            EditorGUILayout.Space(5);
-            GUILayout.Label("Output obstacle models folder:", EditorStyles.boldLabel);
-            EditorGUILayout.Space(1);
-            obstacleCreator.obstacleModelPath = EditorGUILayout.TextField(obstacleCreator.obstacleModelPath);
-            EditorGUILayout.Space(5);
-            GUILayout.Label("Output bundle folder:", EditorStyles.boldLabel);
-            EditorGUILayout.Space(1);
-            obstacleCreator.bundleOutputPath = EditorGUILayout.TextField(obstacleCreator.bundleOutputPath);
-            EditorGUILayout.Space(5);
-            obstacleCreator.obstacleType = (ObstacleType)EditorGUILayout.EnumPopup("Obstacle type:", obstacleCreator.obstacleType);
-            EditorGUILayout.Space(10);
-            Rect rect = EditorGUILayout.GetControlRect(false, 1);
-            EditorGUI.DrawRect(rect, new Color(0.5f, 0.5f, 0.5f, 1));
-
-            EditorGUILayout.Space(10);
-            if (GUILayout.Button("Reset settings", GUILayout.Height(25)))
-            {
-                obstacleCreator.sourcePrefabsPath = ObstacleCreatorData.defaultSourcePrefabsPath;
-                obstacleCreator.texturesPath = ObstacleCreatorData.defaultTexturesPath;
-                obstacleCreator.targetPrefabsPath = ObstacleCreatorData.defaultTargetPrefabsPath;
-                obstacleCreator.obstacleModelPath = ObstacleCreatorData.defaultObstacleModelPath;
-                obstacleCreator.bundleOutputPath = ObstacleCreatorData.defaultbundleOutputPath;
-            }
-            EditorGUILayout.Space(2);
-
-            var oldColor = GUI.backgroundColor;
-
-            GUI.backgroundColor = new Color(0.7f, 0.7f, 0.341f);
-
-            if (GUILayout.Button("Convert", GUILayout.Height(25)))
-            {
-                switch (tab)
-                {
-                    case 0:
-                        EditorUtility.DisplayProgressBar("Creating files", "Creating target prefabs, obstacleModel and assetsbundle", 0.5f);
-                        CreateByFolder();
-                        EditorUtility.ClearProgressBar();
-                        break;
-                    case 1:
-                        CreatePrefab(obstacleCreator.fbx, obstacleCreator.targetPrefabsPath);
-                        break;
-
-                }
-            }
-
-            GUI.backgroundColor = oldColor;
+            
             EditorGUILayout.EndVertical();
+
         }
 
 
+        private void ConvertPrefabButton()
+        {
+            var oldColor = GUI.backgroundColor;
+            GUI.backgroundColor = new Color(0.7f, 0.7f, 0.341f);
+            if (GUILayout.Button("Convert this prefab", GUILayout.Height(25)))
+            {
+                EditorUtility.DisplayProgressBar("Creating files", "Creating target prefabs, obstacleModel and assetsbundle", 0.5f);
+                CreateSingleMode();
+                EditorUtility.ClearProgressBar();
+            }
+            GUI.backgroundColor = oldColor;
+        }
+
+        private void ConvertAllPrefabsButton()
+        {
+            var oldColor = GUI.backgroundColor;
+            GUI.backgroundColor = new Color(0.7f, 0.7f, 0.341f);
+            if (GUILayout.Button("Convert All prefabs", GUILayout.Height(25)))
+            {
+                EditorUtility.DisplayProgressBar("Creating files", "Creating target prefabs, obstacleModel and assetsbundle", 0.5f);
+                CreateByFolder();
+                EditorUtility.ClearProgressBar();
+            }
+            GUI.backgroundColor = oldColor;
+        }
+
+        private void CreateBundleButton()
+        {
+            EditorGUILayout.Space(5);
+            GUILayout.Label("For load obstacles and button sprites at runtime:", EditorStyles.boldLabel);
+            EditorGUILayout.Space(1);
+
+
+            var oldColor = GUI.backgroundColor;
+            GUI.backgroundColor = new Color(0.7f, 0.7f, 0.341f);
+
+            if (GUILayout.Button("Build Asset bundle", GUILayout.Height(25)))
+            {
+                BuildAssetBundles.BuildAllAssetBundles(obstacleCreator.bundleOutputPath, obstacleCreator.targetPrefabsPath, obstacleCreator.texturesPath);
+
+                AssetDatabase.SaveAssets();
+                AssetDatabase.Refresh();
+            }
+
+            GUI.backgroundColor = oldColor;
+        }
+
+
+        private void CreateSingleMode()
+        {
+            CreatePrefab(obstacleCreator.fbx, obstacleCreator.targetPrefabsPath);
+
+            ObstacleModel obstacleModel = CreateObstacleModel(obstacleCreator.fbx.name, obstacleCreator.obstacleType);
+
+            var list = settingsInstaller.gameSettings.obstacleDatas.ToList();
+            list.Add(obstacleModel);
+            settingsInstaller.gameSettings.obstacleDatas = list.ToArray();
+            EditorUtility.SetDirty(settingsInstaller);
+            EditorUtility.SetDirty(obstacleModel);
+            AssetDatabase.SaveAssets();
+            AssetDatabase.Refresh();
+        }
 
         private void CreateByFolder()
         {
-
-           
-
             string sourcePrefabsPath = obstacleCreator.sourcePrefabsPath;
 
             List<GameObject> assets = new List<GameObject>();
-            List<GameObject> createdPrefabs = new List<GameObject>();
             TryGetUnityObjectsOfTypeFromPath<GameObject>(sourcePrefabsPath, assets);
-
-            foreach (var item in assets)
-            {
-                //var t = System.IO.Path.GetFullPath(obstacleCreator.targetPrefabsPath);
-                createdPrefabs.Add(CreatePrefab(item, obstacleCreator.targetPrefabsPath));
-            }
-
-            string texturesPath = obstacleCreator.texturesPath;
-
-            List<Sprite> sprites = new List<Sprite>();
-            TryGetUnityObjectsOfTypeFromPath<Sprite>(texturesPath, sprites);
 
             for (int i = 0; i < assets.Count; i++)
             {
-                CreateObstacleModel(assets[i].name, createdPrefabs[i], sprites[i]);
+                CreateObstacleModel(assets[i].name, obstacleCreator.obstacleType);
             }
 
             List<ObstacleModel> obstacleModels = new List<ObstacleModel>();
             TryGetUnityObjectsOfTypeFromPath<ObstacleModel>(obstacleCreator.obstacleModelPath, obstacleModels);
             settingsInstaller.gameSettings.obstacleDatas = obstacleModels.ToArray();
-
-
-            CreateAssetBundles.BuildAllAssetBundles(obstacleCreator.bundleOutputPath, obstacleCreator.targetPrefabsPath, obstacleCreator.texturesPath);
-
-
+            EditorUtility.SetDirty(settingsInstaller);
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();
         }
 
 
-        private void CreateObstacleModel(string name, GameObject targetPrefab, Sprite icon)
+        private ObstacleModel CreateObstacleModel(string name, ObstacleType obstacleType)
         {
             ObstacleModel asset = ScriptableObject.CreateInstance<ObstacleModel>();
             asset.assetName = name;
-            asset.prefab = targetPrefab;
-            asset.sprite = icon;
+            asset.obstacleType = obstacleType;
             string assetPath = obstacleCreator.obstacleModelPath + name + ".asset";
             AssetDatabase.CreateAsset(asset, assetPath);
+            EditorUtility.SetDirty(asset);
+            return asset;
         }
 
 

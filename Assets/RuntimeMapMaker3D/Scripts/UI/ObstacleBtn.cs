@@ -10,6 +10,7 @@ namespace RMM3D
         public class Factory : PlaceholderFactory<ObstacleBtn>
         {
 
+
         }
     }
 }
