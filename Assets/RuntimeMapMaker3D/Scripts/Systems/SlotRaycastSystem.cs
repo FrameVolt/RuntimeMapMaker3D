@@ -7,7 +7,7 @@ namespace RMM3D
 {
     public class SlotRaycastSystem : ITickable, IInitializable
     {
-        public SlotRaycastSystem(GroundGrid groundGrid, SlotRaycastSystem.Settings settings, SlotsHolder slotsHolder)
+        public SlotRaycastSystem(GroundGrid groundGrid, SlotsHolder slotsHolder)
         {
             this.mainCamera = Camera.main;
             this.groundGrid = groundGrid;
@@ -16,7 +16,6 @@ namespace RMM3D
             this.halfXAmount = groundGrid.xAmount / 2;
             this.yAmount = groundGrid.yAmount;
             this.halfZAmount = groundGrid.zAmount / 2;
-            this.settings = settings;
             this.slotsHolder = slotsHolder;
         }
 
@@ -26,7 +25,6 @@ namespace RMM3D
         private int halfXAmount;
         private int yAmount;
         private int halfZAmount;
-        private readonly Settings settings;
         private readonly SlotsHolder slotsHolder;
 
         //public ReactiveProperty<int> GroundY { get; private set; } = new ReactiveProperty<int>();
@@ -68,6 +66,7 @@ namespace RMM3D
         private int maxY_ID;
         private int maxZ_ID;
 
+        private LayerMask layerMask = LayerMask.GetMask("Default", "Obstacle");
 
         public void Initialize()
         {
@@ -127,7 +126,7 @@ namespace RMM3D
         {
             Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
             RaycastHit hit;
-            var hited = Physics.Raycast(ray, out hit, settings.layerMask);
+            var hited = Physics.Raycast(ray, out hit, layerMask);
 
             if (!hited)
                 return;
@@ -146,20 +145,20 @@ namespace RMM3D
 
             if (hitPoint.y > -0.4f + GroundY)
             {
+
                 var obstacleFacade = hit.collider.GetComponentInParent<ObstacleFacade>();
 
-                if (obstacleFacade == null)
-                    return;
-                CurrentObstacle = obstacleFacade;
+                if (obstacleFacade != null) {
+                    CurrentObstacle = obstacleFacade;
+                    tempHitID = obstacleFacade.slotID;
+                    Vector3 normal = hit.normal;
 
-                tempHitID = obstacleFacade.slotID;
-                Vector3 normal = hit.normal;
+                    tempNormal = Vector3Int.RoundToInt(normal);
+                    tempPlaceableID = tempHitID + Vector3Int.RoundToInt(tempNormal);
 
-                tempNormal = Vector3Int.RoundToInt(normal);
-                tempPlaceableID = tempHitID + Vector3Int.RoundToInt(tempNormal);
-
-                if (tempPlaceableID.y > yAmount - 1)
-                    return;
+                    if (tempPlaceableID.y > yAmount - 1)
+                        return;
+                }
             }
             else
             {
@@ -183,11 +182,7 @@ namespace RMM3D
             return (inputValue >= Mathf.Min(bound1, bound2) && inputValue <= Mathf.Max(bound1, bound2));
         }
 
+      
 
-        [System.Serializable]
-        public class Settings
-        {
-            public LayerMask layerMask;
-        }
     }
 }

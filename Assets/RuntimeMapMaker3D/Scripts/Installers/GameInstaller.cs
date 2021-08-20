@@ -15,6 +15,7 @@ namespace RMM3D
         {
             Container.BindInterfacesAndSelfTo<SlotRaycastSystem>().AsSingle().NonLazy();
             Container.Bind<SlotsHolder>().AsSingle().NonLazy();
+            Container.BindInterfacesAndSelfTo<ToolHandlers>().AsSingle();
             Container.BindInterfacesAndSelfTo<PlacementSystem>().AsSingle().NonLazy();
             Container.BindInterfacesAndSelfTo<RotateObstacleSystem>().AsSingle().NonLazy();
             Container.BindInterfacesAndSelfTo<SaveMapSystem>().AsSingle().NonLazy();
@@ -28,6 +29,7 @@ namespace RMM3D
             Container.BindInterfacesAndSelfTo<AssetBundleSystem>().AsSingle().NonLazy();
             Container.BindInterfacesAndSelfTo<ColorBrushSystem>().AsSingle().NonLazy();
             Container.BindInterfacesAndSelfTo<SoltMap>().AsSingle().NonLazy();
+
 
             Container.Bind<MemoryPoolSettings>().FromInstance(settings.defaultPoolSettings);
 
@@ -53,8 +55,12 @@ namespace RMM3D
 
         private void InitExecutionOrder()
         {
-            //Container.BindExecutionOrder<UIManager>(-10);
-            //Container.BindExecutionOrder<ConfirmPop>(-10);
+            Container.BindExecutionOrder<PlacementHandler>(-10);
+            Container.BindExecutionOrder<BoxSelectionHandler>(-10);
+            Container.BindExecutionOrder<MoveHandler>(-10);
+            Container.BindExecutionOrder<EraseHandler>(-10);
+            Container.BindExecutionOrder<RotateHandler>(-10);
+            Container.BindExecutionOrder<BrushHandler>(-10);
         }
 
 

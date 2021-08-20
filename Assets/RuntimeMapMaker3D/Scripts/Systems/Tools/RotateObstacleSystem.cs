@@ -36,7 +36,23 @@ namespace RMM3D
         private ToolHandlers toolHandlers;
         private UndoRedoSystem undoRedoSystem;
 
+        private Axis axis;
+        public Axis CurrentAxis
+        {
+            get
+            {
+                return axis;
+            }
+            set
+            {
+                if (axis == value)
+                    return;
 
+                axis = value;
+            }
+        }
+
+        public ChangeAxisEvent OnChangeCurrentAxis = new ChangeAxisEvent();
         /// <summary>
         /// Tick is Same as Unity Update event, control by Zenject
         /// </summary>
@@ -62,7 +78,7 @@ namespace RMM3D
                 {
                     var trans = slot.item.transform;
 
-                    switch (toolHandlers.CurrentAxis)
+                    switch (CurrentAxis)
                     {
                         case Axis.X:
                             trans.Rotate(new Vector3(-90, 0, 0), Space.World);
@@ -93,11 +109,11 @@ namespace RMM3D
         {
             var array = Enum.GetValues(typeof(Axis));
             var length = array.Length;
-            int index = (int)toolHandlers.CurrentAxis;
+            int index = (int)CurrentAxis;
             index++;
             if (index >= length)
                 index = 0;
-            toolHandlers.CurrentAxis = (Axis)index;
+            CurrentAxis = (Axis)index;
         }
     }
 }

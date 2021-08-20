@@ -36,8 +36,10 @@ namespace RMM3D
         private OutLineSystem obstacleOutLineSystem;
         private ToolHandlers toolHandlers;
 
-        private Vector3Int startSlot;
-        private Vector3Int endSlot;
+        public Vector3Int StartSlotID { get; private set; }
+        public Vector3Int EndSlotID { get; private set; }
+        public Vector3 StartSlotPos { get; private set; }
+
 
         private List<Vector3Int> selectedSlotIDs;
         public List<GameObject> SelectedGOs { get; private set; }
@@ -76,11 +78,15 @@ namespace RMM3D
                 if (!slotRaycastSystem.IsPlaceableIDInRnage)
                     return;
 
-                startSlot = slotRaycastSystem.CurrentInRangeGroundSlotID;
+                StartSlotID = slotRaycastSystem.CurrentInRangeGroundSlotID;
+                StartSlotPos = slotRaycastSystem.CurrentInRangeGroundSlotPos;
+            }
+            if (Input.GetMouseButton(0))
+            {
+                EndSlotID = slotRaycastSystem.CurrentInRangeGroundSlotID;
             }
             if (Input.GetMouseButtonUp(0))
             {
-                endSlot = slotRaycastSystem.CurrentInRangeGroundSlotID;
                 OnMouseButtonUp();
             }
 
@@ -91,13 +97,13 @@ namespace RMM3D
         {
             ClearSelections();
 
-            var selecteVector = endSlot - startSlot;
+            var selecteVector = EndSlotID - StartSlotID;
 
-            for (int i = startSlot.x; i != endSlot.x + Mathf.CeilToInt(Mathf.Sign(selecteVector.x)); i += Mathf.CeilToInt(Mathf.Sign(selecteVector.x)))
+            for (int i = StartSlotID.x; i != EndSlotID.x + Mathf.CeilToInt(Mathf.Sign(selecteVector.x)); i += Mathf.CeilToInt(Mathf.Sign(selecteVector.x)))
             {
                 for (int j = slotRaycastSystem.GroundY; j < groundGrid.yAmount; j++)
                 {
-                    for (int k = startSlot.z; k != endSlot.z + Mathf.CeilToInt(Mathf.Sign(selecteVector.z)); k += Mathf.CeilToInt(Mathf.Sign(selecteVector.z)))
+                    for (int k = StartSlotID.z; k != EndSlotID.z + Mathf.CeilToInt(Mathf.Sign(selecteVector.z)); k += Mathf.CeilToInt(Mathf.Sign(selecteVector.z)))
                     {
                         var slotID = new Vector3Int(i, j, k);
 

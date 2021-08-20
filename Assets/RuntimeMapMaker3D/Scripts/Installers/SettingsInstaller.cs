@@ -17,7 +17,6 @@ namespace RMM3D
             Container.BindInstance(gameSettings.groundGrid).IfNotBound();
             Container.BindInstance(gameSettings.freeFlyCamSetting).IfNotBound();
             Container.BindInstance(gameSettings.confirmPopPrefab).IfNotBound();
-            Container.BindInstance(gameSettings.GroundPosSystemSettings).IfNotBound();
             Container.BindInstance(gameSettings.UndoRedoSystemSettings).IfNotBound();
             Container.BindInstance(gameSettings.groundGridSystemSettings).IfNotBound();
             Container.BindInstance(gameSettings.obstacleCreatorData).IfNotBound();
@@ -34,7 +33,6 @@ namespace RMM3D
             public FreeFlyCamSetting freeFlyCamSetting;
             public GameObject confirmPopPrefab;
             public MemoryPoolSettings defaultPoolSettings;
-            public SlotRaycastSystem.Settings GroundPosSystemSettings;
             public UndoRedoSystem.Settings UndoRedoSystemSettings;
             public GroundGridSystem.Settings groundGridSystemSettings;
             public ObstacleCreatorData obstacleCreatorData;

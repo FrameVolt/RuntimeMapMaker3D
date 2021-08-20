@@ -109,7 +109,7 @@ namespace RMM3D
 
         private void OnButtonClick(ObstacleModel[] obstacles, int index)
         {
-            toolGroupPanel.ChangeToolType(ToolType.BaseSelection);
+            toolGroupPanel.ChangeToolType(ToolType.Placement);
 
             CurrentObstacleData = obstacles[index];
 

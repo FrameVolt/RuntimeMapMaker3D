@@ -16,7 +16,6 @@ namespace RMM3D
         private ObstacleCreatorData obstacleCreatorData;
         public AssetBundle assetBundle { get; private set; }
 
-       
 
     }
 }

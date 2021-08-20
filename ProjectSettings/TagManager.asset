@@ -16,10 +16,10 @@ TagManager:
   - UI
   - 
   - 
-  - Obstacle
   - Outline
-  - 
-  - 
+  - Obstacle
+  - Handler
+  - Ground
   - 
   - 
   - 

@@ -11,20 +11,27 @@ public class AutoCreateLayer : Editor {
     {
         var tagManager = new SerializedObject(AssetDatabase.LoadAllAssetsAtPath("ProjectSettings/TagManager.asset")[0]);
         SerializedProperty layers = tagManager.FindProperty("layers");
+        int count = 0;
+        SetLayer("Outline", ref count, layers, tagManager);
+        SetLayer("Obstacle", ref count, layers, tagManager);
+        SetLayer("Handler", ref count, layers, tagManager);
+    }
 
-
-        float count = 0;
+    private static void SetLayer(string layName, ref int count, SerializedProperty layers, SerializedObject tagManager)
+    {
+        
         while (layers.NextVisible(true))
         {
-            if (layers.name == "data") {
+            if (layers.name == "data")
+            {
 
-                if (layers.stringValue == "Outline")
+                if (layers.stringValue == layName)
                     return;
 
-                if (layers.stringValue == ""  && count > 8)
+                if (layers.stringValue == "" && count > 8)
                 {
                     //Debug.Log(layers.stringValue);
-                    layers.stringValue = "Outline";
+                    layers.stringValue = layName;
                     tagManager.ApplyModifiedProperties();
 
                     return;

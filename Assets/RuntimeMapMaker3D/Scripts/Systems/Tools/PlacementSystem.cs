@@ -21,42 +21,66 @@ namespace RMM3D
         public PlacementSystem(SlotRaycastSystem slotRaycastSystem,
                 SlotsHolder slotsHolder,
                 ObstacleBtnsPanel obstacleBtnSystem,
-                ToolHandlers toolHandlers,
                 ObstacleFacade.Factory obstacleFactory,
                 UndoRedoSystem undoRedoSystem,
-                GroundGrid groundGrid,
                 BoxSelectionSystem boxSelectionSystem,
-                ColorPicker colorPicker
+                ColorPicker colorPicker,
+                ToolHandlers toolHandlers,
+                GroundGrid groundGrid
                 )
         {
             this.slotRaycastSystem = slotRaycastSystem;
             this.slotsHolder = slotsHolder;
             this.obstacleBtnPanel = obstacleBtnSystem;
-            this.toolHandlers = toolHandlers;
             this.obstacleFactory = obstacleFactory;
             this.undoRedoSystem = undoRedoSystem;
-            this.groundGrid = groundGrid;
             this.boxSelectionSystem = boxSelectionSystem;
             this.colorPicker = colorPicker;
+            this.toolHandlers = toolHandlers;
+            this.groundGrid = groundGrid;
         }
 
 
         private readonly SlotRaycastSystem slotRaycastSystem;
         private readonly SlotsHolder slotsHolder;
         private readonly ObstacleBtnsPanel obstacleBtnPanel;
-        private readonly ToolHandlers toolHandlers;
         private readonly ObstacleFacade.Factory obstacleFactory;
         private readonly UndoRedoSystem undoRedoSystem;
-        private readonly GroundGrid groundGrid;
         private readonly BoxSelectionSystem boxSelectionSystem;
         private readonly ColorPicker colorPicker;
+        private readonly ToolHandlers toolHandlers;
+        private readonly GroundGrid groundGrid;
 
         private Vector3Int currentHitID;
 
         private Vector2 lastPos;
         private float threshold = 1f;
-
         private int lastY;
+
+        private Vector3 handlerScale = Vector3.one;
+        public Vector3 HandlerScale {
+            get {
+                return handlerScale;
+            }
+            set { 
+                if(handlerScale == value)
+                {
+                    return;
+                }
+                if(value.x < 1 || value.y < 1 || value.z < 1)
+                {
+                    return;
+                }
+                if(value.x > groundGrid.xAmount || value.y > groundGrid.yAmount || value.z > groundGrid.zAmount)
+                {
+                    return;
+                }
+
+                handlerScale = value;
+                onHandlerScaleChangeEvent.Invoke(value);
+            } }
+
+        public HandlerScaleChangeEvent onHandlerScaleChangeEvent = new HandlerScaleChangeEvent();
 
 
         /// <summary>
@@ -64,7 +88,7 @@ namespace RMM3D
         /// </summary>
         public void Tick()
         {
-            if (toolHandlers.CurrentToolType != ToolType.BaseSelection)
+            if (toolHandlers.CurrentToolType != ToolType.Placement)
                 return;
             if (obstacleBtnPanel.CurrentObstacleData == null)
                 return;
@@ -78,14 +102,11 @@ namespace RMM3D
             {
                 lastY = slotRaycastSystem.PlaceableSlotID.y;
 
-                if (toolHandlers.BoxSelectionTransSize.sqrMagnitude > 1)
-                {
-                    //var selecteVector = toolHandlers.EndSlotID - toolHandlers.StartSlotID;
+                //var selecteVector = toolHandlers.EndSlotID - toolHandlers.StartSlotID;
 
-                    if (CheckInSelectionRange(slotRaycastSystem.CurrentSoltID, toolHandlers.EndSlotID, toolHandlers.StartSlotID))
-                    {
-                        GroupSpawn(obstacleBtnPanel.CurrentObstacleData);
-                    }
+                if (CheckInSelectionRange(slotRaycastSystem.CurrentSoltID, boxSelectionSystem.EndSlotID, boxSelectionSystem.StartSlotID))
+                {
+                    GroupSpawnFromBoxSelection(obstacleBtnPanel.CurrentObstacleData);
                 }
             }
             if (Input.GetMouseButtonUp(0))
@@ -113,7 +134,11 @@ namespace RMM3D
                     return;
                 }
 
-                Spawn(currentHitID, slotRaycastSystem.CurrentObstacle, obstacleBtnPanel.CurrentObstacleData);
+                //Spawn(currentHitID, obstacleBtnPanel.CurrentObstacleData);
+
+
+                GroupSpawnBrush(currentHitID, Vector3Int.one * 3, obstacleBtnPanel.CurrentObstacleData);
+
                 lastY = currentHitID.y;
             }
         }
@@ -124,12 +149,12 @@ namespace RMM3D
         /// <param name="slotID"></param>
         /// <param name="obstacle"></param>
         /// <param name="obstacleModel"></param>
-        private void Spawn(Vector3Int slotID, ObstacleFacade obstacle, ObstacleModel obstacleModel)
+        private void Spawn(Vector3Int slotID, ObstacleModel obstacleModel)
         {
             var slot = slotsHolder.slotMap.Solts[slotID.x, slotID.y, slotID.z];
             if (slot.item == null)
             {
-                obstacle = obstacleFactory.Create(slotID, obstacleModel, Vector3.zero, colorPicker.CurrentColor);
+                var obstacle = obstacleFactory.Create(slotID, obstacleModel, Vector3.zero, colorPicker.CurrentColor);
                 obstacle.transform.position = slot.position;
                 slotsHolder.slotMap.SetSlotItem(slotID, obstacle.gameObject, obstacleModel);
             }
@@ -139,7 +164,7 @@ namespace RMM3D
         /// Spawn obstacles in selection range.
         /// </summary>
         /// <param name="obstacleModel"></param>
-        private void GroupSpawn(ObstacleModel obstacleModel)
+        private void GroupSpawnFromBoxSelection(ObstacleModel obstacleModel)
         {
             for (int i = 0; i < boxSelectionSystem.coveringSlotIDs.Count; i++)
             {
@@ -160,6 +185,28 @@ namespace RMM3D
             }
         }
 
+        private void GroupSpawnBrush(Vector3Int centerID, Vector3Int size, ObstacleModel obstacleModel)
+        {
+            for (int i = 0; i < size.x; i++)
+            {
+                for (int j = 0; j < size.y; j++)
+                {
+                    for (int k = 0; k < size.z; k++)
+                    {
+                        Vector3Int targetSlotID = centerID + new Vector3Int(i, j, k);
+
+                        var slot = slotsHolder.slotMap.Solts[targetSlotID.x, targetSlotID.y, targetSlotID.z];
+
+                        var obstacle = obstacleFactory.Create(targetSlotID, obstacleModel, Vector3.zero, colorPicker.CurrentColor);
+                        obstacle.transform.position = slot.position;
+                        slotsHolder.slotMap.SetSlotItem(targetSlotID, obstacle.gameObject, obstacleModel);
+                    }
+                }
+            }
+        }
+
+
+
         public bool CheckInSelectionRange(Vector3Int slotID, Vector3Int min, Vector3Int max)
         {
             bool inRange = true;
@@ -172,5 +219,17 @@ namespace RMM3D
         {
             return (inputValue >= Mathf.Min(bound1, bound2) && inputValue <= Mathf.Max(bound1, bound2));
         }
+
+        private Vector3Int Offset(Vector3Int slotID)
+        {
+            var halfXAmount = groundGrid.xAmount / 2;
+            var halfZAmount = groundGrid.zAmount / 2;
+
+            return new Vector3Int(
+                Mathf.FloorToInt(slotID.x + halfXAmount / groundGrid.size), 
+                0, 
+                Mathf.FloorToInt(slotID.z + halfZAmount / groundGrid.size));
+        }
+
     }
 }
