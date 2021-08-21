@@ -34,16 +34,20 @@ namespace RMM3D
                     boxSelectionTrans.localScale = Vector3.zero;
                     boxSelectionTrans.gameObject.SetActive(true);
                 }
-                else
+                else if (toolType != ToolType.Placement && toolType != ToolType.Move && toolType != ToolType.Erase)
                 {
                     boxSelectionTrans.gameObject.SetActive(false);
                 }
             });
+            boxSelectionTrans.localScale = Vector3.zero;
         }
 
         public void Tick()
         {
             if (EventSystem.current.IsPointerOverGameObject())
+                return;
+
+            if (toolHandlers.CurrentToolType != ToolType.BoxSelection)
                 return;
 
             if (Input.GetMouseButton(0))

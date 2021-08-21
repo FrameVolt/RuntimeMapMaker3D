@@ -24,7 +24,7 @@ namespace RMM3D
         private MoveToolSystem moveToolSystem;
 
         [SerializeField] private Transform trans;
-
+        [SerializeField] private Transform scaleTrans;
         public void Initialize()
         {
             toolHandlers.OnChangeCurrentToolType.AddListener(toolType =>
@@ -37,6 +37,11 @@ namespace RMM3D
                 {
                     trans.gameObject.SetActive(false);
                 }
+            });
+            toolHandlers.onHandlerScaleChangeEvent.AddListener(v =>
+            {
+                var oddScale = new Vector3(v.x * 2 - 1, v.y, v.z * 2 - 1);
+                scaleTrans.localScale = oddScale;
             });
         }
 

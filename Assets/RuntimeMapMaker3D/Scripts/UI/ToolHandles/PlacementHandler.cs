@@ -41,9 +41,8 @@ namespace RMM3D
                     trans.gameObject.SetActive(false);
                 }
             });
-            placementSystem.onHandlerScaleChangeEvent.AddListener(v =>
+            toolHandlers.onHandlerScaleChangeEvent.AddListener(v =>
             {
-                //var oddScale = new Vector3(v.x % 2 == 0 ? v.x + 1 : v.x, v.y % 2 == 0 ? v.y + 1 : v.y, v.z % 2 == 0 ? v.z + 1 : v.z);
                 var oddScale = new Vector3(v.x * 2 - 1, v.y, v.z * 2 - 1);
                 scaleTrans.localScale = oddScale;
             });

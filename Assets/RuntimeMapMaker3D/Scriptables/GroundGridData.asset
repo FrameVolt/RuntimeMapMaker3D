@@ -13,6 +13,6 @@ MonoBehaviour:
   m_Name: GroundGridData
   m_EditorClassIdentifier: 
   xAmount: 50
+  yAmount: 10
   zAmount: 50
-  yAmount: 3
   size: 1

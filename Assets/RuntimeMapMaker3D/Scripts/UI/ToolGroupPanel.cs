@@ -44,7 +44,10 @@ namespace RMM3D
         [SerializeField] private GameObject colorPickerPanel;
         public void Initialize()
         {
-            placementBtn.onValueChanged.AddListener((x) => { toolHandlers.CurrentToolType = ToolType.Placement; MoveDown(placementGroup, x); });
+            placementBtn.onValueChanged.AddListener((x) => { 
+                toolHandlers.CurrentToolType = ToolType.Placement; 
+                MoveDown(placementGroup, x); 
+            });
             boxSelectionBtn.onValueChanged.AddListener((x) => { toolHandlers.CurrentToolType = ToolType.BoxSelection; MoveDown(boxSelectionGroup, x); });
             moveBtn.onValueChanged.AddListener((x) => { toolHandlers.CurrentToolType = ToolType.Move; MoveDown(moveGroup, x); });
             eraseBtn.onValueChanged.AddListener((x) => { toolHandlers.CurrentToolType = ToolType.Erase; MoveDown(eraseGroup, x); });
@@ -77,6 +80,7 @@ namespace RMM3D
             colorPicker.onValueChanged.AddListener((c) => { brushColorImage.color = c; });
 
             colorPickerPanel.SetActive(false);
+
             brushColorImage.color = colorPicker.CurrentColor;
         }
 

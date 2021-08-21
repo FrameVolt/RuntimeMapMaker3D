@@ -68,16 +68,11 @@ namespace RMM3D
                     //如果选框内有选中的对象
                     if (hasSame)
                     {
-                        for (int i = 0; i < boxSelectionSystem.SelectedObstacles.Count; i++)
-                        {
-                            var obstacle = boxSelectionSystem.SelectedObstacles[i];
-                            slotsHolder.slotMap.ReleaseSlotItem(obstacle.slotID, obstacleFactory);
-                        }
-                        boxSelectionSystem.ClearSelections();
+                        EraseSelections();
                     }
                     else
                     {
-                        slotsHolder.slotMap.ReleaseSlotItem(currentHitID, obstacleFactory);
+                        EraseSingle();
                     }
 
 
@@ -105,5 +100,42 @@ namespace RMM3D
             return sameObstacle;
         }
 
+        private void EraseSingle()
+        {
+            slotsHolder.slotMap.ReleaseSlotItem(currentHitID, obstacleFactory);
+        }
+
+        private void EraseSelections()
+        {
+            for (int i = 0; i < boxSelectionSystem.SelectedObstacles.Count; i++)
+            {
+                var obstacle = boxSelectionSystem.SelectedObstacles[i];
+                slotsHolder.slotMap.ReleaseSlotItem(obstacle.slotID, obstacleFactory);
+            }
+            boxSelectionSystem.ClearSelections();
+        }
+
+        private void EraseBrush(Vector3Int centerID, Vector3Int size)
+        {
+            for (int i = 0; i < size.x; i++)
+            {
+                for (int j = 0; j < size.y; j++)
+                {
+                    for (int k = 0; k < size.z; k++)
+                    {
+                        Vector3Int targetSlotID = centerID + new Vector3Int(i - size.x / 2, j, k - size.z / 2);
+
+                        if (!slotRaycastSystem.CheckInIDRange(targetSlotID))
+                            continue;
+
+                        var itemGO = slotsHolder.slotMap.TryGetItem(targetSlotID);
+                        if (itemGO != null)
+                        {
+                            slotsHolder.slotMap.ReleaseSlotItem(currentHitID, obstacleFactory);
+                        }
+                    }
+                }
+            }
+        }
     }
 }

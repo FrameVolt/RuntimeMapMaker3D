@@ -66,7 +66,12 @@ namespace RMM3D
         private int maxY_ID;
         private int maxZ_ID;
 
-        private LayerMask layerMask = LayerMask.GetMask("Default", "Obstacle");
+        //private LayerMask layerMask = LayerMask.GetMask("Default", "Obstacle", "Outline");
+        private LayerMask layerMask = 
+            1 << LayerMask.NameToLayer("Ground") |
+            1 << LayerMask.NameToLayer("Obstacle") |
+            1 << LayerMask.NameToLayer("Outline") | 
+            0 << LayerMask.NameToLayer("Handler");
 
         public void Initialize()
         {
@@ -126,7 +131,7 @@ namespace RMM3D
         {
             Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
             RaycastHit hit;
-            var hited = Physics.Raycast(ray, out hit, layerMask);
+            var hited = Physics.Raycast(ray, out hit, 100, layerMask);
 
             if (!hited)
                 return;
@@ -143,27 +148,25 @@ namespace RMM3D
 
             Vector3 tempNormal = Vector3.up;
 
-            if (hitPoint.y > -0.4f + GroundY)
-            {
 
-                var obstacleFacade = hit.collider.GetComponentInParent<ObstacleFacade>();
+            var obstacleFacade = hit.collider.GetComponentInParent<ObstacleFacade>();
 
-                if (obstacleFacade != null) {
-                    CurrentObstacle = obstacleFacade;
-                    tempHitID = obstacleFacade.slotID;
-                    Vector3 normal = hit.normal;
+            if (obstacleFacade != null) {//hit on Obstacle
+                CurrentObstacle = obstacleFacade;
+                tempHitID = obstacleFacade.slotID;
+                Vector3 normal = hit.normal;
 
-                    tempNormal = Vector3Int.RoundToInt(normal);
-                    tempPlaceableID = tempHitID + Vector3Int.RoundToInt(tempNormal);
+                tempNormal = Vector3Int.RoundToInt(normal);
+                tempPlaceableID = tempHitID + Vector3Int.RoundToInt(tempNormal);
 
-                    if (tempPlaceableID.y > yAmount - 1)
-                        return;
-                }
+                //if (tempPlaceableID.y > yAmount - 1)
+                //    return;
             }
-            else
+            else//Hit on ground
             {
                 CurrentObstacle = null;
             }
+
 
             CurrentSoltID = tempHitID;
             CurrentInRangeSlotPos = SoltMap.GetSlotPos(tempHitID, groundGrid);

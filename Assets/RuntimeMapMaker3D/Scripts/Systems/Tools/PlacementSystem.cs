@@ -25,8 +25,7 @@ namespace RMM3D
                 UndoRedoSystem undoRedoSystem,
                 BoxSelectionSystem boxSelectionSystem,
                 ColorPicker colorPicker,
-                ToolHandlers toolHandlers,
-                GroundGrid groundGrid
+                ToolHandlers toolHandlers
                 )
         {
             this.slotRaycastSystem = slotRaycastSystem;
@@ -37,7 +36,6 @@ namespace RMM3D
             this.boxSelectionSystem = boxSelectionSystem;
             this.colorPicker = colorPicker;
             this.toolHandlers = toolHandlers;
-            this.groundGrid = groundGrid;
         }
 
 
@@ -49,38 +47,12 @@ namespace RMM3D
         private readonly BoxSelectionSystem boxSelectionSystem;
         private readonly ColorPicker colorPicker;
         private readonly ToolHandlers toolHandlers;
-        private readonly GroundGrid groundGrid;
 
         private Vector3Int currentHitID;
 
         private Vector2 lastPos;
         private float threshold = 1f;
         private int lastY;
-
-        private Vector3 handlerScale = Vector3.one;
-        public Vector3 HandlerScale {
-            get {
-                return handlerScale;
-            }
-            set { 
-                if(handlerScale == value)
-                {
-                    return;
-                }
-                if(value.x < 1 || value.y < 1 || value.z < 1)
-                {
-                    return;
-                }
-                if(value.x > groundGrid.xAmount || value.y > groundGrid.yAmount || value.z > groundGrid.zAmount)
-                {
-                    return;
-                }
-
-                handlerScale = value;
-                onHandlerScaleChangeEvent.Invoke(value);
-            } }
-
-        public HandlerScaleChangeEvent onHandlerScaleChangeEvent = new HandlerScaleChangeEvent();
 
 
         /// <summary>
@@ -136,8 +108,7 @@ namespace RMM3D
 
                 //Spawn(currentHitID, obstacleBtnPanel.CurrentObstacleData);
 
-
-                GroupSpawnBrush(currentHitID, Vector3Int.one * 3, obstacleBtnPanel.CurrentObstacleData);
+                GroupSpawnBrush(currentHitID, toolHandlers.BrushOddScaleInt, obstacleBtnPanel.CurrentObstacleData);
 
                 lastY = currentHitID.y;
             }
@@ -187,20 +158,21 @@ namespace RMM3D
 
         private void GroupSpawnBrush(Vector3Int centerID, Vector3Int size, ObstacleModel obstacleModel)
         {
-            for (int i = 0; i < size.x; i++)
+            toolHandlers.CheckSlotsInBrush(centerID, size);
+            List<Vector3Int> slotsInBrush = toolHandlers.SlotsInBrush;
+            foreach (var targetSlotID in slotsInBrush)
             {
-                for (int j = 0; j < size.y; j++)
+                if (!slotRaycastSystem.CheckInIDRange(targetSlotID))
+                    continue;
+
+                var itemGO = slotsHolder.slotMap.TryGetItem(targetSlotID);
+                if (itemGO == null)
                 {
-                    for (int k = 0; k < size.z; k++)
-                    {
-                        Vector3Int targetSlotID = centerID + new Vector3Int(i, j, k);
+                    var slot = slotsHolder.slotMap.Solts[targetSlotID.x, targetSlotID.y, targetSlotID.z];
 
-                        var slot = slotsHolder.slotMap.Solts[targetSlotID.x, targetSlotID.y, targetSlotID.z];
-
-                        var obstacle = obstacleFactory.Create(targetSlotID, obstacleModel, Vector3.zero, colorPicker.CurrentColor);
-                        obstacle.transform.position = slot.position;
-                        slotsHolder.slotMap.SetSlotItem(targetSlotID, obstacle.gameObject, obstacleModel);
-                    }
+                    var obstacle = obstacleFactory.Create(targetSlotID, obstacleModel, Vector3.zero, colorPicker.CurrentColor);
+                    obstacle.transform.position = slot.position;
+                    slotsHolder.slotMap.SetSlotItem(targetSlotID, obstacle.gameObject, obstacleModel);
                 }
             }
         }
@@ -218,17 +190,6 @@ namespace RMM3D
         public bool IsBetween(float inputValue, float bound1, float bound2)
         {
             return (inputValue >= Mathf.Min(bound1, bound2) && inputValue <= Mathf.Max(bound1, bound2));
-        }
-
-        private Vector3Int Offset(Vector3Int slotID)
-        {
-            var halfXAmount = groundGrid.xAmount / 2;
-            var halfZAmount = groundGrid.zAmount / 2;
-
-            return new Vector3Int(
-                Mathf.FloorToInt(slotID.x + halfXAmount / groundGrid.size), 
-                0, 
-                Mathf.FloorToInt(slotID.z + halfZAmount / groundGrid.size));
         }
 
     }

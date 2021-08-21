@@ -42,6 +42,8 @@ namespace RMM3D
         private List<ObstacleModel> oldObstacleModels = new List<ObstacleModel>();
 
 
+        private List<GameObject> selectedGOs;
+        private List<ObstacleFacade> selectedObstacles;
         public void Tick()
         {
             if (toolHandlers.CurrentToolType != ToolType.Move)
@@ -55,72 +57,43 @@ namespace RMM3D
             {
                 CurrentGrabedObstacle = slotRaycastSystem.CurrentObstacle;
 
-                if (CurrentGrabedObstacle == null)
-                    return;
-
-                //如果没有点选中的Items,则使用当前点的对象
-                var hasSame = CheckHasSameSelectedObstacle();
-                if (hasSame == false)
-                {
-                    boxSelectionSystem.ClearSelections();
-                    boxSelectionSystem.SetDefaultSelection(slotRaycastSystem.CurrentGroundSlotID, CurrentGrabedObstacle.gameObject, CurrentGrabedObstacle);
-                }
-
-
                 relatives.Clear();
                 var startPos = slotRaycastSystem.GroundHitPos;
+                var currentHitID = slotRaycastSystem.CurrentSoltID;
 
-                for (int i = 0; i < boxSelectionSystem.SelectedGOs.Count; i++)
+                toolHandlers.CheckSlotsInBrush(currentHitID, toolHandlers.BrushOddScaleInt);
+                selectedGOs = toolHandlers.SelectedGOs;
+                selectedObstacles = toolHandlers.SelectedObstacles;
+                for (int i = 0; i < selectedGOs.Count; i++)
                 {
-                    var relative = boxSelectionSystem.SelectedGOs[i].transform.position - startPos;
+                    var relative = selectedGOs[i].transform.position - startPos;
                     relatives.Add(relative);
                 }
             }
 
             if (Input.GetMouseButton(0))
             {
-                if (CurrentGrabedObstacle == null)
-                    return;
-
-                for (int i = 0; i < boxSelectionSystem.SelectedGOs.Count; i++)
+                for (int i = 0; i < selectedGOs.Count; i++)
                 {
-                    boxSelectionSystem.SelectedGOs[i].transform.position = slotRaycastSystem.GroundHitPos + relatives[i];
+                    selectedGOs[i].transform.position = slotRaycastSystem.GroundHitPos + relatives[i];
                 }
             }
 
             if (Input.GetMouseButtonUp(0))
             {
-                //Debug.Log("AmountItem1: " + slotsHolder.slotMap.AmountItem() + ":" + slotsHolder.slotMap.AmountObstacleModel());
                 RemoveItemsFromOldSlot();
-                //Debug.Log("AmountItem1: " + slotsHolder.slotMap.AmountItem() + ":" + slotsHolder.slotMap.AmountObstacleModel());
                 PlacementItemsToNewSlot();
-                //Debug.Log("AmountItem1: " + slotsHolder.slotMap.AmountItem() + ":" + slotsHolder.slotMap.AmountObstacleModel());
                 undoRedoSystem.AppendStatus();
             }
-        }
-
-
-        private bool CheckHasSameSelectedObstacle()
-        {
-            bool sameObstacle = false;
-            for (int i = 0; i < boxSelectionSystem.SelectedObstacles.Count; i++)
-            {
-                if (boxSelectionSystem.SelectedObstacles[i] == CurrentGrabedObstacle)
-                {
-                    sameObstacle = true;
-                    break;
-                }
-            }
-            return sameObstacle;
         }
 
 
 
         private void RemoveItemsFromOldSlot()
         {
-            for (int i = 0; i < boxSelectionSystem.SelectedObstacles.Count; i++)
+            for (int i = 0; i < selectedObstacles.Count; i++)
             {
-                var obstacle = boxSelectionSystem.SelectedObstacles[i];
+                var obstacle = selectedObstacles[i];
 
                 oldObstacleModels.Add(slotsHolder.slotMap.TryGetObstacleModel(obstacle.slotID));
 
@@ -132,9 +105,9 @@ namespace RMM3D
 
             bool isOutRange = false;
 
-            for (int i = 0; i < boxSelectionSystem.SelectedObstacles.Count; i++)
+            for (int i = 0; i < selectedObstacles.Count; i++)
             {
-                var obstacle = boxSelectionSystem.SelectedObstacles[i];
+                var obstacle = selectedObstacles[i];
                 var newTransPos = obstacle.transform.position;
 
                 var newSlotID = slotsHolder.slotMap.TranPos2SlotID(newTransPos, groundGrid);
