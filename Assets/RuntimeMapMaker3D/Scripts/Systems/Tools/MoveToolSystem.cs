@@ -38,7 +38,6 @@ namespace RMM3D
         private readonly UndoRedoSystem undoRedoSystem;
 
         private List<Vector3> relatives = new List<Vector3>();
-        public ObstacleFacade CurrentGrabedObstacle { get; private set; }
         private List<ObstacleModel> oldObstacleModels = new List<ObstacleModel>();
 
 
@@ -55,8 +54,6 @@ namespace RMM3D
 
             if (Input.GetMouseButtonDown(0))
             {
-                CurrentGrabedObstacle = slotRaycastSystem.CurrentObstacle;
-
                 relatives.Clear();
                 var startPos = slotRaycastSystem.GroundHitPos;
                 var currentHitID = slotRaycastSystem.CurrentSoltID;
@@ -134,7 +131,7 @@ namespace RMM3D
                     slotsHolder.slotMap.ReleaseSlotItem(newSlotID, obstacleFactory);
 
                 obstacle.SetSlotID(newSlotID);
-                slotsHolder.slotMap.SetSlotItem(newSlotID, obstacle.gameObject, oldObstacleModels[i]);
+                slotsHolder.slotMap.SetSlotItem(newSlotID, obstacle, oldObstacleModels[i]);
 
             }
             oldObstacleModels.Clear();

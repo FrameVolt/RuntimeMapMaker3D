@@ -13,23 +13,19 @@ namespace RMM3D
             ToolHandlers toolHandlers, 
             ColorPicker colorPicker,
             SlotRaycastSystem slotRaycastSystem,
-            SlotsHolder slotsHolder,
             UndoRedoSystem undoRedoSystem
             )
         {
             this.toolHandlers = toolHandlers;
             this.colorPicker = colorPicker;
             this.slotRaycastSystem = slotRaycastSystem;
-            this.slotsHolder = slotsHolder;
             this.undoRedoSystem = undoRedoSystem;
         }
         private readonly ToolHandlers toolHandlers;
         private readonly ColorPicker colorPicker;
         private readonly SlotRaycastSystem slotRaycastSystem;
-        private readonly SlotsHolder slotsHolder;
         private readonly UndoRedoSystem undoRedoSystem;
         private Vector3Int currentHitID;
-        private ObstacleFacade currentObstacle;
 
         public void Tick()
         {
@@ -47,19 +43,26 @@ namespace RMM3D
                     return;
 
                 currentHitID = slotRaycastSystem.CurrentSoltID;
-                currentObstacle = slotRaycastSystem.CurrentObstacle;
 
-                if (currentObstacle != null)
-                {
-                    currentObstacle.SetColor(colorPicker.CurrentColor);
-                }
+                ColorBrush(currentHitID, toolHandlers.BrushOddScaleInt);
 
             }
 
-            if (Input.GetMouseButton(0))
+            if (Input.GetMouseButtonUp(0))
             {
                 undoRedoSystem.AppendStatus();
             }
         }
+
+        private void ColorBrush(Vector3Int centerID, Vector3Int size)
+        {
+            toolHandlers.CheckSlotsInBrush(centerID, size);
+            List<ObstacleFacade> selectedObstacles = toolHandlers.SelectedObstacles;
+            foreach (var obstacle in selectedObstacles)
+            {
+                obstacle.SetColor(colorPicker.CurrentColor);
+            }
+        }
+
     }
 }

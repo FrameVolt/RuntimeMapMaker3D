@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4472872514c39e7479942594868cecdf, type: 3}
   m_Name: GroundGridData
   m_EditorClassIdentifier: 
-  xAmount: 50
-  yAmount: 10
-  zAmount: 50
+  xAmount: 40
+  yAmount: 40
+  zAmount: 40
   size: 1

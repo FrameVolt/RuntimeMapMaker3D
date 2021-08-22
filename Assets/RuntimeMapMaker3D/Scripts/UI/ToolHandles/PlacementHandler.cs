@@ -58,14 +58,14 @@ namespace RMM3D
             if (toolHandlers.CurrentToolType == ToolType.Placement)
             {
                 Vector3 temp;
-                if (Input.GetMouseButton(0))
-                {
-                    temp = slotRaycastSystem.CurrentInRangeSlotPos;
-                }
-                else
-                {
-                    temp = slotRaycastSystem.PlaceableSlotPos;
-                }
+                //if (Input.GetMouseButton(0))
+                //{
+                    temp = slotRaycastSystem.CurrentSoltIDPos;
+                //}
+                //else
+                //{
+                //    temp = slotRaycastSystem.PlaceableSlotPos;
+                //}
 
                 var pos = new Vector3(temp.x, temp.y, temp.z);
                 trans.position = pos;

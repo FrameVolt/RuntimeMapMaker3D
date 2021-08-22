@@ -151,11 +151,12 @@ namespace RMM3D
         {
             Solts[slotID.x, slotID.y, slotID.z].color = color;
         }
-        public void SetSlotItem(Vector3Int slotID, GameObject item, ObstacleModel obstacleData)
+        public void SetSlotItem(Vector3Int slotID, ObstacleFacade obstacle, ObstacleModel obstacleData)
         {
-            Solts[slotID.x, slotID.y, slotID.z].rotation = item.transform.eulerAngles;
-            Solts[slotID.x, slotID.y, slotID.z].item = item;
+            Solts[slotID.x, slotID.y, slotID.z].rotation = obstacle.transform.eulerAngles;
+            Solts[slotID.x, slotID.y, slotID.z].item = obstacle.gameObject;
             Solts[slotID.x, slotID.y, slotID.z].obstacleData = obstacleData;
+            Solts[slotID.x, slotID.y, slotID.z].color = obstacle.color;
         }
 
         /// <summary>
@@ -166,6 +167,7 @@ namespace RMM3D
             Solts[slotID.x, slotID.y, slotID.z].rotation = Vector3.zero;
             Solts[slotID.x, slotID.y, slotID.z].item = null;
             Solts[slotID.x, slotID.y, slotID.z].obstacleData = null;
+            Solts[slotID.x, slotID.y, slotID.z].color = Color.white;
         }
 
         /// <summary>
@@ -190,6 +192,7 @@ namespace RMM3D
             Solts[slotID.x, slotID.y, slotID.z].rotation = Vector3.zero;
             Solts[slotID.x, slotID.y, slotID.z].item = null;
             Solts[slotID.x, slotID.y, slotID.z].obstacleData = null;
+            Solts[slotID.x, slotID.y, slotID.z].color = Color.white;
         }
 
 

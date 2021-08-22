@@ -73,14 +73,14 @@ namespace RMM3D
 
         private void RotateHandlerColor()
         {
-            if (slotRaycastSystem.CurrentObstacle != null)
-            {
-                rotateHandlerMat.color = Color.white;
-            }
-            else
-            {
-                rotateHandlerMat.color = new Color(1, 1, 1, 0.3f);
-            }
+            //if (slotRaycastSystem.CurrentObstacle != null)
+            //{
+            //    rotateHandlerMat.color = Color.white;
+            //}
+            //else
+            //{
+            //    rotateHandlerMat.color = new Color(1, 1, 1, 0.3f);
+            //}
         }
     }
 }

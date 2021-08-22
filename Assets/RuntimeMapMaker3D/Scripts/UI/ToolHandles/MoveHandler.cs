@@ -59,7 +59,7 @@ namespace RMM3D
                 //}
                 //else
                 //{
-                    var pos = slotRaycastSystem.CurrentGroundSlotPos;
+                    var pos = slotRaycastSystem.CurrentSoltIDPos;
                     trans.position = pos;
                 //}
 

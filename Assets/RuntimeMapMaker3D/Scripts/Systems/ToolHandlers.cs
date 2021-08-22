@@ -7,13 +7,19 @@ namespace RMM3D
 {
     public class ToolHandlers : IInitializable
     {
-        public ToolHandlers(GroundGrid groundGrid, SoltMap slotMap)
+        public ToolHandlers(GroundGrid groundGrid, SoltMap slotMap, SlotsHolder slotsHolder)
         {
             this.groundGrid = groundGrid;
             this.slotMap = slotMap;
+            this.slotsHolder = slotsHolder;
         }
         private readonly GroundGrid groundGrid;
         private readonly SoltMap slotMap;
+        private readonly SlotsHolder slotsHolder;
+
+        private int maxX_ID;
+        private int maxY_ID;
+        private int maxZ_ID;
 
         private ToolType currentToolType;
         public ToolType CurrentToolType
@@ -41,7 +47,6 @@ namespace RMM3D
 
 
 
-
         private Vector3 brushScale = Vector3.one;
         public Vector3 BrushScale
         {
@@ -59,6 +64,10 @@ namespace RMM3D
                 var tempY = Mathf.Clamp(value.y, 1, groundGrid.yAmount);
                 var tempZ = Mathf.Clamp(value.z, 1, groundGrid.zAmount);
                 Vector3 temp = new Vector3(tempX, tempY, tempZ);
+
+                temp = new Vector3Int(Mathf.RoundToInt(temp.x), Mathf.RoundToInt(temp.y), Mathf.RoundToInt(temp.z));
+
+
                 brushScale = temp;
                 onHandlerScaleChangeEvent.Invoke(temp);
             }
@@ -82,6 +91,11 @@ namespace RMM3D
         public void Initialize()
         {
             CurrentToolType = ToolType.Placement;
+
+            maxX_ID = slotsHolder.slotMap.Solts.GetLength(0) - 1;
+            maxY_ID = slotsHolder.slotMap.Solts.GetLength(1) - 1;
+            maxZ_ID = slotsHolder.slotMap.Solts.GetLength(2) - 1;
+
         }
 
         public void CheckSlotsInBrush(Vector3Int centerID, Vector3Int size)
@@ -100,8 +114,10 @@ namespace RMM3D
                     {
                         Vector3Int targetSlotID = centerID + new Vector3Int(Mathf.CeilToInt(i - size.x / 2f), j, Mathf.CeilToInt(k - size.z / 2f));
 
-                        //TODO limit  solt in range
-
+                        //check solt in range
+                        if (!CheckInIDRange(targetSlotID)) {
+                            continue;
+                        }
                         SlotsInBrush.Add(targetSlotID);
 
                         var go = slotMap.TryGetItem(targetSlotID);
@@ -118,6 +134,19 @@ namespace RMM3D
                     }
                 }
             }
+        }
+
+        public bool CheckInIDRange(Vector3Int slotID)
+        {
+            bool inRange = true;
+            if (!IsBetween(slotID.x, 0, maxX_ID) || !IsBetween(slotID.y, 0, maxY_ID) || !IsBetween(slotID.z, 0, maxZ_ID))
+                inRange = false;
+
+            return inRange;
+        }
+        public bool IsBetween(float inputValue, float bound1, float bound2)
+        {
+            return (inputValue >= Mathf.Min(bound1, bound2) && inputValue <= Mathf.Max(bound1, bound2));
         }
     }
     public enum ToolType

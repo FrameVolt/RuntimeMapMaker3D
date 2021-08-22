@@ -54,29 +54,32 @@ namespace RMM3D
                     return;
 
                 currentHitID = slotRaycastSystem.CurrentSoltID;
-                currentObstacle = slotRaycastSystem.CurrentObstacle;
+                //currentObstacle = slotRaycastSystem.CurrentObstacle;
 
-                var slotItem = slotsHolder.slotMap.TryGetItem(currentHitID);
-
-
-                if (slotItem != null)
-                {
-
-                    var hasSame = CheckHasSameSelectedObstacle();
+                //var slotItem = slotsHolder.slotMap.TryGetItem(currentHitID);
 
 
-                    //如果选框内有选中的对象
-                    if (hasSame)
-                    {
-                        EraseSelections();
-                    }
-                    else
-                    {
-                        EraseSingle();
-                    }
+                //if (slotItem != null)
+                //{
+
+                //    var hasSame = CheckHasSameSelectedObstacle();
 
 
-                }
+                //    //如果选框内有选中的对象
+                //    if (hasSame)
+                //    {
+                //        EraseSelections();
+                //    }
+                //    else
+                //    {
+                //        EraseSingle();
+                //    }
+
+
+                //}
+
+                EraseBrush(currentHitID, toolHandlers.BrushOddScaleInt);
+
             }
 
             if (Input.GetMouseButtonUp(0))
@@ -117,24 +120,11 @@ namespace RMM3D
 
         private void EraseBrush(Vector3Int centerID, Vector3Int size)
         {
-            for (int i = 0; i < size.x; i++)
+            toolHandlers.CheckSlotsInBrush(centerID, size);
+            List<ObstacleFacade> selectedObstacles = toolHandlers.SelectedObstacles;
+            foreach (var obstacle in selectedObstacles)
             {
-                for (int j = 0; j < size.y; j++)
-                {
-                    for (int k = 0; k < size.z; k++)
-                    {
-                        Vector3Int targetSlotID = centerID + new Vector3Int(i - size.x / 2, j, k - size.z / 2);
-
-                        if (!slotRaycastSystem.CheckInIDRange(targetSlotID))
-                            continue;
-
-                        var itemGO = slotsHolder.slotMap.TryGetItem(targetSlotID);
-                        if (itemGO != null)
-                        {
-                            slotsHolder.slotMap.ReleaseSlotItem(currentHitID, obstacleFactory);
-                        }
-                    }
-                }
+                slotsHolder.slotMap.ReleaseSlotItem(obstacle.slotID, obstacleFactory);
             }
         }
     }

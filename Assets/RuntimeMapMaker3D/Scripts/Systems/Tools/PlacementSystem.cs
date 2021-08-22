@@ -48,11 +48,10 @@ namespace RMM3D
         private readonly ColorPicker colorPicker;
         private readonly ToolHandlers toolHandlers;
 
-        private Vector3Int currentHitID;
+        private Vector3Int currentGroundSlotID;
 
         private Vector2 lastPos;
         private float threshold = 1f;
-        private int lastY;
 
 
         /// <summary>
@@ -72,45 +71,30 @@ namespace RMM3D
 
             if (Input.GetMouseButtonDown(0))
             {
-                lastY = slotRaycastSystem.PlaceableSlotID.y;
 
-                //var selecteVector = toolHandlers.EndSlotID - toolHandlers.StartSlotID;
-
-                if (CheckInSelectionRange(slotRaycastSystem.CurrentSoltID, boxSelectionSystem.EndSlotID, boxSelectionSystem.StartSlotID))
-                {
-                    GroupSpawnFromBoxSelection(obstacleBtnPanel.CurrentObstacleData);
-                }
             }
-            if (Input.GetMouseButtonUp(0))
+            else if (Input.GetMouseButtonUp(0))
             {
-                currentHitID = Vector3Int.zero;
+                currentGroundSlotID = Vector3Int.zero;
 
                 undoRedoSystem.AppendStatus();
 
             }
-            if (Input.GetMouseButton(0))
+            else if (Input.GetMouseButton(0))
             {
                 if (Vector3.Distance(lastPos, Input.mousePosition) < threshold)
                     return;
-
-                if (slotRaycastSystem.PlaceableSlotID == currentHitID)
-                    return;
-
-                currentHitID = slotRaycastSystem.PlaceableSlotID;
-
-
                 lastPos = Input.mousePosition;
 
-                if (lastY != currentHitID.y)
-                {
+                if (slotRaycastSystem.CurrentSoltID == currentGroundSlotID)
                     return;
-                }
 
-                //Spawn(currentHitID, obstacleBtnPanel.CurrentObstacleData);
+                
+                currentGroundSlotID = slotRaycastSystem.CurrentSoltID;
 
-                GroupSpawnBrush(currentHitID, toolHandlers.BrushOddScaleInt, obstacleBtnPanel.CurrentObstacleData);
 
-                lastY = currentHitID.y;
+                GroupSpawnBrush(currentGroundSlotID, toolHandlers.BrushOddScaleInt, obstacleBtnPanel.CurrentObstacleData);
+
             }
         }
 
@@ -127,7 +111,7 @@ namespace RMM3D
             {
                 var obstacle = obstacleFactory.Create(slotID, obstacleModel, Vector3.zero, colorPicker.CurrentColor);
                 obstacle.transform.position = slot.position;
-                slotsHolder.slotMap.SetSlotItem(slotID, obstacle.gameObject, obstacleModel);
+                slotsHolder.slotMap.SetSlotItem(slotID, obstacle, obstacleModel);
             }
         }
 
@@ -150,7 +134,7 @@ namespace RMM3D
                     {
                         var obstacle = obstacleFactory.Create(slotID, obstacleModel, Vector3.zero, colorPicker.CurrentColor);
                         obstacle.transform.position = slot.position;
-                        slotsHolder.slotMap.SetSlotItem(slotID, obstacle.gameObject, obstacleModel);
+                        slotsHolder.slotMap.SetSlotItem(slotID, obstacle, obstacleModel);
                     }
                 }
             }
@@ -172,11 +156,10 @@ namespace RMM3D
 
                     var obstacle = obstacleFactory.Create(targetSlotID, obstacleModel, Vector3.zero, colorPicker.CurrentColor);
                     obstacle.transform.position = slot.position;
-                    slotsHolder.slotMap.SetSlotItem(targetSlotID, obstacle.gameObject, obstacleModel);
+                    slotsHolder.slotMap.SetSlotItem(targetSlotID, obstacle, obstacleModel);
                 }
             }
         }
-
 
 
         public bool CheckInSelectionRange(Vector3Int slotID, Vector3Int min, Vector3Int max)
