@@ -55,7 +55,7 @@ namespace RMM3D
             if (Input.GetMouseButtonDown(0))
             {
                 relatives.Clear();
-                var startPos = slotRaycastSystem.GroundHitPos;
+                var startPos = slotRaycastSystem.HitPos;
                 var currentHitID = slotRaycastSystem.CurrentSoltID;
 
                 toolHandlers.CheckSlotsInBrush(currentHitID, toolHandlers.BrushOddScaleInt);
@@ -72,7 +72,7 @@ namespace RMM3D
             {
                 for (int i = 0; i < selectedGOs.Count; i++)
                 {
-                    selectedGOs[i].transform.position = slotRaycastSystem.GroundHitPos + relatives[i];
+                    selectedGOs[i].transform.position = slotRaycastSystem.HitPos + relatives[i];
                 }
             }
 

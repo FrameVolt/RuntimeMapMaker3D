@@ -78,12 +78,12 @@ namespace RMM3D
                 if (!slotRaycastSystem.IsPlaceableIDInRnage)
                     return;
 
-                StartSlotID = slotRaycastSystem.CurrentInRangeGroundSlotID;
-                StartSlotPos = slotRaycastSystem.CurrentInRangeGroundSlotPos;
+                StartSlotID = slotRaycastSystem.CurrentSoltID;
+                StartSlotPos = slotRaycastSystem.CurrentSoltIDPos;
             }
             if (Input.GetMouseButton(0))
             {
-                EndSlotID = slotRaycastSystem.CurrentInRangeGroundSlotID;
+                EndSlotID = slotRaycastSystem.CurrentSoltID;
             }
             if (Input.GetMouseButtonUp(0))
             {

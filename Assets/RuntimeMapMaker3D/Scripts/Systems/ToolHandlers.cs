@@ -76,7 +76,7 @@ namespace RMM3D
         public Vector3Int BrushOddScaleInt
         {
             get {
-                var oddScale = OddScale(new Vector3Int(Mathf.RoundToInt(BrushScale.x), Mathf.RoundToInt(BrushScale.y), Mathf.RoundToInt(BrushScale.z)));
+                var oddScale = OddScale(new Vector3Int(Mathf.FloorToInt(BrushScale.x), Mathf.FloorToInt(BrushScale.y), Mathf.FloorToInt(BrushScale.z)));
                 return oddScale;
             }
         }

@@ -51,14 +51,6 @@ namespace RMM3D
         public Vector3Int CurrentSoltID { get; private set; }
         public Vector3 CurrentSoltIDPos { get; private set; }
         public Vector3 CurrentInRangeSlotPos { get; private set; }
-        public Vector3Int PlaceableSlotID { get; private set; }
-        public Vector3 PlaceableSlotPos { get; private set; }
-        public Vector3 CurrentGroundSlotPos { get; private set; }
-        public Vector3Int CurrentGroundSlotID { get; private set; }
-        public Vector3Int CurrentInRangeGroundSlotID { get; private set; }
-        public Vector3 CurrentInRangeGroundSlotPos { get; private set; }
-
-        public Vector3Int InRangePlaceableID { get; private set; }
 
         public Vector3 HitPos { get; private set; }
         public Vector3 GroundHitPos { get; private set; }
@@ -74,8 +66,8 @@ namespace RMM3D
         //private LayerMask layerMask = LayerMask.GetMask("Default", "Obstacle", "Outline");
         private LayerMask layerMask = 
             1 << LayerMask.NameToLayer("Ground") |
-            1 << LayerMask.NameToLayer("Obstacle") |
-            1 << LayerMask.NameToLayer("Outline") | 
+            //1 << LayerMask.NameToLayer("Obstacle") |
+            //1 << LayerMask.NameToLayer("Outline") | 
             0 << LayerMask.NameToLayer("Handler");
 
         public void Initialize()
@@ -87,9 +79,8 @@ namespace RMM3D
 
         public void Tick()
         {
-            CalculateCurrentGroundPos();
             CalculateCurrentRayPos();
-            CheckInIDRange(PlaceableSlotID);
+            CheckInIDRange(CurrentSoltID);
         }
 
         public bool CheckInIDRange(Vector3Int slotID)
@@ -106,46 +97,18 @@ namespace RMM3D
             GroundY = y;
         }
 
-        private void CalculateCurrentGroundPos()
-        {
-            Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
-
-            float enter = 0.0f;
-
-            var hited = plane.Raycast(ray, out enter);
-
-            if (!hited)
-                return;
-
-            Vector3 hitPoint = ray.GetPoint(enter);
-
-
-
-            int x = Mathf.FloorToInt(hitPoint.x + halfXAmount / groundGrid.size);
-            int z = Mathf.FloorToInt(hitPoint.z + halfZAmount / groundGrid.size);
-
-            GroundHitPos = hitPoint;
-            CurrentGroundSlotID = new Vector3Int(x, GroundY, z);
-            CurrentGroundSlotPos = SoltMap.GetSlotPos(CurrentGroundSlotID, groundGrid);
-
-            CurrentInRangeGroundSlotID = new Vector3Int(Mathf.Clamp(CurrentGroundSlotID.x, 0, maxX_ID), Mathf.Clamp(CurrentGroundSlotID.y, GroundY, maxY_ID), Mathf.Clamp(CurrentGroundSlotID.z, 0, maxZ_ID));
-            CurrentInRangeGroundSlotPos = SoltMap.GetSlotPos(CurrentInRangeGroundSlotID, groundGrid);
-        }
-
         private void CalculateCurrentRayPos()
         {
             Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
 
-            
-
-
-            //var hited = Physics.Raycast(ray, out hit, 100, layerMask);
             Vector3 offset = new Vector3(0.4F, 0, 0.4F);
+            Vector3 halfExtents = (Vector3)toolHandlers.BrushOddScaleInt * 0.5f - offset;
+            halfExtents.y = 0;
+
             RaycastHit hit;
-            var hited = Physics.BoxCast(ray.origin, (Vector3)toolHandlers.BrushOddScaleInt * 0.5f - offset, ray.direction, out hit, Quaternion.identity, 100, layerMask);
+            var hited = Physics.BoxCast(ray.origin, halfExtents, ray.direction, out hit, Quaternion.identity, 100, layerMask);
 
-            ExtDebug.DrawBoxCastOnHit(ray.origin, (Vector3)toolHandlers.BrushOddScaleInt * 0.5f - offset, Quaternion.identity, ray.direction, hit.distance, Color.yellow);
-
+            ExtDebug.DrawBoxCastOnHit(ray.origin, halfExtents, Quaternion.identity, ray.direction, hit.distance, Color.yellow);
             Debug.DrawLine(ray.origin, mainCamera.transform.position + ray.direction * hit.distance, Color.blue);
 
             if (!hited)
@@ -163,36 +126,16 @@ namespace RMM3D
 
             tempPlaceableID.y = Mathf.Clamp(Mathf.RoundToInt(hitPoint.y), 0, yAmount);
 
-
-
-            //hit on Obstacle
-            //if (hit.collider.gameObject.layer != groundLayer)
-            //{
-            //    tempHitID = obstacleFacade.slotID;
-            //    Vector3 normal = hit.normal;
-
-            //    tempNormal = Vector3Int.RoundToInt(normal);
-            //    tempPlaceableID = tempHitID + Vector3Int.RoundToInt(tempNormal);
-            //}
-
             CurrentSoltID = tempHitID;
             CurrentSoltIDPos = SoltMap.GetSlotPos(tempHitID, groundGrid);
             CurrentInRangeSlotPos = SoltMap.GetSlotPos(tempHitID, groundGrid);
 
-            PlaceableSlotID = tempPlaceableID;
-            PlaceableSlotPos = SoltMap.GetSlotPos(tempPlaceableID, groundGrid);
-
-            InRangePlaceableID = new Vector3Int(Mathf.Clamp(PlaceableSlotID.x, 0, maxX_ID), Mathf.Clamp(PlaceableSlotID.y, GroundY, maxY_ID), Mathf.Clamp(PlaceableSlotID.z, 0, maxZ_ID));
-
-            HitPos = hit.point;
+            HitPos = hitPoint;
         }
 
         public bool IsBetween(float inputValue, float bound1, float bound2)
         {
             return (inputValue >= Mathf.Min(bound1, bound2) && inputValue <= Mathf.Max(bound1, bound2));
         }
-
-      
-
     }
 }
