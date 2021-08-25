@@ -124,6 +124,7 @@ namespace RMM3D
 
             tempPlaceableID = tempHitID;
 
+
             tempPlaceableID.y = Mathf.Clamp(Mathf.RoundToInt(hitPoint.y), 0, yAmount);
 
             CurrentSoltID = tempHitID;

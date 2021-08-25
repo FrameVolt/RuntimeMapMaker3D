@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 4877359280320273208}
   - component: {fileID: 4877359280320273209}
   - component: {fileID: -3537575100260373232}
+  - component: {fileID: 8144376156711878255}
   m_Layer: 5
   m_Name: ObstacleBtn
   m_TagString: Untagged
@@ -60,7 +61,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Material: {fileID: 2100000, guid: 5f97f0c022d43e148a4e5db8fdc28ab3, type: 2}
+  m_Material: {fileID: 0}
   m_Color: {r: 0.4811321, g: 0.4811321, b: 0.4811321, a: 1}
   m_RaycastTarget: 1
   m_Maskable: 1
@@ -132,6 +133,26 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 685bc13cbd56677409451511b2be3d58, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &8144376156711878255
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4877359280320273223}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 306cc8c2b49d7114eaa3623786fc2126, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_IgnoreLayout: 0
+  m_MinWidth: -1
+  m_MinHeight: -1
+  m_PreferredWidth: -1
+  m_PreferredHeight: -1
+  m_FlexibleWidth: -1
+  m_FlexibleHeight: -1
+  m_LayoutPriority: 1
 --- !u!1 &4877359281629217891
 GameObject:
   m_ObjectHideFlags: 0

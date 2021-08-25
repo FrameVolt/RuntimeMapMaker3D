@@ -32,9 +32,9 @@ namespace RMM3D
         ObstacleBtn.Factory obstacleBtnFactory;
         private AssetBundleSystem assetBundleSystem;
 
-        [SerializeField] private Transform solidGroup;
-        [SerializeField] private Transform harmfulGroup;
-        [SerializeField] private Transform propsGroup;
+        [SerializeField] private Transform solidBtnGroup;
+        [SerializeField] private Transform harmfulBtnGroup;
+        [SerializeField] private Transform propsBtnGroup;
         private ToolGroupPanel toolGroupPanel;
 
         public ObstacleModel CurrentObstacleData { get; private set; }
@@ -45,9 +45,9 @@ namespace RMM3D
         public void Initialize()
         {
             List<Button> buttons = new List<Button>();
-            buttons.AddRange(solidGroup.GetComponentsInChildren<Button>());
-            buttons.AddRange(harmfulGroup.GetComponentsInChildren<Button>());
-            buttons.AddRange(propsGroup.GetComponentsInChildren<Button>());
+            buttons.AddRange(solidBtnGroup.GetComponentsInChildren<Button>());
+            buttons.AddRange(harmfulBtnGroup.GetComponentsInChildren<Button>());
+            buttons.AddRange(propsBtnGroup.GetComponentsInChildren<Button>());
 
             for (int i = 0; i < buttons.Count; i++)
             {
@@ -86,15 +86,15 @@ namespace RMM3D
                 switch (obstacleType)
                 {
                     case ObstacleType.Obstacle:
-                        obstacleBtnInstance.transform.SetParent(solidGroup);
+                        obstacleBtnInstance.transform.SetParent(solidBtnGroup);
                         obstacleBtnInstance.transform.localScale = Vector3.one;
                         break;
                     case ObstacleType.Harmful:
-                        obstacleBtnInstance.transform.SetParent(harmfulGroup);
+                        obstacleBtnInstance.transform.SetParent(harmfulBtnGroup);
                         obstacleBtnInstance.transform.localScale = Vector3.one;
                         break;
                     case ObstacleType.Prop:
-                        obstacleBtnInstance.transform.SetParent(propsGroup);
+                        obstacleBtnInstance.transform.SetParent(propsBtnGroup);
                         obstacleBtnInstance.transform.localScale = Vector3.one;
                         break;
                     default:

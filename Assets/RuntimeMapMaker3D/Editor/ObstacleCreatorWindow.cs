@@ -6,6 +6,7 @@ using System.IO;
 using RMM3D;
 using System;
 using System.Linq;
+using System.Threading;
 
 namespace RMM3D.Editor
 {
@@ -208,6 +209,16 @@ namespace RMM3D.Editor
         {
             string sourcePrefabsPath = obstacleCreator.sourcePrefabsPath;
 
+
+            var filePaths = System.IO.Directory.GetFiles(sourcePrefabsPath).Where(name => !name.EndsWith(".meta")).ToArray();
+
+            for (int j = 0; j < filePaths.Length; j++)
+            {
+
+                CreatePrefabBySourcePath(filePaths[j], obstacleCreator.targetPrefabsPath);
+            }
+
+
             List<GameObject> assets = new List<GameObject>();
             TryGetUnityObjectsOfTypeFromPath<GameObject>(sourcePrefabsPath, assets);
 
@@ -275,12 +286,11 @@ namespace RMM3D.Editor
 
         private GameObject CreatePrefab(GameObject go, string outputPath)
         {
+
+            CreateTextureFromPreview(go);
+
+
             var obstacleLayer = LayerMask.NameToLayer("Obstacle");
-            if (obstacleLayer == -1)
-            {
-                LayerUtility.CreateLayer("Obstacle");
-                obstacleLayer = LayerMask.NameToLayer("Obstacle");
-            }
 
             GameObject gameObject = (GameObject)PrefabUtility.InstantiatePrefab(go);
             GameObject parentGO = new GameObject();
@@ -292,9 +302,6 @@ namespace RMM3D.Editor
             parentGO.AddComponent<ObstacleFacade>();
             var binding = parentGO.AddComponent<Zenject.ZenjectBinding>();
 
-
-
-
             var prefab = PrefabUtility.SaveAsPrefabAssetAndConnect(parentGO, outputPath + parentGO.name + ".prefab", InteractionMode.UserAction);
             DestroyImmediate(parentGO);
 
@@ -303,5 +310,55 @@ namespace RMM3D.Editor
 
         }
 
+
+        private void CreateTextureFromPreview(UnityEngine.Object asset)
+        {
+            //TODO Check exist
+
+            //var assetPath = AssetDatabase.GetAssetPath(asset);
+            //var originalTexture = (Texture2D)AssetDatabase.GetCachedIcon(assetPath);
+            ////var originalTexture = AssetPreview.GetAssetPreview(asset);
+
+            //Texture2D copyTexture = new Texture2D(originalTexture.width, originalTexture.height);
+            //copyTexture.SetPixels(originalTexture.GetPixels());
+            //copyTexture.Apply();
+            //byte[] _bytes = copyTexture.EncodeToPNG();
+            //System.IO.File.WriteAllBytes(obstacleCreator.texturesPath + asset.name + ".png", _bytes);
+
+            Texture2D bTexture = null;
+            while (bTexture == null)
+            {
+
+                bTexture = AssetPreview.GetAssetPreview(asset);
+
+                Thread.Sleep(80);
+            }
+
+            if (bTexture != null)
+            {
+                bTexture.mipMapBias = -1.5f;
+                bTexture.Apply();
+                byte[] data = bTexture.EncodeToPNG();
+                string pathAndName = obstacleCreator.texturesPath + asset.name + ".png";
+                File.WriteAllBytes(pathAndName, data);
+                AssetDatabase.SaveAssets();
+                AssetDatabase.Refresh();
+                Convert2Sprite(pathAndName);
+            }
+        }
+
+        private void Convert2Sprite(string path)
+        {
+            TextureImporter importer = (TextureImporter)AssetImporter.GetAtPath(path);
+
+            if (importer.textureType != TextureImporterType.Sprite)
+            {
+                importer.textureType = TextureImporterType.Sprite; 
+                importer.spriteImportMode = SpriteImportMode.Single;
+                importer.mipmapEnabled = false;
+            }
+            EditorUtility.SetDirty(importer);
+            importer.SaveAndReimport();
+        }
     }
 }
