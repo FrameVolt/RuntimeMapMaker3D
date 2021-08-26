@@ -1,12 +1,12 @@
 ManifestFileVersion: 0
-CRC: 4063333265
+CRC: 88355346
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: 5d5e42ffafd007af0ac0864cc434b65f
+    Hash: 045ea07aa43427827ba85606a73d4905
   TypeTreeHash:
     serializedVersion: 2
-    Hash: ae5027b6c87f5cec67dc01e477566933
+    Hash: 9994fcafd8260048dddc0803b38fbfe1
 HashAppended: 0
 ClassTypes:
 - Class: 1
@@ -27,6 +27,14 @@ ClassTypes:
   Script: {instanceID: 0}
 - Class: 65
   Script: {instanceID: 0}
+- Class: 74
+  Script: {instanceID: 0}
+- Class: 90
+  Script: {instanceID: 0}
+- Class: 91
+  Script: {instanceID: 0}
+- Class: 95
+  Script: {instanceID: 0}
 - Class: 114
   Script: {fileID: 11500000, guid: 15a06508325dbb643a7d49b0888604a8, type: 3}
 - Class: 114
@@ -39,17 +47,20 @@ ClassTypes:
   Script: {instanceID: 0}
 Assets:
 - Assets/RuntimeMapMaker3D/ArtWorks/Textures/ObstaclesIcon/brick_brown_1.png
+- Assets/RuntimeMapMaker3D/Prefabs/Obstacles/chest_gold.prefab
 - Assets/RuntimeMapMaker3D/Prefabs/Obstacles/cactus_2.prefab
 - Assets/RuntimeMapMaker3D/Prefabs/Obstacles/ConvexTrangle.prefab
 - Assets/RuntimeMapMaker3D/ArtWorks/Textures/ObstaclesIcon/ConcaveTrangle.png
 - Assets/RuntimeMapMaker3D/ArtWorks/Textures/ObstaclesIcon/brick_black_2.png
 - Assets/RuntimeMapMaker3D/Prefabs/Obstacles/cactus_block_top.prefab
+- Assets/RuntimeMapMaker3D/ArtWorks/Textures/ObstaclesIcon/bubble_lava.png
 - Assets/RuntimeMapMaker3D/ArtWorks/Textures/ObstaclesIcon/brick_black_3.png
 - Assets/RuntimeMapMaker3D/Prefabs/Obstacles/brick_black_2.prefab
 - Assets/RuntimeMapMaker3D/Prefabs/Obstacles/pebbles_2.prefab
 - Assets/RuntimeMapMaker3D/Prefabs/Obstacles/sand_cube_3.prefab
 - Assets/RuntimeMapMaker3D/ArtWorks/Textures/ObstaclesIcon/palm_leaf_start.png
 - Assets/RuntimeMapMaker3D/Prefabs/Obstacles/brick_brown_1.prefab
+- Assets/RuntimeMapMaker3D/ArtWorks/Textures/ObstaclesIcon/lava_cubes_5.png
 - Assets/RuntimeMapMaker3D/ArtWorks/Textures/ObstaclesIcon/brick_black_4.png
 - Assets/RuntimeMapMaker3D/ArtWorks/Textures/ObstaclesIcon/cactus_block.png
 - Assets/RuntimeMapMaker3D/ArtWorks/Textures/ObstaclesIcon/cactus_block_top.png
@@ -58,37 +69,56 @@ Assets:
 - Assets/RuntimeMapMaker3D/ArtWorks/Textures/ObstaclesIcon/brick_brown_4.png
 - Assets/RuntimeMapMaker3D/ArtWorks/Textures/ObstaclesIcon/brick_black_1.png
 - Assets/RuntimeMapMaker3D/ArtWorks/Textures/ObstaclesIcon/ConvexTrangle.png
+- Assets/RuntimeMapMaker3D/Prefabs/Obstacles/chest_silver.prefab
 - Assets/RuntimeMapMaker3D/ArtWorks/Textures/ObstaclesIcon/pebbles_3.png
+- Assets/RuntimeMapMaker3D/Prefabs/Obstacles/lava_cubes_1.prefab
+- Assets/RuntimeMapMaker3D/Prefabs/Obstacles/bubble_lava.prefab
 - Assets/RuntimeMapMaker3D/ArtWorks/Textures/ObstaclesIcon/sand_cube_2.png
 - Assets/RuntimeMapMaker3D/ArtWorks/Textures/ObstaclesIcon/palm_leaf.png
 - Assets/RuntimeMapMaker3D/ArtWorks/Textures/ObstaclesIcon/palm_2.png
 - Assets/RuntimeMapMaker3D/Prefabs/Obstacles/brick_black_1.prefab
+- Assets/RuntimeMapMaker3D/Prefabs/Obstacles/chest_wood.prefab
+- Assets/RuntimeMapMaker3D/Prefabs/Obstacles/box_wood_2.prefab
+- Assets/RuntimeMapMaker3D/ArtWorks/Textures/ObstaclesIcon/lava_cubes_3.png
 - Assets/RuntimeMapMaker3D/ArtWorks/Textures/ObstaclesIcon/cactus_flower.png
 - Assets/RuntimeMapMaker3D/Prefabs/Obstacles/brick_brown_4.prefab
 - Assets/RuntimeMapMaker3D/ArtWorks/Textures/ObstaclesIcon/sand_top.png
 - Assets/RuntimeMapMaker3D/ArtWorks/Textures/ObstaclesIcon/pebbles_1.png
 - Assets/RuntimeMapMaker3D/Prefabs/Obstacles/sand_top.prefab
 - Assets/RuntimeMapMaker3D/ArtWorks/Textures/ObstaclesIcon/sand_cube_1.png
+- Assets/RuntimeMapMaker3D/Prefabs/Obstacles/box_wood_1.prefab
 - Assets/RuntimeMapMaker3D/Prefabs/Obstacles/cactus_block.prefab
+- Assets/RuntimeMapMaker3D/ArtWorks/Textures/ObstaclesIcon/chest_wood.png
+- Assets/RuntimeMapMaker3D/Prefabs/Obstacles/lava_cubes_2.prefab
+- Assets/RuntimeMapMaker3D/ArtWorks/Textures/ObstaclesIcon/lava_cubes_4.png
+- Assets/RuntimeMapMaker3D/Prefabs/Obstacles/lava_cubes_3.prefab
 - Assets/RuntimeMapMaker3D/ArtWorks/Textures/ObstaclesIcon/cactus_1.png
 - Assets/RuntimeMapMaker3D/Prefabs/Obstacles/cactus_3.prefab
 - Assets/RuntimeMapMaker3D/Prefabs/Obstacles/BaseLine.prefab
 - Assets/RuntimeMapMaker3D/ArtWorks/Textures/ObstaclesIcon/palm_1.png
 - Assets/RuntimeMapMaker3D/Prefabs/Obstacles/brick_brown_2.prefab
+- Assets/RuntimeMapMaker3D/ArtWorks/Textures/ObstaclesIcon/chest_silver.png
 - Assets/RuntimeMapMaker3D/ArtWorks/Textures/ObstaclesIcon/cactus_3.png
+- Assets/RuntimeMapMaker3D/Prefabs/Obstacles/lava_cubes_5.prefab
 - Assets/RuntimeMapMaker3D/ArtWorks/Textures/ObstaclesIcon/BaseCube.png
 - Assets/RuntimeMapMaker3D/Prefabs/Obstacles/palm_trunk_block.prefab
 - Assets/RuntimeMapMaker3D/ArtWorks/Textures/ObstaclesIcon/sand_cube_3.png
 - Assets/RuntimeMapMaker3D/ArtWorks/Textures/ObstaclesIcon/palm_leaf_end.png
 - Assets/RuntimeMapMaker3D/ArtWorks/Textures/ObstaclesIcon/brick_brown_2.png
 - Assets/RuntimeMapMaker3D/Prefabs/Obstacles/pebbles_1.prefab
+- Assets/RuntimeMapMaker3D/Prefabs/Obstacles/lava_cubes_4.prefab
+- Assets/RuntimeMapMaker3D/ArtWorks/Textures/ObstaclesIcon/box_wood_1.png
 - Assets/RuntimeMapMaker3D/Prefabs/Obstacles/ConcaveTrangle.prefab
 - Assets/RuntimeMapMaker3D/Prefabs/Obstacles/palm_leaf_start.prefab
 - Assets/RuntimeMapMaker3D/ArtWorks/Textures/ObstaclesIcon/brick_brown_3.png
+- Assets/RuntimeMapMaker3D/ArtWorks/Textures/ObstaclesIcon/lava_cubes_2.png
+- Assets/RuntimeMapMaker3D/ArtWorks/Textures/ObstaclesIcon/chest_gold.png
 - Assets/RuntimeMapMaker3D/Prefabs/Obstacles/Trangle.prefab
 - Assets/RuntimeMapMaker3D/Prefabs/Obstacles/pebbles_3.prefab
 - Assets/RuntimeMapMaker3D/ArtWorks/Textures/ObstaclesIcon/pebbles_2.png
 - Assets/RuntimeMapMaker3D/Prefabs/Obstacles/cactus_flower.prefab
+- Assets/RuntimeMapMaker3D/ArtWorks/Textures/ObstaclesIcon/lava_cubes_1.png
+- Assets/RuntimeMapMaker3D/ArtWorks/Textures/ObstaclesIcon/box_wood_2.png
 - Assets/RuntimeMapMaker3D/ArtWorks/Textures/ObstaclesIcon/cactus_2.png
 - Assets/RuntimeMapMaker3D/Prefabs/Obstacles/sand_cube_2.prefab
 - Assets/RuntimeMapMaker3D/ArtWorks/Textures/ObstaclesIcon/BaseLine.png

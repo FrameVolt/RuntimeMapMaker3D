@@ -15,6 +15,11 @@ namespace RMM3D
         private RectTransform frameRectTrans;
         private LayoutElement layoutElement;
 
+        private int ColumnCount = 5;
+        private int ColumnSize = 100; // 40+80*0, 40+80*1 = 120, 40+80*2 
+
+        private GameObject placeholdBtn;
+
         private void Start()
         {
             frameRectTrans = transform.parent.GetComponent<RectTransform>();
@@ -30,8 +35,13 @@ namespace RMM3D
         {
             Debug.Log("Begin Drag");
             lastMousePosition = eventData.position;
-            layoutElement.ignoreLayout = true;
+            
+            placeholdBtn = Instantiate(this.gameObject, frameRectTrans);
+            placeholdBtn.AddComponent<CanvasGroup>().alpha = 0;
+            int i = this.transform.GetSiblingIndex();
+            placeholdBtn.transform.SetSiblingIndex(i);
             transform.SetAsLastSibling();
+            layoutElement.ignoreLayout = true;
         }
 
         /// <summary>
@@ -44,13 +54,14 @@ namespace RMM3D
             Vector2 diff = currentMousePosition - lastMousePosition;
             RectTransform rect = GetComponent<RectTransform>();
 
-            Vector3 newPosition = rect.position + new Vector3(diff.x, diff.y, transform.position.z);
-            Vector3 oldPos = rect.position;
-            rect.position = newPosition;
-            //if (!IsRectTransformInsideRange(rect))
-            //{
-            //    rect.position = oldPos;
-            //}
+            Vector3 newPosition = rect.localPosition + new Vector3(diff.x, diff.y, 0);
+            Vector3 oldPos = rect.localPosition;
+
+            rect.localPosition = newPosition;
+            ClampPos(rect);
+            placeholdBtn.transform.SetSiblingIndex(CalculateCurrentSiblingIndex());
+
+
             lastMousePosition = currentMousePosition;
         }
 
@@ -63,33 +74,36 @@ namespace RMM3D
             Debug.Log("End Drag");
             //Implement your funtionlity here
             layoutElement.ignoreLayout = false;
+
+            transform.SetSiblingIndex(placeholdBtn.transform.GetSiblingIndex());
+            Destroy(placeholdBtn);
         }
 
-        /// <summary>
-        /// This methods will check is the rect transform is inside the screen or not
-        /// </summary>
-        /// <param name="rectTransform">Rect Trasform</param>
-        /// <returns></returns>
-        private bool IsRectTransformInsideRange(RectTransform rectTransform)
+        private void ClampPos(RectTransform rectTransform)
         {
-            bool isInside = false;
             Vector3[] corners = new Vector3[4];
-            rectTransform.GetWorldCorners(corners);
-            int visibleCorners = 0;
-            Rect rect = frameRectTrans.rect;
-            foreach (Vector3 corner in corners)
-            {
-                if (rect.Contains(corner))
-                {
-                    visibleCorners++;
-                }
-            }
-            if (visibleCorners == 4)
-            {
-                isInside = true;
-            }
-            return isInside;
+            frameRectTrans.GetLocalCorners(corners);
+
+            var pos = rectTransform.localPosition;
+
+            pos.x = Mathf.Clamp(pos.x, corners[0].x, corners[3].x);
+            pos.y = Mathf.Clamp(pos.y, corners[0].y, corners[1].y);
+            rectTransform.localPosition = pos;
         }
+
+
+        private int CalculateCurrentSiblingIndex()
+        {
+            int x = Mathf.FloorToInt(transform.localPosition.x / 80f);
+            int y = Mathf.FloorToInt(-transform.localPosition.y / 80f);
+            //Mathf.FloorToInt(transform.localPosition.x + 400f / 5f);
+            //Mathf.FloorToInt(transform.localPosition.y + 400f / 5f);
+            int result = x + ColumnCount * y;
+
+            return result;
+        }
+
+
 
         public class Factory : PlaceholderFactory<ObstacleBtn>
         {

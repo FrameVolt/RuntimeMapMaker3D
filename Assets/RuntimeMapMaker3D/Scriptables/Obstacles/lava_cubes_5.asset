@@ -9,10 +9,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4472872514c39e7479942594868cecdf, type: 3}
-  m_Name: GroundGridData
+  m_Script: {fileID: 11500000, guid: d900d69fc7840ad408413059b23afcce, type: 3}
+  m_Name: lava_cubes_5
   m_EditorClassIdentifier: 
-  xAmount: 20
-  yAmount: 20
-  zAmount: 20
-  size: 1
+  obstacleType: 1
+  assetName: lava_cubes_5
+  slotSize: 0
