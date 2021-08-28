@@ -66,6 +66,7 @@ namespace RMM3D
             AddOutlines();
         }
 
+
         public void Tick()
         {
             if (toolHandlers.CurrentToolType != ToolType.BoxSelection)

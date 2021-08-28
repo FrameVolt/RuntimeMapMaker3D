@@ -43,6 +43,7 @@ namespace RMM3D.Editor
 
         void OnDestroy()
         {
+            EditorUtility.SetDirty(obstacleCreator);
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();
         }

@@ -13,7 +13,6 @@ namespace RMM3D
         [SerializeField] private Sprite down;
 
 
-
         private bool expended = false;
 
         void Start()

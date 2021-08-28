@@ -29,7 +29,8 @@ namespace RMM3D
             Container.BindInterfacesAndSelfTo<AssetBundleSystem>().AsSingle().NonLazy();
             Container.BindInterfacesAndSelfTo<ColorBrushSystem>().AsSingle().NonLazy();
             Container.BindInterfacesAndSelfTo<SoltMap>().AsSingle().NonLazy();
-
+            Container.BindInterfacesAndSelfTo<SelectionSystem>().AsSingle().NonLazy();
+            
 
             Container.Bind<MemoryPoolSettings>().FromInstance(settings.defaultPoolSettings);
 

@@ -151,6 +151,7 @@ namespace RMM3D
     }
     public enum ToolType
     {
+        Selection,
         BoxSelection,
         Placement,
         Move,

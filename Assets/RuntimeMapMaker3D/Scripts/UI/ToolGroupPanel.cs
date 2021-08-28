@@ -25,6 +25,7 @@ namespace RMM3D
         private ToolHandlers toolHandlers;
         private ColorPicker colorPicker;
 
+        [SerializeField] private Toggle selectionBtn;
         [SerializeField] private Toggle placementBtn;
         [SerializeField] private Toggle boxSelectionBtn;
         [SerializeField] private Toggle moveBtn;
@@ -33,24 +34,21 @@ namespace RMM3D
         [SerializeField] private Toggle colorBrushBtn;
         [SerializeField] private TMP_Text rotateText;
 
-        [SerializeField] private RectTransform placementGroup;
-        [SerializeField] private RectTransform boxSelectionGroup;
-        [SerializeField] private RectTransform moveGroup;
-        [SerializeField] private RectTransform eraseGroup;
-        [SerializeField] private RectTransform rotateGroup;
-        [SerializeField] private RectTransform ColorBrushGroup;
-
         [SerializeField] private Image brushColorImage;
         [SerializeField] private GameObject colorPickerPanel;
+        [SerializeField] private GameObject transformInspectorPanel;
         public void Initialize()
         {
-            placementBtn.onValueChanged.AddListener((x) => { 
-                toolHandlers.CurrentToolType = ToolType.Placement; 
-                MoveDown(placementGroup, x); 
+            selectionBtn.onValueChanged.AddListener((x) => { 
+                toolHandlers.CurrentToolType = ToolType.Selection;
+                transformInspectorPanel.SetActive(x);
             });
-            boxSelectionBtn.onValueChanged.AddListener((x) => { toolHandlers.CurrentToolType = ToolType.BoxSelection; MoveDown(boxSelectionGroup, x); });
-            moveBtn.onValueChanged.AddListener((x) => { toolHandlers.CurrentToolType = ToolType.Move; MoveDown(moveGroup, x); });
-            eraseBtn.onValueChanged.AddListener((x) => { toolHandlers.CurrentToolType = ToolType.Erase; MoveDown(eraseGroup, x); });
+            placementBtn.onValueChanged.AddListener((x) => { 
+                toolHandlers.CurrentToolType = ToolType.Placement;
+            });
+            boxSelectionBtn.onValueChanged.AddListener((x) => { toolHandlers.CurrentToolType = ToolType.BoxSelection;  });
+            moveBtn.onValueChanged.AddListener((x) => { toolHandlers.CurrentToolType = ToolType.Move; });
+            eraseBtn.onValueChanged.AddListener((x) => { toolHandlers.CurrentToolType = ToolType.Erase; });
             rotateBtn.onValueChanged.AddListener((x) =>
             {
                 toolHandlers.CurrentToolType = ToolType.Rotate;
@@ -69,32 +67,17 @@ namespace RMM3D
                         rotateText.text = "Z";
                         break;
                 }
-                MoveDown(rotateGroup, x);
             });
             colorBrushBtn.onValueChanged.AddListener((x) => { 
                 toolHandlers.CurrentToolType = ToolType.ColorBrush; 
-                MoveDown(ColorBrushGroup, x);
                 colorPickerPanel.SetActive(x);
             });
 
             colorPicker.onValueChanged.AddListener((c) => { brushColorImage.color = c; });
 
             colorPickerPanel.SetActive(false);
-
+            transformInspectorPanel.SetActive(false);
             brushColorImage.color = colorPicker.CurrentColor;
-        }
-
-        public void MoveDown(RectTransform rectTransform, bool isOn)
-        {
-            if (isOn)
-            {
-
-            }
-            else
-            {
-
-            }
-
         }
 
 

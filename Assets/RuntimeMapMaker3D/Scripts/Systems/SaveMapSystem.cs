@@ -7,6 +7,7 @@ using System.IO;
 
 namespace RMM3D
 {
+
     /// <summary>
     /// Storage all of obstacles data on the map to streamingAssets/map.txt
     /// </summary>

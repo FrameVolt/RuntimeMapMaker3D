@@ -139,12 +139,36 @@ namespace RMM3D
 
         public GameObject TryGetItem(Vector3Int slotID)
         {
-            return Solts[slotID.x, slotID.y, slotID.z].item;
+            GameObject result = null;
+            try
+            {
+                var slot = Solts[slotID.x, slotID.y, slotID.z];
+                result = slot.item;
+
+            }
+            catch(IndexOutOfRangeException ex)
+            {
+                Debug.LogWarning(ex);
+            }
+
+            return result;
         }
 
         public ObstacleModel TryGetObstacleModel(Vector3Int slotID)
         {
-            return Solts[slotID.x, slotID.y, slotID.z].obstacleData;
+            ObstacleModel result = null;
+
+            try
+            {
+                var slot = Solts[slotID.x, slotID.y, slotID.z];
+                result = slot.obstacleData;
+            }
+            catch(IndexOutOfRangeException ex)
+            {
+                Debug.LogWarning(ex);
+            }
+
+            return result;
         }
 
         public void SetSoltColor(Vector3Int slotID, Color color)
