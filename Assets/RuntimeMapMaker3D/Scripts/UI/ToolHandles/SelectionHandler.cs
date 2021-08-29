@@ -30,7 +30,7 @@ namespace RMM3D
 
         public void Initialize()
         {
-            toolHandlers.OnChangeCurrentToolType.AddListener(toolType =>
+            toolHandlers.OnChangeToolType.AddListener(toolType =>
             {
                 if (toolType == ToolType.Selection)
                 {
@@ -52,7 +52,7 @@ namespace RMM3D
 
             if (toolHandlers.CurrentToolType == ToolType.Selection)
             {
-                trans.position = slotRaycastSystem.CurrentSoltIDPos;
+                trans.position = slotRaycastSystem.CurrentGroundSlotPos;
             }
         }
     }

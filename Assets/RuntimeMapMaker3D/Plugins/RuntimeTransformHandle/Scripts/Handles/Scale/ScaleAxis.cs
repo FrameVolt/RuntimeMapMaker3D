@@ -63,13 +63,13 @@ namespace RuntimeHandle
             mouseVector = Camera.main.transform.rotation * mouseVector.normalized;
 
             Vector3 rperp = _parentTransformHandle.space == HandleSpace.LOCAL
-                ? _parentTransformHandle.target.rotation * _perp
+                ? _parentTransformHandle.Target.rotation * _perp
                 : _perp;
             Vector3 projected = Vector3.ProjectOnPlane(mouseVector, rperp);
 
             projected *= Time.deltaTime * mag * RuntimeTransformHandle.MOUSE_SENSITIVITY;
             Vector3 raxis = _parentTransformHandle.space == HandleSpace.LOCAL
-                ? _parentTransformHandle.target.rotation * _axis
+                ? _parentTransformHandle.Target.rotation * _axis
                 : _axis;
             float d = raxis.x * projected.x + raxis.y * projected.y + raxis.z * projected.z;
             
@@ -93,7 +93,7 @@ namespace RuntimeHandle
                 scale += _startScale;
             }
             
-            _parentTransformHandle.target.localScale = scale;
+            _parentTransformHandle.Target.localScale = scale;
             
             base.Interact(p_previousPosition);
         }
@@ -101,7 +101,7 @@ namespace RuntimeHandle
         public override void StartInteraction(Vector3 p_hitPoint)
         {
             base.StartInteraction(p_hitPoint);
-            _startScale = _parentTransformHandle.target.localScale;
+            _startScale = _parentTransformHandle.Target.localScale;
         }
     }
 }

@@ -22,6 +22,8 @@ namespace RMM3D
         }
 
         public event Action OnAppend = () => { };
+        public event Action OnRedo = () => { };
+        public event Action OnUndo = () => { };
 
         private readonly SlotsHolder slotsHolder;
         private readonly int max;
@@ -123,7 +125,7 @@ namespace RMM3D
 
                 _redoList.AddLast(slots);
                 _undoList.RemoveLast();
-
+                OnUndo.Invoke();
             }
             else
             {
@@ -152,7 +154,7 @@ namespace RMM3D
 
                 _undoList.AddLast(slots);
                 _redoList.RemoveLast();
-
+                OnRedo.Invoke();
             }
             else
             {

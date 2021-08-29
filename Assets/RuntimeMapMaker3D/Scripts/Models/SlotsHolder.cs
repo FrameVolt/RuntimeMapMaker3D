@@ -230,7 +230,7 @@ namespace RMM3D
 
             Vector3Int result = new Vector3Int();
             result.x = Mathf.FloorToInt(transPos.x + halfXAmount / groundGrid.size);
-            result.y = Mathf.FloorToInt(transPos.y / groundGrid.size);
+            result.y = Mathf.RoundToInt(transPos.y / groundGrid.size);
             result.z = Mathf.FloorToInt(transPos.z + halfZAmount / groundGrid.size);
 
             Debug.Log(transPos.z + " " + halfZAmount / groundGrid.size);

@@ -49,7 +49,7 @@ namespace RuntimeHandle
             float mag = mouseVector.magnitude;
             mouseVector = Camera.main.transform.rotation * mouseVector.normalized;
 
-            Vector3 planeNormal = _parentTransformHandle.space == HandleSpace.LOCAL ? _parentTransformHandle.target.rotation * _axis : _axis;
+            Vector3 planeNormal = _parentTransformHandle.space == HandleSpace.LOCAL ? _parentTransformHandle.Target.rotation * _axis : _axis;
             Vector3 projected = Vector3.ProjectOnPlane(mouseVector, planeNormal);
             
             projected *= Time.deltaTime * mag * 2; // Bulhar
@@ -71,7 +71,7 @@ namespace RuntimeHandle
                     Mathf.Abs(Mathf.CeilToInt(snappedDelta * 180 / Mathf.PI)) + 1);
                 DrawArc();
                 
-                _parentTransformHandle.target.localRotation =
+                _parentTransformHandle.Target.localRotation =
                     _startRotation * Quaternion.AngleAxis(-snappedDelta * 180f / Mathf.PI, _axis);
             }
             else
@@ -86,7 +86,7 @@ namespace RuntimeHandle
                     Mathf.Abs(Mathf.CeilToInt(snappedDelta * 180 / Mathf.PI)) + 1);
                 DrawArc();
 
-                _parentTransformHandle.target.rotation = _startRotation *
+                _parentTransformHandle.Target.rotation = _startRotation *
                                                          Quaternion.AngleAxis(-snappedDelta * 180f / Mathf.PI,
                                                              invertedRotatedAxis);
             }
@@ -97,7 +97,7 @@ namespace RuntimeHandle
         public override void StartInteraction(Vector3 p_hitPoint)
         {
             base.StartInteraction(p_hitPoint);
-            _startRotation = _parentTransformHandle.space == HandleSpace.LOCAL ? _parentTransformHandle.target.localRotation : _startRotation = _parentTransformHandle.target.rotation;
+            _startRotation = _parentTransformHandle.space == HandleSpace.LOCAL ? _parentTransformHandle.Target.localRotation : _startRotation = _parentTransformHandle.Target.rotation;
 
             _arcMaterial = new Material(Shader.Find("sHTiF/HandleShader"));
             _arcMaterial.color = new Color(1,1,0,.4f);
@@ -108,17 +108,17 @@ namespace RuntimeHandle
             if (_parentTransformHandle.space == HandleSpace.LOCAL)
             {
                 Vector3 rotatedAxis = _startRotation * _axis;
-                axisPlane = new Plane(rotatedAxis, _parentTransformHandle.target.position);
+                axisPlane = new Plane(rotatedAxis, _parentTransformHandle.Target.position);
                 _hitPoint = axisPlane.ClosestPointOnPlane(_hitPoint);
             }
             else
             {
-                axisPlane = new Plane(_axis, _parentTransformHandle.target.position);
+                axisPlane = new Plane(_axis, _parentTransformHandle.Target.position);
                 _hitPoint = axisPlane.ClosestPointOnPlane(_hitPoint);
             }
 
-            Plane xPlane = new Plane(_parentTransformHandle.handleCamera.transform.up, _parentTransformHandle.target.position);
-            Plane yPlane = new Plane(_parentTransformHandle.handleCamera.transform.right, _parentTransformHandle.target.position);
+            Plane xPlane = new Plane(_parentTransformHandle.handleCamera.transform.up, _parentTransformHandle.Target.position);
+            Plane yPlane = new Plane(_parentTransformHandle.handleCamera.transform.right, _parentTransformHandle.Target.position);
             _xmod = xPlane.SameSide(_hitPoint, _parentTransformHandle.handleCamera.transform.position) ? -1 : 1;
             _ymod = yPlane.SameSide(_hitPoint, _parentTransformHandle.handleCamera.transform.position) ? 1 : -1;
             if (!axisPlane.GetSide(_parentTransformHandle.handleCamera.transform.position)) 

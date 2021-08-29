@@ -12,7 +12,11 @@ namespace RuntimeHandle
         protected RuntimeTransformHandle _parentTransformHandle;
         protected List<ScaleAxis> _axes;
         protected ScaleGlobal _globalAxis;
-        
+
+        private Color rightColor = /*Color.red;*/new Color(0.71f, 0.55f, 0.25f);
+        private Color upColor = /*Color.green;*/new Color(0.95f, 0.92f, 0.81f);
+        private Color forwardColor = /*Color.blue;*/new Color(0.07f, 0.15f, 0.12f);
+
         public ScaleHandle Initialize(RuntimeTransformHandle p_parentTransformHandle)
         {
             _parentTransformHandle = p_parentTransformHandle;
@@ -22,15 +26,15 @@ namespace RuntimeHandle
             
             if (_parentTransformHandle.axes == HandleAxes.X || _parentTransformHandle.axes == HandleAxes.XY || _parentTransformHandle.axes == HandleAxes.XZ || _parentTransformHandle.axes == HandleAxes.XYZ)
                 _axes.Add(new GameObject().AddComponent<ScaleAxis>()
-                    .Initialize(_parentTransformHandle, Vector3.right, -Vector3.forward, Color.red));
+                    .Initialize(_parentTransformHandle, Vector3.right, -Vector3.forward, rightColor));
             
             if (_parentTransformHandle.axes == HandleAxes.Y || _parentTransformHandle.axes == HandleAxes.XY || _parentTransformHandle.axes == HandleAxes.YZ || _parentTransformHandle.axes == HandleAxes.XYZ)
                 _axes.Add(new GameObject().AddComponent<ScaleAxis>()
-                    .Initialize(_parentTransformHandle, Vector3.up, Vector3.forward, Color.green));
+                    .Initialize(_parentTransformHandle, Vector3.up, Vector3.forward, upColor));
 
             if (_parentTransformHandle.axes == HandleAxes.Z || _parentTransformHandle.axes == HandleAxes.XZ || _parentTransformHandle.axes == HandleAxes.YZ || _parentTransformHandle.axes == HandleAxes.XYZ)
                 _axes.Add(new GameObject().AddComponent<ScaleAxis>()
-                    .Initialize(_parentTransformHandle, Vector3.forward, Vector3.right, Color.blue));
+                    .Initialize(_parentTransformHandle, Vector3.forward, Vector3.right, forwardColor));
 
             if (_parentTransformHandle.axes != HandleAxes.X && _parentTransformHandle.axes != HandleAxes.Y && _parentTransformHandle.axes != HandleAxes.Z)
             {

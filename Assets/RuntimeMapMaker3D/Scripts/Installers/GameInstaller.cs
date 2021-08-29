@@ -62,6 +62,11 @@ namespace RMM3D
             Container.BindExecutionOrder<EraseHandler>(-10);
             Container.BindExecutionOrder<RotateHandler>(-10);
             Container.BindExecutionOrder<BrushHandler>(-10);
+            Container.BindExecutionOrder<SelectionSystem>(-10);
+            Container.BindExecutionOrder<RuntimeTransformHandleIntegrate>(0);
+            
+
+
         }
 
 

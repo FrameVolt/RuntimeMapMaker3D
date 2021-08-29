@@ -27,7 +27,7 @@ namespace RMM3D
         [SerializeField] private Transform scaleTrans;
         public void Initialize()
         {
-            toolHandlers.OnChangeCurrentToolType.AddListener(toolType =>
+            toolHandlers.OnChangeToolType.AddListener(toolType =>
             {
                 if (toolType == ToolType.ColorBrush)
                 {
@@ -52,7 +52,7 @@ namespace RMM3D
 
             if (toolHandlers.CurrentToolType == ToolType.ColorBrush)
             {
-                var pos = slotRaycastSystem.CurrentInRangeSlotPos;
+                var pos = slotRaycastSystem.CurrentGroundSlotPos;
                 trans.position = pos;
             }
 

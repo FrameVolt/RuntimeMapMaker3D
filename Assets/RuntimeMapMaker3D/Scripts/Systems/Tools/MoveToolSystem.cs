@@ -56,7 +56,7 @@ namespace RMM3D
             {
                 relatives.Clear();
                 var startPos = slotRaycastSystem.HitPos;
-                var currentHitID = slotRaycastSystem.CurrentSoltID;
+                var currentHitID = slotRaycastSystem.CurrentGroundSlotID;
 
                 toolHandlers.CheckSlotsInBrush(currentHitID, toolHandlers.BrushOddScaleInt);
                 selectedGOs = toolHandlers.SelectedGOs;

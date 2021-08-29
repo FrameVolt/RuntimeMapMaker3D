@@ -34,17 +34,16 @@ namespace RMM3D
                     return;
                 currentToolType = value;
 
-                OnChangeCurrentToolType.Invoke(value);
+                OnChangeToolType.Invoke(value);
             }
         }
 
-        public ChangeToolTypeEvent OnChangeCurrentToolType = new ChangeToolTypeEvent();
+        public ChangeToolTypeEvent OnChangeToolType = new ChangeToolTypeEvent();
         public List<GameObject> SelectedGOs { get; private set; } = new List<GameObject>();
         public List<Vector3Int> SelectedSlotsOfGO { get; private set; } = new List<Vector3Int>();
         public List<ObstacleFacade> SelectedObstacles { get; private set; } = new List<ObstacleFacade>();
         public List<Vector3Int> SlotsInBrushGround { get; private set; } = new List<Vector3Int>();
         public List<Vector3Int> SlotsInBrush { get; private set; } = new List<Vector3Int>();
-
 
 
         private Vector3 brushScale = Vector3.one;

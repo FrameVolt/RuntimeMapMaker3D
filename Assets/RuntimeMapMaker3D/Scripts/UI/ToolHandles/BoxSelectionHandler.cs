@@ -27,7 +27,7 @@ namespace RMM3D
 
         public void Initialize()
         {
-            toolHandlers.OnChangeCurrentToolType.AddListener(toolType =>
+            toolHandlers.OnChangeToolType.AddListener(toolType =>
             {
                 if (toolType == ToolType.BoxSelection)
                 {

@@ -35,6 +35,7 @@ namespace RMM3D
         [SerializeField] private TMP_Text rotateText;
 
         [SerializeField] private Image brushColorImage;
+        [SerializeField] private GameObject brushPanel;
         [SerializeField] private GameObject colorPickerPanel;
         [SerializeField] private GameObject transformInspectorPanel;
         public void Initialize()
@@ -42,6 +43,7 @@ namespace RMM3D
             selectionBtn.onValueChanged.AddListener((x) => { 
                 toolHandlers.CurrentToolType = ToolType.Selection;
                 transformInspectorPanel.SetActive(x);
+                brushPanel.SetActive(!x);
             });
             placementBtn.onValueChanged.AddListener((x) => { 
                 toolHandlers.CurrentToolType = ToolType.Placement;

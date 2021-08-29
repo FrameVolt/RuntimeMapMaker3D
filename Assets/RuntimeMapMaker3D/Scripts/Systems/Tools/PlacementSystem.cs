@@ -86,11 +86,11 @@ namespace RMM3D
                     return;
                 lastPos = Input.mousePosition;
 
-                if (slotRaycastSystem.CurrentSoltID == currentGroundSlotID)
+                if (slotRaycastSystem.CurrentGroundSlotID == currentGroundSlotID)
                     return;
 
                 
-                currentGroundSlotID = slotRaycastSystem.CurrentSoltID;
+                currentGroundSlotID = slotRaycastSystem.CurrentGroundSlotID;
 
 
                 GroupSpawnBrush(currentGroundSlotID, toolHandlers.BrushOddScaleInt, obstacleBtnPanel.CurrentObstacleData);

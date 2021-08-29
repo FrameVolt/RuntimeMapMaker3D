@@ -28,7 +28,7 @@ namespace RMM3D
 
         public void Initialize()
         {
-            toolHandlers.OnChangeCurrentToolType.AddListener(toolType => {
+            toolHandlers.OnChangeToolType.AddListener(toolType => {
                 if (toolType == ToolType.Move)
                 {
                     trans.gameObject.SetActive(true);
@@ -59,7 +59,7 @@ namespace RMM3D
                 //}
                 //else
                 //{
-                    var pos = slotRaycastSystem.CurrentSoltIDPos;
+                    var pos = slotRaycastSystem.CurrentGroundSlotPos;
                     trans.position = pos;
                 //}
 

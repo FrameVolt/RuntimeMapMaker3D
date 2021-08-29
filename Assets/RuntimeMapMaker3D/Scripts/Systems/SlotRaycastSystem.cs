@@ -31,8 +31,6 @@ namespace RMM3D
 
         private LayerMask groundLayer = 1 << LayerMask.NameToLayer("Ground");
 
-
-        //public ReactiveProperty<int> GroundY { get; private set; } = new ReactiveProperty<int>();
         private int groundY;
         public int GroundY { 
             get {
@@ -48,23 +46,25 @@ namespace RMM3D
         
         }
         public IntEvent OnChangeGroundY = new IntEvent();
-        public Vector3Int CurrentSoltID { get; private set; }
-        public Vector3 CurrentSoltIDPos { get; private set; }
-        public Vector3 CurrentInRangeSlotPos { get; private set; }
+        public Vector3Int CurrentGroundSlotID { get; private set; }
+        public Vector3 CurrentGroundSlotPos { get; private set; }
 
         public Vector3 HitPos { get; private set; }
-        public Vector3 GroundHitPos { get; private set; }
 
         public bool IsPlaceableIDInRnage { get; private set; }
 
         public ObstacleFacade CurrentObstacle { get; private set; }
+        public Vector3Int CurrentObstacleSlotID { get; private set; }
 
         private int maxX_ID;
         private int maxY_ID;
         private int maxZ_ID;
 
+
+        private LayerMask obstacleLayMask = 1 << LayerMask.NameToLayer("Obstacle") | 0 << LayerMask.NameToLayer("Handler");
+
         //private LayerMask layerMask = LayerMask.GetMask("Default", "Obstacle", "Outline");
-        private LayerMask layerMask = 
+        private LayerMask groundLayerMask = 
             1 << LayerMask.NameToLayer("Ground") |
             //1 << LayerMask.NameToLayer("Obstacle") |
             //1 << LayerMask.NameToLayer("Outline") | 
@@ -79,8 +79,9 @@ namespace RMM3D
 
         public void Tick()
         {
-            CalculateCurrentRayPos();
-            CheckInIDRange(CurrentSoltID);
+            CalculateObstacleRayPos();
+            CalculateGroundRayPos();
+            CheckInIDRange(CurrentGroundSlotID);
         }
 
         public bool CheckInIDRange(Vector3Int slotID)
@@ -97,7 +98,28 @@ namespace RMM3D
             GroundY = y;
         }
 
-        private void CalculateCurrentRayPos()
+
+        private void CalculateObstacleRayPos()
+        {
+            Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
+            RaycastHit hit;
+            var hited = Physics.Raycast(ray, out hit, 100, obstacleLayMask);
+
+            if (!hited)
+                return;
+
+            var obstacleFacade = hit.collider.GetComponentInParent<ObstacleFacade>();
+
+            if (obstacleFacade == null)
+                return;
+
+            CurrentObstacle = obstacleFacade;
+            CurrentObstacleSlotID = obstacleFacade.slotID;
+        }
+
+
+
+        private void CalculateGroundRayPos()
         {
             Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
 
@@ -106,7 +128,7 @@ namespace RMM3D
             halfExtents.y = 0;
 
             RaycastHit hit;
-            var hited = Physics.BoxCast(ray.origin, halfExtents, ray.direction, out hit, Quaternion.identity, 100, layerMask);
+            var hited = Physics.BoxCast(ray.origin, halfExtents, ray.direction, out hit, Quaternion.identity, 100, groundLayerMask);
 
             ExtDebug.DrawBoxCastOnHit(ray.origin, halfExtents, Quaternion.identity, ray.direction, hit.distance, Color.yellow);
             Debug.DrawLine(ray.origin, mainCamera.transform.position + ray.direction * hit.distance, Color.blue);
@@ -127,9 +149,8 @@ namespace RMM3D
 
             tempPlaceableID.y = Mathf.Clamp(Mathf.RoundToInt(hitPoint.y), 0, yAmount);
 
-            CurrentSoltID = tempHitID;
-            CurrentSoltIDPos = SoltMap.GetSlotPos(tempHitID, groundGrid);
-            CurrentInRangeSlotPos = SoltMap.GetSlotPos(tempHitID, groundGrid);
+            CurrentGroundSlotID = tempHitID;
+            CurrentGroundSlotPos = SoltMap.GetSlotPos(tempHitID, groundGrid);
 
             HitPos = hitPoint;
         }

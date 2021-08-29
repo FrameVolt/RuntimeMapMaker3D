@@ -2,97 +2,121 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using Zenject;
 
 namespace RMM3D
 {
     [RequireComponent(typeof(RuntimeTransformHandle))]
-    public class RuntimeTransformHandleIntegrate : MonoBehaviour, IInitializable
+    public class RuntimeTransformHandleIntegrate : MonoBehaviour, IInitializable, ITickable
     {
         [Inject]
-        public void Contrust(GroundGrid groundGrid)
+        public void Contrust(
+            ToolHandlers toolHandlers,
+            GroundGrid groundGrid, 
+            SlotRaycastSystem slotRaycastSystem, 
+            SlotsHolder slotsHolder, 
+            ObstacleFacade.Factory obstacleFactory,
+            UndoRedoSystem undoRedoSystem
+            )
         {
+            this.toolHandlers = toolHandlers;
             this.groundGrid = groundGrid;
+            this.slotsHolder = slotsHolder;
+            this.slotRaycastSystem = slotRaycastSystem;
+            this.obstacleFactory = obstacleFactory;
+            this.undoRedoSystem = undoRedoSystem;
 
         }
+        private ToolHandlers toolHandlers;
         private GroundGrid groundGrid;
+        private SlotsHolder slotsHolder;
+        private SlotRaycastSystem slotRaycastSystem;
+        private ObstacleFacade.Factory obstacleFactory;
+        private UndoRedoSystem undoRedoSystem;
 
 
         [SerializeField] private RuntimeTransformHandle runtimeTransformHandle;
 
         private ObstacleFacade currentObstacle;
-
+        private ObstacleModel oldObstacleModel;
         public void Initialize()
         {
-            runtimeTransformHandle.positionSnap = Vector3.one * groundGrid.size;
+            //runtimeTransformHandle.positionSnap = Vector3.one * groundGrid.size;
+            undoRedoSystem.OnRedo += () => { runtimeTransformHandle.Target = null; };
+            undoRedoSystem.OnUndo += () => { runtimeTransformHandle.Target = null; };
+
+            toolHandlers.OnChangeToolType.AddListener((x) => {
+                if(x != ToolType.Selection)
+                {
+                    runtimeTransformHandle.Target = null;
+                }
+            });
         }
+
+        public void Tick()
+        {
+            if (toolHandlers.CurrentToolType != ToolType.Selection)
+                return;
+            if (EventSystem.current.IsPointerOverGameObject())
+                return;
+
+            if (Input.GetMouseButtonUp(0))
+            {
+                if (runtimeTransformHandle.Target == null)
+                    return;
+
+                PerpareMove();
+                RelpaceSoltItem();
+                undoRedoSystem.AppendStatus();
+            }
+        }
+
+        private void PerpareMove()
+        {
+            currentObstacle = runtimeTransformHandle.Target.GetComponent<ObstacleFacade>();
+        }
+
 
         private void RelpaceSoltItem()
         {
-
+            RemoveItemFromOldSlot();
+            PlacementItemToNewSlot();
         }
 
-
-        private void MovePrepare()
+        private void RemoveItemFromOldSlot()
         {
-            //currentObstacle = runtimeTransformHandle.target.GetComponent<>
+
+            var obstacle = currentObstacle;
+
+            oldObstacleModel = slotsHolder.slotMap.TryGetObstacleModel(obstacle.slotID);
+
+            slotsHolder.slotMap.RemoveSlotItem(obstacle.slotID);
+        }
+        private void PlacementItemToNewSlot()
+        {
+            var obstacle = currentObstacle;
+            var newTransPos = obstacle.transform.position;
+
+            var newSlotID = slotsHolder.slotMap.TranPos2SlotID(newTransPos, groundGrid);
+
+            if (!slotRaycastSystem.CheckInIDRange(newSlotID))//如果新位置在地图外面，则释放这个对象
+            {
+                obstacleFactory.DeSpawn(obstacle);
+                runtimeTransformHandle.Target = null;
+                return;
+            }
+
+            //移除新位置上的已经存在的对象
+            var stayedItem = slotsHolder.slotMap.TryGetItem(newSlotID);
+            if (stayedItem != null)
+                slotsHolder.slotMap.ReleaseSlotItem(newSlotID, obstacleFactory);
+
+            obstacle.SetSlotID(newSlotID);
+            slotsHolder.slotMap.SetSlotItem(newSlotID, obstacle, oldObstacleModel);
+            runtimeTransformHandle.Target = obstacle.gameObject.transform;
         }
 
-        //private void RemoveItemsFromOldSlot()
-        //{
-        //    for (int i = 0; i < selectedObstacles.Count; i++)
-        //    {
-        //        var obstacle = selectedObstacles[i];
-
-        //        oldObstacleModels.Add(slotsHolder.slotMap.TryGetObstacleModel(obstacle.slotID));
-
-        //        slotsHolder.slotMap.RemoveSlotItem(obstacle.slotID);
-        //    }
-        //}
-        //private void PlacementItemsToNewSlot()
-        //{
-
-        //    bool isOutRange = false;
-
-        //    for (int i = 0; i < selectedObstacles.Count; i++)
-        //    {
-        //        var obstacle = selectedObstacles[i];
-        //        var newTransPos = obstacle.transform.position;
-
-        //        var newSlotID = slotsHolder.slotMap.TranPos2SlotID(newTransPos, groundGrid);
-
-        //        if (newSlotID.y != obstacle.slotID.y)
-        //        {
-        //            Debug.LogWarning("y 不相同");
-        //        }
-
-        //        newSlotID.y = obstacle.slotID.y;//some times it's make y different
-
-        //        Debug.Log(newTransPos + ":" + newSlotID);
-        //        if (!slotRaycastSystem.CheckInIDRange(newSlotID))//如果新位置在地图外面，则释放这个对象
-        //        {
-        //            isOutRange = true;
-        //            obstacleFactory.DeSpawn(obstacle);
-        //            continue;
-        //        }
-
-
-        //        //移除新位置上的已经存在的对象
-        //        var stayedItem = slotsHolder.slotMap.TryGetItem(newSlotID);
-        //        if (stayedItem != null)
-        //            slotsHolder.slotMap.ReleaseSlotItem(newSlotID, obstacleFactory);
-
-        //        obstacle.SetSlotID(newSlotID);
-        //        slotsHolder.slotMap.SetSlotItem(newSlotID, obstacle, oldObstacleModels[i]);
-
-        //    }
-        //    oldObstacleModels.Clear();
-
-        //    if (isOutRange)
-        //    {
-        //        boxSelectionSystem.ClearSelections();
-        //    }
-
-        //}
+       
     }
 }

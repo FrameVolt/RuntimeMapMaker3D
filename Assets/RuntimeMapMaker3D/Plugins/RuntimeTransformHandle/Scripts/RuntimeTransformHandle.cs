@@ -8,7 +8,7 @@ namespace RuntimeHandle
      */
     public class RuntimeTransformHandle : MonoBehaviour
     {
-        public static float MOUSE_SENSITIVITY = 1;
+        public static float MOUSE_SENSITIVITY = 2;
         
         public HandleAxes axes = HandleAxes.XYZ;
         public HandleSpace space = HandleSpace.LOCAL;
@@ -35,7 +35,29 @@ namespace RuntimeHandle
         private RotationHandle _rotationHandle;
         private ScaleHandle _scaleHandle;
 
-        public Transform target;
+        private Transform target;
+
+        public Transform Target
+        {
+            get
+            {
+                return target;
+            }
+            set
+            {
+                if(value == null)
+                {
+                    Clear();
+                }
+                else
+                {
+                    ChangeHandle();
+                }
+
+                target = value;
+            }
+        }
+
 
         void Start()
         {
@@ -44,10 +66,10 @@ namespace RuntimeHandle
 
             _previousType = type;
 
-            if (target == null)
-                target = transform;
+            //if (target == null)
+            //    target = transform;
 
-            CreateHandles();
+            //CreateHandles();
         }
 
         void CreateHandles()
@@ -75,20 +97,29 @@ namespace RuntimeHandle
             if (_scaleHandle) _scaleHandle.Destroy();
         }
 
+        private void ChangeHandle()
+        {
+            Clear();
+            CreateHandles();
+            _previousType = type;
+            _previousAxes = axes;
+        }
+
+
         void Update()
         {
+            if (Target == null)
+                return;
+
+
             if (autoScale)
                 transform.localScale =
                     Vector3.one * (Vector3.Distance(handleCamera.transform.position, transform.position) * autoScaleFactor) / 15;
-            
+
             if (_previousType != type || _previousAxes != axes)
             {
-                Clear();
-                CreateHandles();
-                _previousType = type;
-                _previousAxes = axes;
+                ChangeHandle();
             }
-
             HandleBase handle = null;
             Vector3 hitPoint = Vector3.zero;
             GetHandle(ref handle, ref hitPoint);
@@ -114,10 +145,10 @@ namespace RuntimeHandle
 
             _previousMousePosition = Input.mousePosition;
 
-            transform.position = target.transform.position;
+            transform.position = Target.transform.position;
             if (space == HandleSpace.LOCAL || type == HandleType.SCALE)
             {
-                transform.rotation = target.transform.rotation;
+                transform.rotation = Target.transform.rotation;
             }
             else
             {
@@ -162,7 +193,7 @@ namespace RuntimeHandle
         static public RuntimeTransformHandle Create(Transform p_target, HandleType p_handleType)
         {
             RuntimeTransformHandle runtimeTransformHandle = new GameObject().AddComponent<RuntimeTransformHandle>();
-            runtimeTransformHandle.target = p_target;
+            runtimeTransformHandle.Target = p_target;
             runtimeTransformHandle.type = p_handleType;
 
             return runtimeTransformHandle;

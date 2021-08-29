@@ -78,25 +78,22 @@ namespace RMM3D
             if (EventSystem.current.IsPointerOverGameObject())
                 return;
 
+
             if (Input.GetMouseButtonUp(0))
             {
                 OnMouseButtonUp();
             }
-
         }
 
         private void OnMouseButtonUp()
         {
             ClearSelections();
-            var slotID = slotRaycastSystem.CurrentSoltID;
+            var slotID = slotRaycastSystem.CurrentObstacleSlotID;
             var go = slotMap.TryGetItem(slotID);
             if (go != null)
             {
-                if(SelectedGO != go)
-                {
-                    SelectedGO = go;
-                    runtimeTransformHandle.target = go.transform;
-                }
+                SelectedGO = go;
+                runtimeTransformHandle.Target = go.transform;
             }
         }
 

@@ -47,13 +47,13 @@ namespace RMM3D
 
             if (Input.GetMouseButton(0))
             {
-                if (currentHitID == slotRaycastSystem.CurrentSoltID)
+                if (currentHitID == slotRaycastSystem.CurrentGroundSlotID)
                     return;
 
                 if (!slotRaycastSystem.IsPlaceableIDInRnage)
                     return;
 
-                currentHitID = slotRaycastSystem.CurrentSoltID;
+                currentHitID = slotRaycastSystem.CurrentGroundSlotID;
                 //currentObstacle = slotRaycastSystem.CurrentObstacle;
 
                 //var slotItem = slotsHolder.slotMap.TryGetItem(currentHitID);

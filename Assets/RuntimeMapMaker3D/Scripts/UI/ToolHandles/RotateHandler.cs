@@ -27,7 +27,7 @@ namespace RMM3D
 
         public void Initialize()
         {
-            toolHandlers.OnChangeCurrentToolType.AddListener(toolType => {
+            toolHandlers.OnChangeToolType.AddListener(toolType => {
                 if (toolType == ToolType.Rotate)
                 {
                     trans.gameObject.SetActive(true);
@@ -64,7 +64,7 @@ namespace RMM3D
             if (toolHandlers.CurrentToolType == ToolType.Rotate)
             {
                 RotateHandlerColor();
-                Vector3 temp = slotRaycastSystem.CurrentInRangeSlotPos;
+                Vector3 temp = slotRaycastSystem.CurrentGroundSlotPos;
 
                 var pos = new Vector3(temp.x, temp.y, temp.z);
                 trans.position = pos;
