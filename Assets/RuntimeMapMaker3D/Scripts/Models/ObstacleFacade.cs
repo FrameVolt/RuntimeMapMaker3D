@@ -10,7 +10,7 @@ namespace RMM3D
     public class ObstacleFacade : MonoBehaviour
     {
         [Inject]
-        public void Construct(SoltMap solt, GroundGrid groundGrid, ObstacleModel obstacleModel, Vector3Int slotID, Vector3 euler, Color color)
+        public void Construct(SoltMap solt, GroundGrid groundGrid, ObstacleModel obstacleModel, Vector3Int slotID, Vector3 euler, Vector3 scale, Color color)
         {
             this.solt = solt;
             this.groundGrid = groundGrid;
@@ -19,6 +19,7 @@ namespace RMM3D
             this.obstacleModel = obstacleModel;
             this.color = color;
             this.transform.localEulerAngles = euler;
+            this.transform.localScale = scale;
             obstacleRenderer = GetComponentsInChildren<Renderer>();
             SetColor(color);
         }
@@ -52,7 +53,7 @@ namespace RMM3D
 
 
 
-        public class Factory : PlaceholderFactory<Vector3Int, ObstacleModel, Vector3, Color, ObstacleFacade>
+        public class Factory : PlaceholderFactory<Vector3Int, ObstacleModel, Vector3, Vector3, Color, ObstacleFacade>
         {
             internal void DeSpawn(ObstacleFacade obstacleFacade)
             {
@@ -64,7 +65,7 @@ namespace RMM3D
     /// <summary>
     /// Obstacle real factory, override create function, load from assetbundle
     /// </summary>
-    public class ObstacleFactory : IFactory<Vector3Int, ObstacleModel, Vector3, Color, ObstacleFacade>
+    public class ObstacleFactory : IFactory<Vector3Int, ObstacleModel, Vector3, Vector3, Color, ObstacleFacade>
     {
         DiContainer _container;
         private Transform parent;
@@ -78,11 +79,11 @@ namespace RMM3D
             this.assetBundleSystem = assetBundleSystem;
         }
 
-        public ObstacleFacade Create(Vector3Int slotID, ObstacleModel obstacleModel, Vector3 euler, Color color)
+        public ObstacleFacade Create(Vector3Int slotID, ObstacleModel obstacleModel, Vector3 euler, Vector3 scale, Color color)
         {
 
             var prefab = assetBundleSystem.assetBundle.LoadAsset<GameObject>(obstacleModel.assetName);
-            ObstacleFacade result = _container.InstantiatePrefabForComponent<ObstacleFacade>(prefab, new List<object> { slotID, obstacleModel, euler, color});
+            ObstacleFacade result = _container.InstantiatePrefabForComponent<ObstacleFacade>(prefab, new List<object> { slotID, obstacleModel, euler, scale, color });
             result.transform.SetParent(parent);
             return result;
         }

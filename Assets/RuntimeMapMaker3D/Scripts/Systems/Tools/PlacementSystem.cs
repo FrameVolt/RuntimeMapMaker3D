@@ -109,7 +109,7 @@ namespace RMM3D
             var slot = slotsHolder.slotMap.Solts[slotID.x, slotID.y, slotID.z];
             if (slot.item == null)
             {
-                var obstacle = obstacleFactory.Create(slotID, obstacleModel, Vector3.zero, colorPicker.CurrentColor);
+                var obstacle = obstacleFactory.Create(slotID, obstacleModel, Vector3.zero, Vector3.one, colorPicker.CurrentColor);
                 obstacle.transform.position = slot.position;
                 slotsHolder.slotMap.SetSlotItem(slotID, obstacle, obstacleModel);
             }
@@ -132,7 +132,7 @@ namespace RMM3D
 
                     if (itemGO == null)
                     {
-                        var obstacle = obstacleFactory.Create(slotID, obstacleModel, Vector3.zero, colorPicker.CurrentColor);
+                        var obstacle = obstacleFactory.Create(slotID, obstacleModel, Vector3.zero, Vector3.one, colorPicker.CurrentColor);
                         obstacle.transform.position = slot.position;
                         slotsHolder.slotMap.SetSlotItem(slotID, obstacle, obstacleModel);
                     }
@@ -154,7 +154,7 @@ namespace RMM3D
                 {
                     var slot = slotsHolder.slotMap.Solts[targetSlotID.x, targetSlotID.y, targetSlotID.z];
 
-                    var obstacle = obstacleFactory.Create(targetSlotID, obstacleModel, Vector3.zero, colorPicker.CurrentColor);
+                    var obstacle = obstacleFactory.Create(targetSlotID, obstacleModel, Vector3.zero, Vector3.one, colorPicker.CurrentColor);
                     obstacle.transform.position = slot.position;
                     slotsHolder.slotMap.SetSlotItem(targetSlotID, obstacle, obstacleModel);
                 }

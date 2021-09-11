@@ -28,6 +28,7 @@ namespace RMM3D
                         var slot = new Solt();
                         slot.position = new Vector3(i - halfXAmount + offset, j, k - halfZAmount + offset);
                         slot.rotation = Vector3.zero;
+                        slot.scale = Vector3.one;
                         slot.color = Vector4.one;
                         this.slotMap.Solts[i, j, k] = slot;
                     }
@@ -53,7 +54,7 @@ namespace RMM3D
                     {
                         if (slots[i, j, k].obstacleData != null)
                         {
-                            var obstacle = obstacleFactory.Create(new Vector3Int(i, j, k), slots[i, j, k].obstacleData, slots[i,j,k].rotation,slots[i,j,k].color);
+                            var obstacle = obstacleFactory.Create(new Vector3Int(i, j, k), slots[i, j, k].obstacleData, slots[i,j,k].rotation, slots[i, j, k].scale, slots[i,j,k].color);
                             obstacle.transform.position = slots[i, j, k].position;
                             slots[i, j, k].item = obstacle.gameObject;
                         }
@@ -107,7 +108,7 @@ namespace RMM3D
                     {
                         if (slots[i, j, k].obstacleData != null)
                         {
-                            var obstacle = obstacleFactory.Create(new Vector3Int(i, j, k), slots[i, j, k].obstacleData, slots[i, j, k].rotation, slots[i, j, k].color);
+                            var obstacle = obstacleFactory.Create(new Vector3Int(i, j, k), slots[i, j, k].obstacleData, slots[i, j, k].rotation, slots[i, j, k].scale, slots[i, j, k].color);
                             obstacle.transform.position = slots[i, j, k].position;
                             slots[i, j, k].item = obstacle.gameObject;
                         }
@@ -171,6 +172,15 @@ namespace RMM3D
             return result;
         }
 
+
+        public void SetRoatation(Vector3Int slotID, Vector3 eular)
+        {
+            Solts[slotID.x, slotID.y, slotID.z].rotation = eular;
+        }
+        public void SetScale(Vector3Int slotID, Vector3 scale)
+        {
+            Solts[slotID.x, slotID.y, slotID.z].scale = scale;
+        }
         public void SetSoltColor(Vector3Int slotID, Color color)
         {
             Solts[slotID.x, slotID.y, slotID.z].color = color;
@@ -308,6 +318,7 @@ namespace RMM3D
     {
         public Vector3 position;
         public Vector3 rotation;
+        public Vector3 scale;
         public Vector4 color;
         [System.NonSerialized] public GameObject item;
         public bool isRoot;

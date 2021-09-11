@@ -43,7 +43,7 @@ namespace RMM3D
 
         private void BindFactorys()
         {
-            Container.BindFactory<Vector3Int, ObstacleModel, Vector3, Color, ObstacleFacade, ObstacleFacade.Factory>().FromFactory<ObstacleFactory>();
+            Container.BindFactory<Vector3Int, ObstacleModel, Vector3, Vector3, Color, ObstacleFacade, ObstacleFacade.Factory>().FromFactory<ObstacleFactory>();
 
 
 

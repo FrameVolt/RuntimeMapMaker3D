@@ -26,7 +26,6 @@ namespace RMM3D
             this.slotRaycastSystem = slotRaycastSystem;
             this.obstacleFactory = obstacleFactory;
             this.undoRedoSystem = undoRedoSystem;
-
         }
         private ToolHandlers toolHandlers;
         private GroundGrid groundGrid;
@@ -66,17 +65,39 @@ namespace RMM3D
                 if (runtimeTransformHandle.Target == null)
                     return;
 
-                PerpareMove();
-                RelpaceSoltItem();
+                Perpare();
+
+                if (runtimeTransformHandle.type == HandleType.POSITION)
+                {
+                    RelpaceSoltItem();
+                }
+                else if (runtimeTransformHandle.type == HandleType.ROTATION)
+                {
+                    SetRotationToMap();
+                }
+                else if (runtimeTransformHandle.type == HandleType.SCALE)
+                {
+                    SetScaleToMap();
+                }
+
                 undoRedoSystem.AppendStatus();
             }
         }
 
-        private void PerpareMove()
+        private void SetRotationToMap()
+        {
+            var obstacle = currentObstacle;
+            slotsHolder.slotMap.SetRoatation(obstacle.slotID, obstacle.transform.eulerAngles);
+        }
+        private void SetScaleToMap()
+        {
+            var obstacle = currentObstacle;
+            slotsHolder.slotMap.SetScale(obstacle.slotID, obstacle.transform.localScale);
+        }
+        private void Perpare()
         {
             currentObstacle = runtimeTransformHandle.Target.GetComponent<ObstacleFacade>();
         }
-
 
         private void RelpaceSoltItem()
         {
