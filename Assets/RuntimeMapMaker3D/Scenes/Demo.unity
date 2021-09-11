@@ -29124,26 +29124,13 @@ MonoBehaviour:
   m_text: 'WARNING:
 
 
-    0. If you have any error, please check include those Free
+    1. Open Obstacle creator window
 
-    Dependence:
-
-    -
-    Extenject Dependency Injection IOC
-
-    - JsonDotNet
-
-    - TextMesh Pro
+    at "Tools/RuntimeMapMaker3D"
+    menu.
 
 
-    1.
-    Open Obstacle creator window
-
-    at "Tools/RuntimeMapMaker3D" menu.
-
-
-    2.
-    Click "Build asset bundle" button.'
+    2. Click "Build asset bundle" button.'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}

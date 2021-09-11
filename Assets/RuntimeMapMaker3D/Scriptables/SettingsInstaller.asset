@@ -19,6 +19,10 @@ MonoBehaviour:
     - {fileID: 11400000, guid: 586dcf5f8e6b7b743adc0d284e416939, type: 2}
     - {fileID: 11400000, guid: b3f9c30f7c2c1fd41ab3b1ab69f544f4, type: 2}
     - {fileID: 11400000, guid: b2549c5612c47e441866d17e5f21580d, type: 2}
+    - {fileID: 11400000, guid: dde6b27a5491e164b8bf33e94163d67b, type: 2}
+    - {fileID: 11400000, guid: 1d06fe11c7fab1e49bab641ff5ad11e7, type: 2}
+    - {fileID: 11400000, guid: ab3b6466a89425948adbfeb525ed0639, type: 2}
+    - {fileID: 11400000, guid: b2b9276992b07d7479b7f3a9e0280cc2, type: 2}
     - {fileID: 11400000, guid: 7a9b7246277298c4899f555297576e88, type: 2}
     obstacleBtnPrototype: {fileID: 4877359280320273223, guid: ee64884f36066da43aadda316e230c6e,
       type: 3}

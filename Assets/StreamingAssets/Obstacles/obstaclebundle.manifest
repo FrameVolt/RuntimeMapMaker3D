@@ -1,12 +1,12 @@
 ManifestFileVersion: 0
-CRC: 2869307578
+CRC: 1697427092
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: 02b3e7f06c8b34b49f9fec331b5d4b47
+    Hash: a2260943ce960ddcebef77650fe252b9
   TypeTreeHash:
     serializedVersion: 2
-    Hash: e6b9e399119ffd56ccff1f4f24dca213
+    Hash: f4c00216b525061c2828756643e775dc
 HashAppended: 0
 ClassTypes:
 - Class: 1
@@ -35,6 +35,7 @@ ClassTypes:
   Script: {instanceID: 0}
 - Class: 213
   Script: {instanceID: 0}
+SerializeReferenceClassIdentifiers: []
 Assets:
 - Assets/RuntimeMapMaker3D/ArtWorks/Textures/ObstaclesIcon/brick_brown_1.png
 - Assets/RuntimeMapMaker3D/ArtWorks/Textures/ObstaclesIcon/ConcaveTrangle.png
@@ -43,10 +44,15 @@ Assets:
 - Assets/RuntimeMapMaker3D/Prefabs/Obstacles/BaseLine.prefab
 - Assets/RuntimeMapMaker3D/Prefabs/Obstacles/ConcaveTrangle.prefab
 - Assets/RuntimeMapMaker3D/ArtWorks/Textures/ObstaclesIcon/brick_black_3.png
+- Assets/RuntimeMapMaker3D/Prefabs/Obstacles/Landmine.prefab
 - Assets/RuntimeMapMaker3D/ArtWorks/Textures/ObstaclesIcon/palm_leaf_start.png
+- Assets/RuntimeMapMaker3D/Prefabs/Obstacles/Jump.prefab
+- Assets/RuntimeMapMaker3D/ArtWorks/Textures/ObstaclesIcon/StarThorn.png
 - Assets/RuntimeMapMaker3D/ArtWorks/Textures/ObstaclesIcon/lava_cubes_5.png
 - Assets/RuntimeMapMaker3D/ArtWorks/Textures/ObstaclesIcon/brick_black_4.png
+- Assets/RuntimeMapMaker3D/ArtWorks/Textures/ObstaclesIcon/Landmine.png
 - Assets/RuntimeMapMaker3D/ArtWorks/Textures/ObstaclesIcon/cactus_block.png
+- Assets/RuntimeMapMaker3D/Prefabs/Obstacles/StarThorn.prefab
 - Assets/RuntimeMapMaker3D/ArtWorks/Textures/ObstaclesIcon/cactus_block_top.png
 - Assets/RuntimeMapMaker3D/ArtWorks/Textures/ObstaclesIcon/palm_trunk_block.png
 - Assets/RuntimeMapMaker3D/ArtWorks/Textures/ObstaclesIcon/brick_brown_4.png
@@ -54,7 +60,9 @@ Assets:
 - Assets/RuntimeMapMaker3D/ArtWorks/Textures/ObstaclesIcon/ConvexTrangle.png
 - Assets/RuntimeMapMaker3D/ArtWorks/Textures/ObstaclesIcon/pebbles_3.png
 - Assets/RuntimeMapMaker3D/ArtWorks/Textures/ObstaclesIcon/sand_cube_2.png
+- Assets/RuntimeMapMaker3D/Prefabs/Obstacles/FlyThorn.prefab
 - Assets/RuntimeMapMaker3D/Prefabs/Obstacles/ConvexTrangle.prefab
+- Assets/RuntimeMapMaker3D/ArtWorks/Textures/ObstaclesIcon/Jump.png
 - Assets/RuntimeMapMaker3D/ArtWorks/Textures/ObstaclesIcon/palm_leaf.png
 - Assets/RuntimeMapMaker3D/ArtWorks/Textures/ObstaclesIcon/palm_2.png
 - Assets/RuntimeMapMaker3D/ArtWorks/Textures/ObstaclesIcon/lava_cubes_3.png
@@ -68,6 +76,7 @@ Assets:
 - Assets/RuntimeMapMaker3D/ArtWorks/Textures/ObstaclesIcon/palm_1.png
 - Assets/RuntimeMapMaker3D/ArtWorks/Textures/ObstaclesIcon/chest_silver.png
 - Assets/RuntimeMapMaker3D/ArtWorks/Textures/ObstaclesIcon/cactus_3.png
+- Assets/RuntimeMapMaker3D/ArtWorks/Textures/ObstaclesIcon/FlyThorn.png
 - Assets/RuntimeMapMaker3D/ArtWorks/Textures/ObstaclesIcon/BaseCube.png
 - Assets/RuntimeMapMaker3D/ArtWorks/Textures/ObstaclesIcon/sand_cube_3.png
 - Assets/RuntimeMapMaker3D/ArtWorks/Textures/ObstaclesIcon/palm_leaf_end.png
