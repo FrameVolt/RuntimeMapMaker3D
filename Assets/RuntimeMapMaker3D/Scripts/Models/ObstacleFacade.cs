@@ -10,9 +10,9 @@ namespace RMM3D
     public class ObstacleFacade : MonoBehaviour
     {
         [Inject]
-        public void Construct(SoltMap solt, GroundGrid groundGrid, ObstacleModel obstacleModel, Vector3Int slotID, Vector3 euler, Vector3 scale, Color color)
+        public void Construct(SlotsHolder slotsHolder, GroundGrid groundGrid, ObstacleModel obstacleModel, Vector3Int slotID, Vector3 euler, Vector3 scale, Color color)
         {
-            this.solt = solt;
+            this.slotsHolder = slotsHolder;
             this.groundGrid = groundGrid;
             this.slotID = slotID;
             this.euler = euler;
@@ -24,7 +24,7 @@ namespace RMM3D
             SetColor(color);
         }
 
-        private SoltMap solt;
+        private SlotsHolder slotsHolder;
         private GroundGrid groundGrid;
 
         public Vector3Int slotID { get; private set; }
@@ -37,7 +37,7 @@ namespace RMM3D
         public void SetSlotID(Vector3Int newSlotID)
         {
             slotID = newSlotID;
-            transform.position = SoltMap.GetSlotPos(newSlotID, groundGrid);
+            transform.position = slotsHolder.GetSlotPos(newSlotID, groundGrid);
 
             
         }
@@ -48,7 +48,7 @@ namespace RMM3D
             {
                 obstacleRenderer[i].material.color = color;
             }
-            solt.SetSoltColor(slotID, color);
+            slotsHolder.SetSoltColor(slotID, color);
         }
 
 

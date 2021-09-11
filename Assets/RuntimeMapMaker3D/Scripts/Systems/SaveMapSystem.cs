@@ -29,7 +29,7 @@ namespace RMM3D
         /// </summary>
         public void SaveMap()
         {
-            string str = JsonConvert.SerializeObject(slotsHolder.slotMap.Solts);
+            string str = JsonConvert.SerializeObject(slotsHolder.Solts);
             File.WriteAllText(filePath, str);
 
         }

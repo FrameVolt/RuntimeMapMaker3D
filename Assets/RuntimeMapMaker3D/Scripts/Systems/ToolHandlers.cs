@@ -7,14 +7,12 @@ namespace RMM3D
 {
     public class ToolHandlers : IInitializable
     {
-        public ToolHandlers(GroundGrid groundGrid, SoltMap slotMap, SlotsHolder slotsHolder)
+        public ToolHandlers(GroundGrid groundGrid, SlotsHolder slotsHolder)
         {
             this.groundGrid = groundGrid;
-            this.slotMap = slotMap;
             this.slotsHolder = slotsHolder;
         }
         private readonly GroundGrid groundGrid;
-        private readonly SoltMap slotMap;
         private readonly SlotsHolder slotsHolder;
 
         private int maxX_ID;
@@ -91,9 +89,9 @@ namespace RMM3D
         {
             CurrentToolType = ToolType.Placement;
 
-            maxX_ID = slotsHolder.slotMap.Solts.GetLength(0) - 1;
-            maxY_ID = slotsHolder.slotMap.Solts.GetLength(1) - 1;
-            maxZ_ID = slotsHolder.slotMap.Solts.GetLength(2) - 1;
+            maxX_ID = slotsHolder.Solts.GetLength(0) - 1;
+            maxY_ID = slotsHolder.Solts.GetLength(1) - 1;
+            maxZ_ID = slotsHolder.Solts.GetLength(2) - 1;
 
         }
 
@@ -119,7 +117,7 @@ namespace RMM3D
                         }
                         SlotsInBrush.Add(targetSlotID);
 
-                        var go = slotMap.TryGetItem(targetSlotID);
+                        var go = slotsHolder.TryGetItem(targetSlotID);
                         if (go != null)
                         {
                             SelectedSlotsOfGO.Add(targetSlotID);

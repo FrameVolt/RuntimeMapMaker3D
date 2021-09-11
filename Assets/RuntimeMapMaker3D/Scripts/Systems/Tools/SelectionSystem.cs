@@ -14,21 +14,21 @@ namespace RMM3D
         public SelectionSystem(
             ToolHandlers toolHandlers, 
             OutLineSystem obstacleOutLineSystem, 
-            SoltMap slotMap, 
+            SlotsHolder slotsHolder,
             SlotRaycastSystem slotRaycastSystem,
             RuntimeTransformHandle runtimeTransformHandle
         )
         {
             this.toolHandlers = toolHandlers;
             this.obstacleOutLineSystem = obstacleOutLineSystem;
-            this.slotMap = slotMap;
+            this.slotsHolder = slotsHolder;
             this.slotRaycastSystem = slotRaycastSystem;
             this.runtimeTransformHandle = runtimeTransformHandle;
         }
 
         private readonly ToolHandlers toolHandlers;
         private readonly OutLineSystem obstacleOutLineSystem;
-        private readonly SoltMap slotMap;
+        private readonly SlotsHolder slotsHolder;
         private readonly SlotRaycastSystem slotRaycastSystem;
         private readonly RuntimeTransformHandle runtimeTransformHandle;
 
@@ -89,7 +89,7 @@ namespace RMM3D
         {
             ClearSelections();
             var slotID = slotRaycastSystem.CurrentObstacleSlotID;
-            var go = slotMap.TryGetItem(slotID);
+            var go = slotsHolder.TryGetItem(slotID);
             if (go != null)
             {
                 SelectedGO = go;

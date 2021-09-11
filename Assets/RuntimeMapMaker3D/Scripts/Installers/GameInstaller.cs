@@ -14,7 +14,7 @@ namespace RMM3D
         public override void InstallBindings()
         {
             Container.BindInterfacesAndSelfTo<SlotRaycastSystem>().AsSingle().NonLazy();
-            Container.Bind<SlotsHolder>().AsSingle().NonLazy();
+            Container.BindInterfacesAndSelfTo<SlotsHolder>().AsSingle().NonLazy();
             Container.BindInterfacesAndSelfTo<ToolHandlers>().AsSingle();
             Container.BindInterfacesAndSelfTo<PlacementSystem>().AsSingle().NonLazy();
             Container.BindInterfacesAndSelfTo<RotateObstacleSystem>().AsSingle().NonLazy();
@@ -28,7 +28,6 @@ namespace RMM3D
             Container.BindInterfacesAndSelfTo<MoveToolSystem>().AsSingle().NonLazy();
             Container.BindInterfacesAndSelfTo<AssetBundleSystem>().AsSingle().NonLazy();
             Container.BindInterfacesAndSelfTo<ColorBrushSystem>().AsSingle().NonLazy();
-            Container.BindInterfacesAndSelfTo<SoltMap>().AsSingle().NonLazy();
             Container.BindInterfacesAndSelfTo<SelectionSystem>().AsSingle().NonLazy();
             
 

@@ -9,11 +9,9 @@ namespace RMM3D
 {
     public class SlotsHolder
     {
-        public SlotsHolder(GroundGrid groundGrid, ObstacleFacade.Factory obstacleFactory, SoltMap soltMap)
+        public SlotsHolder(GroundGrid groundGrid, ObstacleFacade.Factory obstacleFactory)
         {
-
-            this.slotMap = soltMap;
-            this.slotMap.Solts = new Solt[groundGrid.xAmount, groundGrid.yAmount, groundGrid.zAmount];
+            this.Solts = new Solt[groundGrid.xAmount, groundGrid.yAmount, groundGrid.zAmount];
 
             int halfXAmount = groundGrid.xAmount / 2;
             int halfZAmount = groundGrid.zAmount / 2;
@@ -30,7 +28,7 @@ namespace RMM3D
                         slot.rotation = Vector3.zero;
                         slot.scale = Vector3.one;
                         slot.color = Vector4.one;
-                        this.slotMap.Solts[i, j, k] = slot;
+                        this.Solts[i, j, k] = slot;
                     }
                 }
             }
@@ -38,13 +36,12 @@ namespace RMM3D
             this.obstacleFactory = obstacleFactory;
         }
 
-        public SoltMap slotMap { get; private set; }
         private readonly ObstacleFacade.Factory obstacleFactory;
-
+        public Solt[,,] Solts;
 
         public void SetSoltMap(Solt[,,] slots)
         {
-            this.slotMap.Solts = slots;
+            this.Solts = slots;
 
             for (int i = 0; i < slots.GetLength(0); i++)
             {
@@ -66,7 +63,7 @@ namespace RMM3D
 
         public void ResetSoltMap()
         {
-            var slots = slotMap.Solts;
+            var slots = Solts;
             for (int i = 0; i < slots.GetLength(0); i++)
             {
                 for (int j = 0; j < slots.GetLength(1); j++)
@@ -75,7 +72,7 @@ namespace RMM3D
                     {
                         if (slots[i, j, k].item != null)
                         {
-                            slotMap.ReleaseSlotItem(new Vector3Int(i, j, k), obstacleFactory);
+                            ReleaseSlotItem(new Vector3Int(i, j, k), obstacleFactory);
                         }
                     }
                 }
@@ -84,7 +81,7 @@ namespace RMM3D
 
         public IEnumerator YieldReplaceSlotMap(Solt[,,] slots)
         {
-            var oldSolts = slotMap.Solts;
+            var oldSolts = Solts;
             for (int i = 0; i < oldSolts.GetLength(0); i++)
             {
                 for (int j = 0; j < oldSolts.GetLength(1); j++)
@@ -93,7 +90,7 @@ namespace RMM3D
                     {
                         if (oldSolts[i, j, k].item != null)
                         {
-                            slotMap.ReleaseSlotItem(new Vector3Int(i, j, k), obstacleFactory);
+                            ReleaseSlotItem(new Vector3Int(i, j, k), obstacleFactory);
                         }
                     }
                 }
@@ -116,17 +113,12 @@ namespace RMM3D
                     }
                 }
             }
-            this.slotMap.Solts = slots;
+            this.Solts = slots;
         }
 
-    }
+        
 
-    [System.Serializable]
-    public class SoltMap
-    {
-        public Solt[,,] Solts;
-
-        public static Vector3 GetSlotPos(Vector3Int ID, GroundGrid groundGrid)
+        public Vector3 GetSlotPos(Vector3Int ID, GroundGrid groundGrid)
         {
             var halfXAmount = groundGrid.xAmount / 2;
             var yAmount = groundGrid.yAmount;
@@ -286,7 +278,7 @@ namespace RMM3D
             }
             return index;
         }
-        public static Solt[,,] Copy(Solt[,,] value)
+        public Solt[,,] Copy(Solt[,,] value)
         {
             int a = value.GetLength(0);
             int b = value.GetLength(1);

@@ -92,9 +92,9 @@ namespace RMM3D
             {
                 var obstacle = selectedObstacles[i];
 
-                oldObstacleModels.Add(slotsHolder.slotMap.TryGetObstacleModel(obstacle.slotID));
+                oldObstacleModels.Add(slotsHolder.TryGetObstacleModel(obstacle.slotID));
 
-                slotsHolder.slotMap.RemoveSlotItem(obstacle.slotID);
+                slotsHolder.RemoveSlotItem(obstacle.slotID);
             }
         }
         private void PlacementItemsToNewSlot()
@@ -107,7 +107,7 @@ namespace RMM3D
                 var obstacle = selectedObstacles[i];
                 var newTransPos = obstacle.transform.position;
 
-                var newSlotID = slotsHolder.slotMap.TranPos2SlotID(newTransPos, groundGrid);
+                var newSlotID = slotsHolder.TranPos2SlotID(newTransPos, groundGrid);
 
                 if (newSlotID.y != obstacle.slotID.y)
                 {
@@ -126,12 +126,12 @@ namespace RMM3D
 
 
                 //移除新位置上的已经存在的对象
-                var stayedItem = slotsHolder.slotMap.TryGetItem(newSlotID);
+                var stayedItem = slotsHolder.TryGetItem(newSlotID);
                 if (stayedItem != null)
-                    slotsHolder.slotMap.ReleaseSlotItem(newSlotID, obstacleFactory);
+                    slotsHolder.ReleaseSlotItem(newSlotID, obstacleFactory);
 
                 obstacle.SetSlotID(newSlotID);
-                slotsHolder.slotMap.SetSlotItem(newSlotID, obstacle, oldObstacleModels[i]);
+                slotsHolder.SetSlotItem(newSlotID, obstacle, oldObstacleModels[i]);
 
             }
             oldObstacleModels.Clear();

@@ -72,7 +72,7 @@ namespace RMM3D
             {
                 var currentHitID = slotRaycastSystem.CurrentGroundSlotID;
 
-                var slot = slotsHolder.slotMap.Solts[currentHitID.x, currentHitID.y, currentHitID.z];
+                var slot = slotsHolder.Solts[currentHitID.x, currentHitID.y, currentHitID.z];
 
                 if (slot.item != null)
                 {

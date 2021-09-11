@@ -106,12 +106,12 @@ namespace RMM3D
         /// <param name="obstacleModel"></param>
         private void Spawn(Vector3Int slotID, ObstacleModel obstacleModel)
         {
-            var slot = slotsHolder.slotMap.Solts[slotID.x, slotID.y, slotID.z];
+            var slot = slotsHolder.Solts[slotID.x, slotID.y, slotID.z];
             if (slot.item == null)
             {
                 var obstacle = obstacleFactory.Create(slotID, obstacleModel, Vector3.zero, Vector3.one, colorPicker.CurrentColor);
                 obstacle.transform.position = slot.position;
-                slotsHolder.slotMap.SetSlotItem(slotID, obstacle, obstacleModel);
+                slotsHolder.SetSlotItem(slotID, obstacle, obstacleModel);
             }
         }
 
@@ -127,14 +127,14 @@ namespace RMM3D
 
                 if (slotID.y == slotRaycastSystem.GroundY)
                 {
-                    var itemGO = slotsHolder.slotMap.TryGetItem(slotID);
-                    var slot = slotsHolder.slotMap.Solts[slotID.x, slotID.y, slotID.z];
+                    var itemGO = slotsHolder.TryGetItem(slotID);
+                    var slot = slotsHolder.Solts[slotID.x, slotID.y, slotID.z];
 
                     if (itemGO == null)
                     {
                         var obstacle = obstacleFactory.Create(slotID, obstacleModel, Vector3.zero, Vector3.one, colorPicker.CurrentColor);
                         obstacle.transform.position = slot.position;
-                        slotsHolder.slotMap.SetSlotItem(slotID, obstacle, obstacleModel);
+                        slotsHolder.SetSlotItem(slotID, obstacle, obstacleModel);
                     }
                 }
             }
@@ -149,14 +149,14 @@ namespace RMM3D
                 if (!slotRaycastSystem.CheckInIDRange(targetSlotID))
                     continue;
 
-                var itemGO = slotsHolder.slotMap.TryGetItem(targetSlotID);
+                var itemGO = slotsHolder.TryGetItem(targetSlotID);
                 if (itemGO == null)
                 {
-                    var slot = slotsHolder.slotMap.Solts[targetSlotID.x, targetSlotID.y, targetSlotID.z];
+                    var slot = slotsHolder.Solts[targetSlotID.x, targetSlotID.y, targetSlotID.z];
 
                     var obstacle = obstacleFactory.Create(targetSlotID, obstacleModel, Vector3.zero, Vector3.one, colorPicker.CurrentColor);
                     obstacle.transform.position = slot.position;
-                    slotsHolder.slotMap.SetSlotItem(targetSlotID, obstacle, obstacleModel);
+                    slotsHolder.SetSlotItem(targetSlotID, obstacle, obstacleModel);
                 }
             }
         }

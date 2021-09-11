@@ -87,12 +87,12 @@ namespace RMM3D
         private void SetRotationToMap()
         {
             var obstacle = currentObstacle;
-            slotsHolder.slotMap.SetRoatation(obstacle.slotID, obstacle.transform.eulerAngles);
+            slotsHolder.SetRoatation(obstacle.slotID, obstacle.transform.eulerAngles);
         }
         private void SetScaleToMap()
         {
             var obstacle = currentObstacle;
-            slotsHolder.slotMap.SetScale(obstacle.slotID, obstacle.transform.localScale);
+            slotsHolder.SetScale(obstacle.slotID, obstacle.transform.localScale);
         }
         private void Perpare()
         {
@@ -110,16 +110,16 @@ namespace RMM3D
 
             var obstacle = currentObstacle;
 
-            oldObstacleModel = slotsHolder.slotMap.TryGetObstacleModel(obstacle.slotID);
+            oldObstacleModel = slotsHolder.TryGetObstacleModel(obstacle.slotID);
 
-            slotsHolder.slotMap.RemoveSlotItem(obstacle.slotID);
+            slotsHolder.RemoveSlotItem(obstacle.slotID);
         }
         private void PlacementItemToNewSlot()
         {
             var obstacle = currentObstacle;
             var newTransPos = obstacle.transform.position;
 
-            var newSlotID = slotsHolder.slotMap.TranPos2SlotID(newTransPos, groundGrid);
+            var newSlotID = slotsHolder.TranPos2SlotID(newTransPos, groundGrid);
 
             if (!slotRaycastSystem.CheckInIDRange(newSlotID))//如果新位置在地图外面，则释放这个对象
             {
@@ -129,12 +129,12 @@ namespace RMM3D
             }
 
             //移除新位置上的已经存在的对象
-            var stayedItem = slotsHolder.slotMap.TryGetItem(newSlotID);
+            var stayedItem = slotsHolder.TryGetItem(newSlotID);
             if (stayedItem != null)
-                slotsHolder.slotMap.ReleaseSlotItem(newSlotID, obstacleFactory);
+                slotsHolder.ReleaseSlotItem(newSlotID, obstacleFactory);
 
             obstacle.SetSlotID(newSlotID);
-            slotsHolder.slotMap.SetSlotItem(newSlotID, obstacle, oldObstacleModel);
+            slotsHolder.SetSlotItem(newSlotID, obstacle, oldObstacleModel);
             runtimeTransformHandle.Target = obstacle.gameObject.transform;
         }
 

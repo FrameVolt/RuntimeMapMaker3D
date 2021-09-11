@@ -26,15 +26,15 @@ namespace RMM3D
             SelectedGOs = new List<GameObject>();
             SelectedObstacles = new List<ObstacleFacade>();
             this.groundGrid = groundGrid;
+            this.slotsHolder = slotsHolder;
 
-            this.slotMap = slotsHolder.slotMap;
         }
 
-        private SlotRaycastSystem slotRaycastSystem;
-        private GroundGrid groundGrid;
-        private SoltMap slotMap;
-        private OutLineSystem obstacleOutLineSystem;
-        private ToolHandlers toolHandlers;
+        private readonly SlotRaycastSystem slotRaycastSystem;
+        private readonly GroundGrid groundGrid;
+        private readonly OutLineSystem obstacleOutLineSystem;
+        private readonly ToolHandlers toolHandlers;
+        private readonly SlotsHolder slotsHolder;
 
         public Vector3Int StartSlotID { get; private set; }
         public Vector3Int EndSlotID { get; private set; }
@@ -108,7 +108,7 @@ namespace RMM3D
                     {
                         var slotID = new Vector3Int(i, j, k);
 
-                        var go = slotMap.TryGetItem(slotID);
+                        var go = slotsHolder.TryGetItem(slotID);
                         if (go != null)
                         {
                             selectedSlotIDs.Add(slotID);

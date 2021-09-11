@@ -105,7 +105,7 @@ namespace RMM3D
 
         private void EraseSingle()
         {
-            slotsHolder.slotMap.ReleaseSlotItem(currentHitID, obstacleFactory);
+            slotsHolder.ReleaseSlotItem(currentHitID, obstacleFactory);
         }
 
         private void EraseSelections()
@@ -113,7 +113,7 @@ namespace RMM3D
             for (int i = 0; i < boxSelectionSystem.SelectedObstacles.Count; i++)
             {
                 var obstacle = boxSelectionSystem.SelectedObstacles[i];
-                slotsHolder.slotMap.ReleaseSlotItem(obstacle.slotID, obstacleFactory);
+                slotsHolder.ReleaseSlotItem(obstacle.slotID, obstacleFactory);
             }
             boxSelectionSystem.ClearSelections();
         }
@@ -124,7 +124,7 @@ namespace RMM3D
             List<ObstacleFacade> selectedObstacles = toolHandlers.SelectedObstacles;
             foreach (var obstacle in selectedObstacles)
             {
-                slotsHolder.slotMap.ReleaseSlotItem(obstacle.slotID, obstacleFactory);
+                slotsHolder.ReleaseSlotItem(obstacle.slotID, obstacleFactory);
             }
         }
     }

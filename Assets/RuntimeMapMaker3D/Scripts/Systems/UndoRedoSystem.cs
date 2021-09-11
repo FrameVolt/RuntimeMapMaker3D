@@ -76,7 +76,7 @@ namespace RMM3D
         {
 
 
-            var newSolts = SoltMap.Copy(slotsHolder.slotMap.Solts);
+            var newSolts = slotsHolder.Copy(slotsHolder.Solts);
 
             //if (_undoList.Count > 0 && _undoList.Last.Value == str)
             //{
@@ -118,7 +118,7 @@ namespace RMM3D
                     slots = _undoList.Last.Value;
                 }
 
-                var newSolts = SoltMap.Copy(slots);
+                var newSolts = slotsHolder.Copy(slots);
 
                 slotsHolder.ResetSoltMap();
                 slotsHolder.SetSoltMap(newSolts);
@@ -148,7 +148,7 @@ namespace RMM3D
                     slots = _redoList.Last.Value;
                 }
 
-                var newSolts = SoltMap.Copy(slots);
+                var newSolts = slotsHolder.Copy(slots);
                 slotsHolder.ResetSoltMap();
                 slotsHolder.SetSoltMap(newSolts);
 

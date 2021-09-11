@@ -72,9 +72,9 @@ namespace RMM3D
 
         public void Initialize()
         {
-            maxX_ID = slotsHolder.slotMap.Solts.GetLength(0) - 1;
-            maxY_ID = slotsHolder.slotMap.Solts.GetLength(1) - 1;
-            maxZ_ID = slotsHolder.slotMap.Solts.GetLength(2) - 1;
+            maxX_ID = slotsHolder.Solts.GetLength(0) - 1;
+            maxY_ID = slotsHolder.Solts.GetLength(1) - 1;
+            maxZ_ID = slotsHolder.Solts.GetLength(2) - 1;
         }
 
         public void Tick()
@@ -150,7 +150,7 @@ namespace RMM3D
             tempPlaceableID.y = Mathf.Clamp(Mathf.RoundToInt(hitPoint.y), 0, yAmount);
 
             CurrentGroundSlotID = tempHitID;
-            CurrentGroundSlotPos = SoltMap.GetSlotPos(tempHitID, groundGrid);
+            CurrentGroundSlotPos = slotsHolder.GetSlotPos(tempHitID, groundGrid);
 
             HitPos = hitPoint;
         }
