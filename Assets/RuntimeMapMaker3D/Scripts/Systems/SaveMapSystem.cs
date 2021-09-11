@@ -1,7 +1,8 @@
-﻿using Newtonsoft.Json;
+﻿// Copyright (c) LouYaoMing. All Right Reserved.
+// Licensed under MIT License.
+
+using Newtonsoft.Json;
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using System.IO;
 

@@ -1,4 +1,6 @@
-﻿using UnityEditor;
+﻿// Copyright (c) LouYaoMing. All Right Reserved.
+// Licensed under MIT License.
+
 using UnityEngine;
 
 namespace RMM3D

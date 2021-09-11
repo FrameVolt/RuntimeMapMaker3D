@@ -1,6 +1,5 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿// Copyright (c) LouYaoMing. All Right Reserved.
+// Licensed under MIT License.
 
 namespace RMM3D
 {

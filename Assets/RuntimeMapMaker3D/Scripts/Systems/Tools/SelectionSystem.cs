@@ -1,6 +1,7 @@
-﻿using RuntimeHandle;
-using System.Collections;
-using System.Collections.Generic;
+﻿// Copyright (c) LouYaoMing. All Right Reserved.
+// Licensed under MIT License.
+
+using RuntimeHandle;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;

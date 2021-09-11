@@ -1,0 +1,5 @@
+[*]
+end_of_line = crlf
+file_header_template = Copyright (c) LouYaoMing. All Right Reserved.\nLicensed under MIT License.
+[*.xml]
+indent_style = space

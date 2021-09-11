@@ -1,10 +1,11 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿// Copyright (c) 2021 LouYaoMing. All Right Reserved. 
+// Licensed under the MIT License.
+
 using UnityEditor;
 
 namespace RMM3D.Editor
 {
-public static class LayerUtility
+    public static class LayerUtility
 {
     public static void CreateLayer(string layerName)
     {

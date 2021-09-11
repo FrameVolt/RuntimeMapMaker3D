@@ -1,7 +1,6 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Runtime.InteropServices;
+﻿// Copyright (c) LouYaoMing. All Right Reserved.
+// Licensed under MIT License.
+
 using UnityEngine;
 using Zenject;
 

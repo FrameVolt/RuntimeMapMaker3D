@@ -1,4 +1,7 @@
-﻿using UnityEngine;
+﻿// Copyright (c) LouYaoMing. All Right Reserved.
+// Licensed under MIT License.
+
+using UnityEngine;
 
 public static class ExtDebug
 {

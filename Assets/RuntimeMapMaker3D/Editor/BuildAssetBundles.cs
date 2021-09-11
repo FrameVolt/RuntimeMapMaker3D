@@ -1,4 +1,7 @@
-﻿using UnityEditor;
+﻿// Copyright (c) 2021 LouYaoMing. All Right Reserved. 
+// Licensed under the MIT License.
+
+using UnityEditor;
 using UnityEngine;
 using System.IO;
 using System.Collections.Generic;

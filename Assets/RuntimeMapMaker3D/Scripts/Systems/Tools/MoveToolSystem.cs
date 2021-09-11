@@ -1,9 +1,10 @@
-﻿using System.Collections;
+﻿// Copyright (c) LouYaoMing. All Right Reserved.
+// Licensed under MIT License.
+
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using Zenject;
-using UnityEngine.Assertions;
 
 namespace RMM3D
 {

@@ -1,7 +1,6 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using UnityEditor;
+﻿// Copyright (c) 2021 LouYaoMing. All Right Reserved. 
+// Licensed under the MIT License.
+
 
 //[CustomPropertyDrawer(typeof(StringStringDictionary))]
 //[CustomPropertyDrawer(typeof(ObjectColorDictionary))]

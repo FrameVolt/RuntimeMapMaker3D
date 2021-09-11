@@ -1,6 +1,7 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿// Copyright (c) LouYaoMing. All Right Reserved.
+// Licensed under MIT License.
+
+using System;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using Zenject;
