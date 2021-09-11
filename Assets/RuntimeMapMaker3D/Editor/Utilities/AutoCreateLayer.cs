@@ -12,6 +12,7 @@ public class AutoCreateLayer : Editor {
         var tagManager = new SerializedObject(AssetDatabase.LoadAllAssetsAtPath("ProjectSettings/TagManager.asset")[0]);
         SerializedProperty layers = tagManager.FindProperty("layers");
         int count = 0;
+        SetLayer("Ground", ref count, layers, tagManager);
         SetLayer("Outline", ref count, layers, tagManager);
         SetLayer("Obstacle", ref count, layers, tagManager);
         SetLayer("Handler", ref count, layers, tagManager);

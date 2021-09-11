@@ -13,7 +13,6 @@ namespace RMM3D
                             SlotsHolder slotsHolder,
                             ObstacleFacade.Factory obstacleFactory,
                             ToolHandlers toolHandlers,
-                            BoxSelectionSystem boxSelectionSystem,
                             UndoRedoSystem undoRedoSystem
                             )
         {
@@ -21,17 +20,13 @@ namespace RMM3D
             this.slotsHolder = slotsHolder;
             this.obstacleFactory = obstacleFactory;
             this.toolHandlers = toolHandlers;
-            this.boxSelectionSystem = boxSelectionSystem;
             this.undoRedoSystem = undoRedoSystem;
         }
-
-
 
         private readonly SlotRaycastSystem slotRaycastSystem;
         private readonly SlotsHolder slotsHolder;
         private readonly ToolHandlers toolHandlers;
         private readonly ObstacleFacade.Factory obstacleFactory;
-        private readonly BoxSelectionSystem boxSelectionSystem;
         private readonly UndoRedoSystem undoRedoSystem;
 
         private Vector3Int currentHitID;
@@ -54,29 +49,6 @@ namespace RMM3D
                     return;
 
                 currentHitID = slotRaycastSystem.CurrentGroundSlotID;
-                //currentObstacle = slotRaycastSystem.CurrentObstacle;
-
-                //var slotItem = slotsHolder.slotMap.TryGetItem(currentHitID);
-
-
-                //if (slotItem != null)
-                //{
-
-                //    var hasSame = CheckHasSameSelectedObstacle();
-
-
-                //    //如果选框内有选中的对象
-                //    if (hasSame)
-                //    {
-                //        EraseSelections();
-                //    }
-                //    else
-                //    {
-                //        EraseSingle();
-                //    }
-
-
-                //}
 
                 EraseBrush(currentHitID, toolHandlers.BrushOddScaleInt);
 
@@ -89,35 +61,11 @@ namespace RMM3D
 
         }
 
-        private bool CheckHasSameSelectedObstacle()
-        {
-            bool sameObstacle = false;
-            for (int i = 0; i < boxSelectionSystem.SelectedObstacles.Count; i++)
-            {
-                if (boxSelectionSystem.SelectedObstacles[i] == currentObstacle)
-                {
-                    sameObstacle = true;
-                    break;
-                }
-            }
-            return sameObstacle;
-        }
-
-        private void EraseSingle()
-        {
-            slotsHolder.ReleaseSlotItem(currentHitID, obstacleFactory);
-        }
-
-        private void EraseSelections()
-        {
-            for (int i = 0; i < boxSelectionSystem.SelectedObstacles.Count; i++)
-            {
-                var obstacle = boxSelectionSystem.SelectedObstacles[i];
-                slotsHolder.ReleaseSlotItem(obstacle.slotID, obstacleFactory);
-            }
-            boxSelectionSystem.ClearSelections();
-        }
-
+        /// <summary>
+        /// Erase from current slots
+        /// </summary>
+        /// <param name="centerID"></param>
+        /// <param name="size"></param>
         private void EraseBrush(Vector3Int centerID, Vector3Int size)
         {
             toolHandlers.CheckSlotsInBrush(centerID, size);

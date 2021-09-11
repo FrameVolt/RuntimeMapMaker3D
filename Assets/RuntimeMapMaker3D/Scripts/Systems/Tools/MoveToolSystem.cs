@@ -85,7 +85,9 @@ namespace RMM3D
         }
 
 
-
+        /// <summary>
+        /// Remove obstacle from old slot
+        /// </summary>
         private void RemoveItemsFromOldSlot()
         {
             for (int i = 0; i < selectedObstacles.Count; i++)
@@ -97,6 +99,11 @@ namespace RMM3D
                 slotsHolder.RemoveSlotItem(obstacle.slotID);
             }
         }
+
+
+        /// <summary>
+        /// Place obstacle to new slot
+        /// </summary>
         private void PlacementItemsToNewSlot()
         {
 

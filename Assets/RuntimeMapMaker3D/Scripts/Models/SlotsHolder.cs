@@ -11,6 +11,16 @@ namespace RMM3D
     {
         public SlotsHolder(GroundGrid groundGrid, ObstacleFacade.Factory obstacleFactory)
         {
+            this.groundGrid = groundGrid;
+            this.obstacleFactory = obstacleFactory;
+            InitSlots();
+        }
+        private readonly GroundGrid groundGrid;
+        private readonly ObstacleFacade.Factory obstacleFactory;
+        public Solt[,,] Solts;
+
+        private void InitSlots()
+        {
             this.Solts = new Solt[groundGrid.xAmount, groundGrid.yAmount, groundGrid.zAmount];
 
             int halfXAmount = groundGrid.xAmount / 2;
@@ -32,12 +42,8 @@ namespace RMM3D
                     }
                 }
             }
-
-            this.obstacleFactory = obstacleFactory;
         }
 
-        private readonly ObstacleFacade.Factory obstacleFactory;
-        public Solt[,,] Solts;
 
         public void SetSoltMap(Solt[,,] slots)
         {
@@ -79,44 +85,6 @@ namespace RMM3D
             }
         }
 
-        public IEnumerator YieldReplaceSlotMap(Solt[,,] slots)
-        {
-            var oldSolts = Solts;
-            for (int i = 0; i < oldSolts.GetLength(0); i++)
-            {
-                for (int j = 0; j < oldSolts.GetLength(1); j++)
-                {
-                    for (int k = 0; k < oldSolts.GetLength(2); k++)
-                    {
-                        if (oldSolts[i, j, k].item != null)
-                        {
-                            ReleaseSlotItem(new Vector3Int(i, j, k), obstacleFactory);
-                        }
-                    }
-                }
-            }
-            yield return null;
-
-            for (int i = 0; i < slots.GetLength(0); i++)
-            {
-                for (int j = 0; j < slots.GetLength(1); j++)
-                {
-                    for (int k = 0; k < slots.GetLength(2); k++)
-                    {
-                        if (slots[i, j, k].obstacleData != null)
-                        {
-                            var obstacle = obstacleFactory.Create(new Vector3Int(i, j, k), slots[i, j, k].obstacleData, slots[i, j, k].rotation, slots[i, j, k].scale, slots[i, j, k].color);
-                            obstacle.transform.position = slots[i, j, k].position;
-                            slots[i, j, k].item = obstacle.gameObject;
-                        }
-
-                    }
-                }
-            }
-            this.Solts = slots;
-        }
-
-        
 
         public Vector3 GetSlotPos(Vector3Int ID, GroundGrid groundGrid)
         {
@@ -221,8 +189,6 @@ namespace RMM3D
             Solts[slotID.x, slotID.y, slotID.z].color = Color.white;
         }
 
-
-
         public Vector3Int TranPos2SlotID(Vector3 transPos, GroundGrid groundGrid)
         {
             var halfXAmount = groundGrid.xAmount / 2;
@@ -284,9 +250,7 @@ namespace RMM3D
             int b = value.GetLength(1);
             int c = value.GetLength(2);
 
-
             Solt[,,] newSolts = new Solt[a, b, c];
-
 
             for (int i = 0; i < a; i++)
             {
@@ -300,9 +264,6 @@ namespace RMM3D
             }
             return newSolts;
         }
-
-
-
     }
 
     [System.Serializable]
@@ -315,8 +276,6 @@ namespace RMM3D
         [System.NonSerialized] public GameObject item;
         public bool isRoot;
         public ObstacleModel obstacleData;
-
-
 
         public static Solt Copy(Solt value)
         {

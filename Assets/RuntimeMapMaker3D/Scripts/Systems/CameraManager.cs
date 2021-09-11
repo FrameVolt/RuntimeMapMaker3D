@@ -33,14 +33,8 @@ namespace RMM3D
 
         public void Initialize()
         {
-            //signalBus.Subscribe<ChangeCameraStateSignal>(OnChangeCameraState);
-
-
-
             ChangeState(CameraState.Follow);
-
         }
-
 
         public void ChangeState(CameraState state)
         {
@@ -67,9 +61,6 @@ namespace RMM3D
             if (currentSystem != null)
                 currentSystem.UpdateState();
         }
-
-
-
 
     }
 

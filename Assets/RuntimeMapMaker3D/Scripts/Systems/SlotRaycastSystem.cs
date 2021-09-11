@@ -5,6 +5,9 @@ using Zenject;
 
 namespace RMM3D
 {
+    /// <summary>
+    /// Globle ray cast system for RMM3D
+    /// </summary>
     public class SlotRaycastSystem : ITickable, IInitializable
     {
         public SlotRaycastSystem(GroundGrid groundGrid, SlotsHolder slotsHolder, ToolHandlers toolHandlers)
@@ -83,7 +86,11 @@ namespace RMM3D
             CalculateGroundRayPos();
             CheckInIDRange(CurrentGroundSlotID);
         }
-
+        /// <summary>
+        /// Check if this slot inside range
+        /// </summary>
+        /// <param name="slotID"></param>
+        /// <returns></returns>
         public bool CheckInIDRange(Vector3Int slotID)
         {
             bool inRange = true;
@@ -98,7 +105,9 @@ namespace RMM3D
             GroundY = y;
         }
 
-
+        /// <summary>
+        /// Ray cast on Obstacle
+        /// </summary>
         private void CalculateObstacleRayPos()
         {
             Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
@@ -118,7 +127,9 @@ namespace RMM3D
         }
 
 
-
+        /// <summary>
+        /// Ray cast on ground
+        /// </summary>
         private void CalculateGroundRayPos()
         {
             Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);

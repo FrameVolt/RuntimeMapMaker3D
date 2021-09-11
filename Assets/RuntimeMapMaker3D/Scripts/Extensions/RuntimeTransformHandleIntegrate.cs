@@ -7,6 +7,9 @@ using Zenject;
 
 namespace RMM3D
 {
+    /// <summary>
+    /// Integrate with RuntimeTransformHandle which is a 3rd plugin created by Peter @sHTiF Stefcek, thanks for your great work.
+    /// </summary>
     [RequireComponent(typeof(RuntimeTransformHandle))]
     public class RuntimeTransformHandleIntegrate : MonoBehaviour, IInitializable, ITickable
     {
@@ -17,7 +20,8 @@ namespace RMM3D
             SlotRaycastSystem slotRaycastSystem, 
             SlotsHolder slotsHolder, 
             ObstacleFacade.Factory obstacleFactory,
-            UndoRedoSystem undoRedoSystem
+            UndoRedoSystem undoRedoSystem,
+            SaveMapSystem saveMapSystem
             )
         {
             this.toolHandlers = toolHandlers;
@@ -26,6 +30,7 @@ namespace RMM3D
             this.slotRaycastSystem = slotRaycastSystem;
             this.obstacleFactory = obstacleFactory;
             this.undoRedoSystem = undoRedoSystem;
+            this.saveMapSystem = saveMapSystem;
         }
         private ToolHandlers toolHandlers;
         private GroundGrid groundGrid;
@@ -33,6 +38,7 @@ namespace RMM3D
         private SlotRaycastSystem slotRaycastSystem;
         private ObstacleFacade.Factory obstacleFactory;
         private UndoRedoSystem undoRedoSystem;
+        private SaveMapSystem saveMapSystem;
 
 
         [SerializeField] private RuntimeTransformHandle runtimeTransformHandle;
@@ -42,8 +48,10 @@ namespace RMM3D
         public void Initialize()
         {
             //runtimeTransformHandle.positionSnap = Vector3.one * groundGrid.size;
-            undoRedoSystem.OnRedo += () => { runtimeTransformHandle.Target = null; };
-            undoRedoSystem.OnUndo += () => { runtimeTransformHandle.Target = null; };
+            undoRedoSystem.OnRedo += ClearTarget;
+            undoRedoSystem.OnUndo += ClearTarget;
+            saveMapSystem.OnLoad += ClearTarget;
+            saveMapSystem.OnReset += ClearTarget;
 
             toolHandlers.OnChangeToolType.AddListener((x) => {
                 if(x != ToolType.Selection)
@@ -51,6 +59,18 @@ namespace RMM3D
                     runtimeTransformHandle.Target = null;
                 }
             });
+        }
+        private void OnDestroy()
+        {
+            undoRedoSystem.OnRedo -= ClearTarget;
+            undoRedoSystem.OnUndo -= ClearTarget;
+            saveMapSystem.OnLoad -= ClearTarget;
+            saveMapSystem.OnReset -= ClearTarget;
+        }
+
+        private void ClearTarget()
+        {
+            runtimeTransformHandle.Target = null;
         }
 
         public void Tick()
@@ -83,12 +103,18 @@ namespace RMM3D
                 undoRedoSystem.AppendStatus();
             }
         }
-
+        /// <summary>
+        /// Set new rotation to slotsholder
+        /// </summary>
         private void SetRotationToMap()
         {
             var obstacle = currentObstacle;
             slotsHolder.SetRoatation(obstacle.slotID, obstacle.transform.eulerAngles);
         }
+
+        /// <summary>
+        /// set new Scale to slotsholder
+        /// </summary>
         private void SetScaleToMap()
         {
             var obstacle = currentObstacle;
@@ -104,7 +130,9 @@ namespace RMM3D
             RemoveItemFromOldSlot();
             PlacementItemToNewSlot();
         }
-
+        /// <summary>
+        /// Remove old obstacle from old slot
+        /// </summary>
         private void RemoveItemFromOldSlot()
         {
 
@@ -114,6 +142,9 @@ namespace RMM3D
 
             slotsHolder.RemoveSlotItem(obstacle.slotID);
         }
+        /// <summary>
+        /// Place this Obstacle to new slot.
+        /// </summary>
         private void PlacementItemToNewSlot()
         {
             var obstacle = currentObstacle;
@@ -121,14 +152,14 @@ namespace RMM3D
 
             var newSlotID = slotsHolder.TranPos2SlotID(newTransPos, groundGrid);
 
-            if (!slotRaycastSystem.CheckInIDRange(newSlotID))//如果新位置在地图外面，则释放这个对象
+            if (!slotRaycastSystem.CheckInIDRange(newSlotID))//If new slotID is out of map, despawn it
             {
                 obstacleFactory.DeSpawn(obstacle);
                 runtimeTransformHandle.Target = null;
                 return;
             }
 
-            //移除新位置上的已经存在的对象
+            //release new slot's old item, and place this obstacle on it.
             var stayedItem = slotsHolder.TryGetItem(newSlotID);
             if (stayedItem != null)
                 slotsHolder.ReleaseSlotItem(newSlotID, obstacleFactory);

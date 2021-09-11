@@ -7,6 +7,10 @@ using Zenject;
 
 namespace RMM3D
 {
+    /// <summary>
+    /// obstacle UI button on the bottom panel.
+    /// this sprite create from ObstacleCreatorWindow, when you build obstacle's assetbundle
+    /// </summary>
     public class ObstacleBtn : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDragHandler
     {
 
@@ -79,6 +83,10 @@ namespace RMM3D
             Destroy(placeholdBtn);
         }
 
+        /// <summary>
+        /// Clamp button movement
+        /// </summary>
+        /// <param name="rectTransform"></param>
         private void ClampPos(RectTransform rectTransform)
         {
             Vector3[] corners = new Vector3[4];
@@ -90,8 +98,10 @@ namespace RMM3D
             pos.y = Mathf.Clamp(pos.y, corners[0].y, corners[1].y);
             rectTransform.localPosition = pos;
         }
-
-
+        /// <summary>
+        /// Calculate this button covering which place
+        /// </summary>
+        /// <returns></returns>
         private int CalculateCurrentSiblingIndex()
         {
             int x = Mathf.FloorToInt(transform.localPosition.x / 80f);

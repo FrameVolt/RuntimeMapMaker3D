@@ -18,9 +18,6 @@ namespace RMM3D
 
             string tempText = text + ch;
 
-
-
-
             var targetValue = System.Convert.ToInt32(tempText);
 
 

@@ -10,6 +10,12 @@ using System.Threading;
 
 namespace RMM3D.Editor
 {
+
+    /// <summary>
+    /// Main editor window of Runtime Map Maker 3D
+    /// Responsible for convert your 3d Models to RMM3D prefabs and assetbundle
+    /// and it while auto create sprite Preview from unity AssetImporter.
+    /// </summary>
     public class ObstacleCreatorWindow : EditorWindow
     {
 

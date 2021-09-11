@@ -6,6 +6,9 @@ using Zenject;
 
 namespace RMM3D
 {
+    /// <summary>
+    /// Obstacle, the item which is you place in slots.
+    /// </summary>
     [DisallowMultipleComponent]
     public class ObstacleFacade : MonoBehaviour
     {
@@ -33,7 +36,6 @@ namespace RMM3D
         private ObstacleModel obstacleModel;
         private Renderer[] obstacleRenderer;
 
-
         public void SetSlotID(Vector3Int newSlotID)
         {
             slotID = newSlotID;
@@ -50,8 +52,6 @@ namespace RMM3D
             }
             slotsHolder.SetSoltColor(slotID, color);
         }
-
-
 
         public class Factory : PlaceholderFactory<Vector3Int, ObstacleModel, Vector3, Vector3, Color, ObstacleFacade>
         {
@@ -79,19 +79,21 @@ namespace RMM3D
             this.assetBundleSystem = assetBundleSystem;
         }
 
+        /// <summary>
+        /// Spawn obstacle's gameobject from assetsbundle.
+        /// </summary>
+        /// <param name="slotID"></param>
+        /// <param name="obstacleModel"> obstacle oragin prototype</param>
+        /// <param name="euler"></param>
+        /// <param name="scale"></param>
+        /// <param name="color"></param>
+        /// <returns></returns>
         public ObstacleFacade Create(Vector3Int slotID, ObstacleModel obstacleModel, Vector3 euler, Vector3 scale, Color color)
         {
-
             var prefab = assetBundleSystem.assetBundle.LoadAsset<GameObject>(obstacleModel.assetName);
             ObstacleFacade result = _container.InstantiatePrefabForComponent<ObstacleFacade>(prefab, new List<object> { slotID, obstacleModel, euler, scale, color });
             result.transform.SetParent(parent);
             return result;
-        }
-
-
-        public void DeSpawn(ObstacleFacade obstacleFacade)
-        {
-            GameObject.Destroy(obstacleFacade.gameObject);
         }
     }
 }

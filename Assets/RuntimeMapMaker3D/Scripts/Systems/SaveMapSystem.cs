@@ -21,6 +21,10 @@ namespace RMM3D
             this.slotsHolder = slotsHolder;
         }
 
+        public event Action OnReset = () => { };
+        public event Action OnLoad = () => { };
+
+
         private SlotsHolder slotsHolder;
 
         private string filePath = Application.streamingAssetsPath + "/map.txt";
@@ -45,6 +49,7 @@ namespace RMM3D
 
             var slotMap = JsonConvert.DeserializeObject<Solt[,,]>(str);
             slotsHolder.SetSoltMap(slotMap);
+            OnLoad.Invoke();
         }
         /// <summary>
         /// reset current map data
@@ -52,6 +57,7 @@ namespace RMM3D
         public void ResetMap()
         {
             slotsHolder.ResetSoltMap();
+            OnReset.Invoke();
         }
     }
 }
