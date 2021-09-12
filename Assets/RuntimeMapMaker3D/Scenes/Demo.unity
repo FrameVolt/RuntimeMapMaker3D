@@ -26216,6 +26216,15 @@ MonoBehaviour:
   positionToggle: {fileID: 962225751}
   rotateToggle: {fileID: 1497854229}
   scaleToggle: {fileID: 1120275357}
+  positionX: {fileID: 1632697038}
+  positionY: {fileID: 1925236347}
+  positionZ: {fileID: 773220581}
+  rotateX: {fileID: 1374697998}
+  rotateY: {fileID: 1444916761}
+  rotateZ: {fileID: 1928912138}
+  scaleX: {fileID: 1087104578}
+  scaleY: {fileID: 1220887413}
+  scaleZ: {fileID: 744259056}
 --- !u!114 &1611394162
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -30777,7 +30786,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
-  m_AnchoredPosition: {x: 0, y: 10.000015}
+  m_AnchoredPosition: {x: 0, y: 10}
   m_SizeDelta: {x: 40, y: 40}
   m_Pivot: {x: 0.5, y: 0}
 --- !u!114 &1956945032
@@ -31572,7 +31581,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
-  m_AnchoredPosition: {x: 0, y: -10.000015}
+  m_AnchoredPosition: {x: 0, y: -10}
   m_SizeDelta: {x: 40, y: 40}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!114 &2079250398
