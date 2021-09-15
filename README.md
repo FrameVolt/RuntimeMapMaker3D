@@ -28,3 +28,43 @@ Features:
 - Save/Load 
 - Undo/Redo all of action
 - Auto generate item preview image 
+
+## On editor mode:
+
+
+
+
+1.Open “Tools/RuntimeMapMaker3D/Obstacle creator window”.
+2.Build Asset bundle, at “Obstacle creator window”.
+3.Now, you can join it.
+
+
+
+On play mode:
+- At persistent group panel:
+You can save, load, reset, undo, redo your design.
+
+
+
+
+- At tools group panel:
+You can Brush/Select/Delete/Move your obstacle
+
+
+
+
+- At obstacle group panel:
+You can select different type of obstacle.
+
+
+
+
+
+
+
+- At layer group panel:
+You can brush obstacle at different y axis.
+
+
+- Handler panel
+You can resize handler size, and rotate handler.
