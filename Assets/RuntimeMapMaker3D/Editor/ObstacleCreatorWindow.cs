@@ -332,12 +332,14 @@ namespace RMM3D.Editor
             //byte[] _bytes = copyTexture.EncodeToPNG();
             //System.IO.File.WriteAllBytes(obstacleCreator.texturesPath + asset.name + ".png", _bytes);
 
+            var assetPath = AssetDatabase.GetAssetPath(asset);
+            ModelImporter modelImporter = AssetImporter.GetAtPath(assetPath) as ModelImporter;
+            modelImporter.SaveAndReimport();
+
             Texture2D bTexture = null;
             while (bTexture == null)
             {
-
                 bTexture = AssetPreview.GetAssetPreview(asset);
-
                 Thread.Sleep(80);
             }
 
