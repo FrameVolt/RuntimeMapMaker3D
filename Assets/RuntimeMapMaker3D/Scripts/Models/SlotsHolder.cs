@@ -17,11 +17,11 @@ namespace RMM3D
         }
         private readonly GroundGrid groundGrid;
         private readonly ObstacleFacade.Factory obstacleFactory;
-        public Solt[,,] Solts;
+        public Slot[,,] Slots;
 
         private void InitSlots()
         {
-            this.Solts = new Solt[groundGrid.xAmount, groundGrid.yAmount, groundGrid.zAmount];
+            this.Slots = new Slot[groundGrid.xAmount, groundGrid.yAmount, groundGrid.zAmount];
 
             int halfXAmount = groundGrid.xAmount / 2;
             int halfZAmount = groundGrid.zAmount / 2;
@@ -33,21 +33,21 @@ namespace RMM3D
                 {
                     for (int k = 0; k < groundGrid.zAmount; k++)
                     {
-                        var slot = new Solt();
+                        var slot = new Slot();
                         slot.position = new Vector3(i - halfXAmount + offset, j, k - halfZAmount + offset);
                         slot.rotation = Vector3.zero;
                         slot.scale = Vector3.one;
                         slot.color = Vector4.one;
-                        this.Solts[i, j, k] = slot;
+                        this.Slots[i, j, k] = slot;
                     }
                 }
             }
         }
 
 
-        public void SetSoltMap(Solt[,,] slots)
+        public void SetSlotMap(Slot[,,] slots)
         {
-            this.Solts = slots;
+            this.Slots = slots;
 
             for (int i = 0; i < slots.GetLength(0); i++)
             {
@@ -67,9 +67,9 @@ namespace RMM3D
             }
         }
 
-        public void ResetSoltMap()
+        public void ResetSlotMap()
         {
-            var slots = Solts;
+            var slots = Slots;
             for (int i = 0; i < slots.GetLength(0); i++)
             {
                 for (int j = 0; j < slots.GetLength(1); j++)
@@ -103,7 +103,7 @@ namespace RMM3D
             GameObject result = null;
             try
             {
-                var slot = Solts[slotID.x, slotID.y, slotID.z];
+                var slot = Slots[slotID.x, slotID.y, slotID.z];
                 result = slot.item;
 
             }
@@ -121,7 +121,7 @@ namespace RMM3D
 
             try
             {
-                var slot = Solts[slotID.x, slotID.y, slotID.z];
+                var slot = Slots[slotID.x, slotID.y, slotID.z];
                 result = slot.obstacleData;
             }
             catch(IndexOutOfRangeException ex)
@@ -135,22 +135,22 @@ namespace RMM3D
 
         public void SetRoatation(Vector3Int slotID, Vector3 eular)
         {
-            Solts[slotID.x, slotID.y, slotID.z].rotation = eular;
+            Slots[slotID.x, slotID.y, slotID.z].rotation = eular;
         }
         public void SetScale(Vector3Int slotID, Vector3 scale)
         {
-            Solts[slotID.x, slotID.y, slotID.z].scale = scale;
+            Slots[slotID.x, slotID.y, slotID.z].scale = scale;
         }
         public void SetSoltColor(Vector3Int slotID, Color color)
         {
-            Solts[slotID.x, slotID.y, slotID.z].color = color;
+            Slots[slotID.x, slotID.y, slotID.z].color = color;
         }
         public void SetSlotItem(Vector3Int slotID, ObstacleFacade obstacle, ObstacleModel obstacleData)
         {
-            Solts[slotID.x, slotID.y, slotID.z].rotation = obstacle.transform.eulerAngles;
-            Solts[slotID.x, slotID.y, slotID.z].item = obstacle.gameObject;
-            Solts[slotID.x, slotID.y, slotID.z].obstacleData = obstacleData;
-            Solts[slotID.x, slotID.y, slotID.z].color = obstacle.color;
+            Slots[slotID.x, slotID.y, slotID.z].rotation = obstacle.transform.eulerAngles;
+            Slots[slotID.x, slotID.y, slotID.z].item = obstacle.gameObject;
+            Slots[slotID.x, slotID.y, slotID.z].obstacleData = obstacleData;
+            Slots[slotID.x, slotID.y, slotID.z].color = obstacle.color;
         }
 
         /// <summary>
@@ -158,10 +158,10 @@ namespace RMM3D
         /// </summary>
         public void RemoveSlotItem(Vector3Int slotID)
         {
-            Solts[slotID.x, slotID.y, slotID.z].rotation = Vector3.zero;
-            Solts[slotID.x, slotID.y, slotID.z].item = null;
-            Solts[slotID.x, slotID.y, slotID.z].obstacleData = null;
-            Solts[slotID.x, slotID.y, slotID.z].color = Color.white;
+            Slots[slotID.x, slotID.y, slotID.z].rotation = Vector3.zero;
+            Slots[slotID.x, slotID.y, slotID.z].item = null;
+            Slots[slotID.x, slotID.y, slotID.z].obstacleData = null;
+            Slots[slotID.x, slotID.y, slotID.z].color = Color.white;
         }
 
         /// <summary>
@@ -170,7 +170,7 @@ namespace RMM3D
         public void ReleaseSlotItem(Vector3Int slotID, ObstacleFacade.Factory obstacleFactory)
         {
 
-            var slotItem = Solts[slotID.x, slotID.y, slotID.z].item;
+            var slotItem = Slots[slotID.x, slotID.y, slotID.z].item;
 
             Assert.IsNotNull(slotItem, "试图移除已经为空的Slot");
             var obstacleFacade = slotItem.GetComponent<ObstacleFacade>();
@@ -183,10 +183,10 @@ namespace RMM3D
                 Debug.LogWarning("试图移除已经disactive的对象" + slotItem.transform.position);
             }
 
-            Solts[slotID.x, slotID.y, slotID.z].rotation = Vector3.zero;
-            Solts[slotID.x, slotID.y, slotID.z].item = null;
-            Solts[slotID.x, slotID.y, slotID.z].obstacleData = null;
-            Solts[slotID.x, slotID.y, slotID.z].color = Color.white;
+            Slots[slotID.x, slotID.y, slotID.z].rotation = Vector3.zero;
+            Slots[slotID.x, slotID.y, slotID.z].item = null;
+            Slots[slotID.x, slotID.y, slotID.z].obstacleData = null;
+            Slots[slotID.x, slotID.y, slotID.z].color = Color.white;
         }
 
         public Vector3Int TranPos2SlotID(Vector3 transPos, GroundGrid groundGrid)
@@ -211,13 +211,13 @@ namespace RMM3D
         public int AmountItem()
         {
             int index = 0;
-            for (int i = 0; i < Solts.GetLength(0); i++)
+            for (int i = 0; i < Slots.GetLength(0); i++)
             {
-                for (int j = 0; j < Solts.GetLength(1); j++)
+                for (int j = 0; j < Slots.GetLength(1); j++)
                 {
-                    for (int k = 0; k < Solts.GetLength(2); k++)
+                    for (int k = 0; k < Slots.GetLength(2); k++)
                     {
-                        if (Solts[i, j, k].item != null)
+                        if (Slots[i, j, k].item != null)
                         {
                             index++;
                         }
@@ -229,13 +229,13 @@ namespace RMM3D
         public int AmountObstacleModel()
         {
             int index = 0;
-            for (int i = 0; i < Solts.GetLength(0); i++)
+            for (int i = 0; i < Slots.GetLength(0); i++)
             {
-                for (int j = 0; j < Solts.GetLength(1); j++)
+                for (int j = 0; j < Slots.GetLength(1); j++)
                 {
-                    for (int k = 0; k < Solts.GetLength(2); k++)
+                    for (int k = 0; k < Slots.GetLength(2); k++)
                     {
-                        if (Solts[i, j, k].obstacleData != null)
+                        if (Slots[i, j, k].obstacleData != null)
                         {
                             index++;
                         }
@@ -244,13 +244,13 @@ namespace RMM3D
             }
             return index;
         }
-        public Solt[,,] Copy(Solt[,,] value)
+        public Slot[,,] Copy(Slot[,,] value)
         {
             int a = value.GetLength(0);
             int b = value.GetLength(1);
             int c = value.GetLength(2);
 
-            Solt[,,] newSolts = new Solt[a, b, c];
+            Slot[,,] newSolts = new Slot[a, b, c];
 
             for (int i = 0; i < a; i++)
             {
@@ -267,7 +267,7 @@ namespace RMM3D
     }
 
     [System.Serializable]
-    public struct Solt
+    public struct Slot
     {
         public Vector3 position;
         public Vector3 rotation;
@@ -277,9 +277,9 @@ namespace RMM3D
         public bool isRoot;
         public ObstacleModel obstacleData;
 
-        public static Solt Copy(Solt value)
+        public static Slot Copy(Slot value)
         {
-            Solt result = new Solt();
+            Slot result = new Slot();
             result.position = value.position;
             result.rotation = value.rotation;
             result.isRoot = value.isRoot;

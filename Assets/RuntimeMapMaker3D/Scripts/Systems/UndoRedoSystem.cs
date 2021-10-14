@@ -14,8 +14,8 @@ namespace RMM3D
             SlotsHolder slotsHolder
             )
         {
-            _undoList = new LinkedList<Solt[,,]>();
-            _redoList = new LinkedList<Solt[,,]>();
+            _undoList = new LinkedList<Slot[,,]>();
+            _redoList = new LinkedList<Slot[,,]>();
 
             this.max = settings.maxItems;
             this.slotsHolder = slotsHolder;
@@ -28,8 +28,8 @@ namespace RMM3D
         private readonly SlotsHolder slotsHolder;
         private readonly int max;
 
-        private LinkedList<Solt[,,]> _undoList;
-        private LinkedList<Solt[,,]> _redoList;
+        private LinkedList<Slot[,,]> _undoList;
+        private LinkedList<Slot[,,]> _redoList;
 
         private bool sign = true;
 
@@ -76,7 +76,7 @@ namespace RMM3D
         {
 
 
-            var newSolts = slotsHolder.Copy(slotsHolder.Solts);
+            var newSolts = slotsHolder.Copy(slotsHolder.Slots);
 
             //if (_undoList.Count > 0 && _undoList.Last.Value == str)
             //{
@@ -88,7 +88,7 @@ namespace RMM3D
                 sign = true;
                 //AppendStatus();
 
-                Solt[,,] slots = _redoList.Last.Value;
+                Slot[,,] slots = _redoList.Last.Value;
                 _undoList.AddLast(slots);
                 _redoList.RemoveLast();
             }
@@ -108,7 +108,7 @@ namespace RMM3D
         {
             if (CanPerformUndo())
             {
-                Solt[,,] slots = _undoList.Last.Value;
+                Slot[,,] slots = _undoList.Last.Value;
 
                 if (sign == true)
                 {
@@ -120,8 +120,8 @@ namespace RMM3D
 
                 var newSolts = slotsHolder.Copy(slots);
 
-                slotsHolder.ResetSoltMap();
-                slotsHolder.SetSoltMap(newSolts);
+                slotsHolder.ResetSlotMap();
+                slotsHolder.SetSlotMap(newSolts);
 
                 _redoList.AddLast(slots);
                 _undoList.RemoveLast();
@@ -138,7 +138,7 @@ namespace RMM3D
         {
             if (CanPerformRedo())
             {
-                Solt[,,] slots = _redoList.Last.Value;
+                Slot[,,] slots = _redoList.Last.Value;
 
                 if (sign == false)
                 {
@@ -149,8 +149,8 @@ namespace RMM3D
                 }
 
                 var newSolts = slotsHolder.Copy(slots);
-                slotsHolder.ResetSoltMap();
-                slotsHolder.SetSoltMap(newSolts);
+                slotsHolder.ResetSlotMap();
+                slotsHolder.SetSlotMap(newSolts);
 
                 _undoList.AddLast(slots);
                 _redoList.RemoveLast();

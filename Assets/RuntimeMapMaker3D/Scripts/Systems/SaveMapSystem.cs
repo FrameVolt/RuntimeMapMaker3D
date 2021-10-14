@@ -34,7 +34,7 @@ namespace RMM3D
         /// </summary>
         public void SaveMap()
         {
-            string str = JsonConvert.SerializeObject(slotsHolder.Solts);
+            string str = JsonConvert.SerializeObject(slotsHolder.Slots);
             File.WriteAllText(filePath, str);
 
         }
@@ -45,11 +45,11 @@ namespace RMM3D
         {
             if (!File.Exists(filePath))
                 return;
-            slotsHolder.ResetSoltMap();
+            slotsHolder.ResetSlotMap();
             string str = File.ReadAllText(filePath);
 
-            var slotMap = JsonConvert.DeserializeObject<Solt[,,]>(str);
-            slotsHolder.SetSoltMap(slotMap);
+            var slotMap = JsonConvert.DeserializeObject<Slot[,,]>(str);
+            slotsHolder.SetSlotMap(slotMap);
             OnLoad.Invoke();
         }
         /// <summary>
@@ -57,7 +57,7 @@ namespace RMM3D
         /// </summary>
         public void ResetMap()
         {
-            slotsHolder.ResetSoltMap();
+            slotsHolder.ResetSlotMap();
             OnReset.Invoke();
         }
     }

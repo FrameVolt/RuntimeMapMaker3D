@@ -91,9 +91,9 @@ namespace RMM3D
         {
             CurrentToolType = ToolType.Placement;
 
-            maxX_ID = slotsHolder.Solts.GetLength(0) - 1;
-            maxY_ID = slotsHolder.Solts.GetLength(1) - 1;
-            maxZ_ID = slotsHolder.Solts.GetLength(2) - 1;
+            maxX_ID = slotsHolder.Slots.GetLength(0) - 1;
+            maxY_ID = slotsHolder.Slots.GetLength(1) - 1;
+            maxZ_ID = slotsHolder.Slots.GetLength(2) - 1;
 
         }
 

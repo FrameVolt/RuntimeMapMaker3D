@@ -107,7 +107,7 @@ namespace RMM3D
         /// <param name="obstacleModel"></param>
         private void Spawn(Vector3Int slotID, ObstacleModel obstacleModel)
         {
-            var slot = slotsHolder.Solts[slotID.x, slotID.y, slotID.z];
+            var slot = slotsHolder.Slots[slotID.x, slotID.y, slotID.z];
             if (slot.item == null)
             {
                 var obstacle = obstacleFactory.Create(slotID, obstacleModel, Vector3.zero, Vector3.one, colorPicker.CurrentColor);
@@ -129,7 +129,7 @@ namespace RMM3D
                 if (slotID.y == slotRaycastSystem.GroundY)
                 {
                     var itemGO = slotsHolder.TryGetItem(slotID);
-                    var slot = slotsHolder.Solts[slotID.x, slotID.y, slotID.z];
+                    var slot = slotsHolder.Slots[slotID.x, slotID.y, slotID.z];
 
                     if (itemGO == null)
                     {
@@ -153,7 +153,7 @@ namespace RMM3D
                 var itemGO = slotsHolder.TryGetItem(targetSlotID);
                 if (itemGO == null)
                 {
-                    var slot = slotsHolder.Solts[targetSlotID.x, targetSlotID.y, targetSlotID.z];
+                    var slot = slotsHolder.Slots[targetSlotID.x, targetSlotID.y, targetSlotID.z];
 
                     var obstacle = obstacleFactory.Create(targetSlotID, obstacleModel, Vector3.zero, Vector3.one, colorPicker.CurrentColor);
                     obstacle.transform.position = slot.position;
