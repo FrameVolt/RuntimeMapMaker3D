@@ -13,6 +13,9 @@ Licensed under the MIT License.
 &emsp; Note that the script object of the plugin is currently managed by Zenject dependency injection. If you are not familiar with dependency injection, please refer to Zenject. But dependency injection does not affect the coding of your main game.
 
 
+&emsp; The repository is a free version of RuntimeMapMaker3D. If you are interested in the plug-in, you can support me in the unity assets store, thank you.
+
+
 Dependence:
 - Extenject Dependency Injection IOC
 - JsonDotNet
