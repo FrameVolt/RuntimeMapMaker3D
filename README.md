@@ -35,6 +35,12 @@ Features:
 - Undo/Redo all of action
 - Auto generate item preview image 
 
+## Nomenclature:
+Obstacle: The prefab units you edit/build in RMM3D at unity runtime.
+
+SourcePrefab: The source prefab/FBX you want to convert to Obstacle.
+
+
 ## On editor mode:
 
 <img src="docs/images/img1.png" width="600">
